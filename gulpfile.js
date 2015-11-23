@@ -4,6 +4,8 @@ var jshint = require('gulp-jshint');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
+var jasmine = require('gulp-jasmine');
+var reporters = require('jasmine-reporters');
 
 // check javascript syntax
 gulp.task('lint', function(){
@@ -25,4 +27,12 @@ gulp.task('watch', function(){
     gulp.watch('js/*.js', ['lint', 'packageScripts']);
 });
 
-gulp.task('default', ['lint', 'packageScripts', 'watch']);
+// jasmine unit tests
+gulp.task('jasmine', function(){
+    return gulp.src('spec/test.js')
+        .pipe(jasmine({
+            reporter: new reporters.JUnitXmlReporter()
+        }));
+});
+
+gulp.task('default', ['lint', 'jasmine', 'packageScripts', 'watch']);
