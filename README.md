@@ -7,6 +7,9 @@ Project structure based on html5-boilerplate:
 Uses Gulp for packaging
 - http://gulpjs.com/
 
+Uses gulp-jasmine to run Jasmine tests
+- https://www.npmjs.com/package/gulp-jasmine
+Test specs are located in spec folder. Test results are generated to junitresults.xml file.
 
 Installation
 Run 'npm install' in project root to install dependencies.
