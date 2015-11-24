@@ -10,12 +10,12 @@ describe("Testing Two Numbers", function () {
 
 describe("Hello world", function() {
 
-    it("should say hello", function() {
-        expect(helloWorld()).toEqual("Hello world!");
-    });
-  /*
+    //it("should say hello", function() {
+    //    expect(helloWorld()).toEqual("Hello world!");
+    //});
+
     it("mece should say hello", function() {
         expect(meceNotifications.client.meceHelloWorld()).toEqual("Hello world!");
     });
-    */
+
 });

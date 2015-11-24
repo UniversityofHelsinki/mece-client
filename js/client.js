@@ -100,6 +100,7 @@ meceNotifications.client = (function (view) {
     };
 
     return {
+        meceHelloWorld : meceHelloWorld,
         markNotificationSeen: markNotificationRead,
         init: init,
         start: start
