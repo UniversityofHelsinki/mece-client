@@ -185,7 +185,7 @@ meceNotifications.client = (function () {
             startingTime = temp.received;
         }
         //add new notifications to array
-        notifications.concat(temps);
+       notifications = notifications.concat(temps);
     }
     function setChannels(_channels) {
         channels=_channels;
