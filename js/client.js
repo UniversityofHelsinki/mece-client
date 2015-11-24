@@ -28,7 +28,9 @@ meceNotifications.view = (function () {
     };
 })();
 
-
+function helloWorld() {
+    return "Hello world!";
+}
 meceNotifications.client = (function (view) {
     var meceNotifiactionUrlTest = 'https://ohtu-devel.it.helsinki.fi/mece/api/notifications/test';
     var meceNotifiactionUrl = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/view/new/fi';
@@ -45,7 +47,9 @@ meceNotifications.client = (function (view) {
     function markNotificationRead(notificationId) {
         console.log("Not implemented. markNotificationRead" + notificationId);
     }
-
+    function meceHelloWorld() {
+        return "Hello world!";
+    }
     function getNotificationsByChannels() {
 
         var url = meceLocalHostUrl + 'channels/' + channels + '/notifications';
@@ -104,6 +108,8 @@ meceNotifications.client = (function (view) {
     return {
         markNotificationSeen: markNotificationRead,
         setChannels: setChannels,
-        start: start
+        start: start,
+        meceHelloWorld: meceHelloWorld
+
     };
 })(meceNotifications.view);
