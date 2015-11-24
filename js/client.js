@@ -45,7 +45,9 @@ meceNotifications.client = (function (view) {
     function markNotificationRead(notificationId) {
         console.log("Not implemented. markNotificationRead" + notificationId);
     }
-
+    function meceHelloWorld() {
+        return "Hello world!";
+    }
     function getNotificationsByChannels() {
         console.log("BEGIN: " + "getNotificationsByChannels");
 
