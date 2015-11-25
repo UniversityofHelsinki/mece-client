@@ -137,7 +137,7 @@ meceNotifications.client = (function (view) {
         // new jQuery in our local jQuery variable
         jQuery = window.jQuery.noConflict(true);
         console.log("onJQueryLoaded:        jQuery.fn.jquery: " + jQuery.fn.jquery);
-        console.log("onJQueryLoaded:             $.fn.jquery: " + $.fn.jquery);
+        //console.log("onJQueryLoaded:             $.fn.jquery: " + $.fn.jquery);
         console.log("onJQueryLoaded: window.jQuery.fn.jquery: " + window.jQuery.fn.jquery);
         meceNotifications.view.init();
         meceNotifications.client.init();

@@ -26,14 +26,15 @@ gulp.task('packageScripts', function(){
 
 // watch files for changes
 gulp.task('watch', function(){
-    gulp.watch('js/*.js', ['lint', 'packageScripts']);
+    gulp.watch('js/*.js', ['lint', 'jasmine-phantom', 'packageScripts']);
 });
 
 // jasmine unit tests
 gulp.task('jasmine', function(){
     return gulp.src('spec/test.js')
         .pipe(jasmine({
-            reporter: new reporters.JUnitXmlReporter()
+            //reporter: new reporters.JUnitXmlReporter()
+            reporter: new SpecReporter()
         }));
 });
 
@@ -43,4 +44,4 @@ gulp.task('jasmine-phantom', function() {
         .pipe(jasmineBrowser.headless())
 });
 
-gulp.task('default', ['lint', 'jasmine', 'packageScripts', 'watch']);
+gulp.task('default', ['lint', 'jasmine-phantom', 'packageScripts', 'watch']);
