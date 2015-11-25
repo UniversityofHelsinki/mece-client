@@ -61,6 +61,7 @@ meceNotifications.client = (function (view) {
         return new Promise(function (resolve, reject) {
             var req = new XMLHttpRequest();
             req.open('GET', url);
+            req.withCredentials = true;
             req.onload = function () {
                 if (req.status == 200) {
                     handleResponse_new(req.response);
