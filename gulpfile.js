@@ -6,6 +6,8 @@ var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var jasmine = require('gulp-jasmine');
 var reporters = require('jasmine-reporters');
+var jasmineBrowser = require('gulp-jasmine-browser');
+var SpecReporter = require('jasmine-spec-reporter');
 
 // check javascript syntax
 gulp.task('lint', function(){
@@ -33,6 +35,12 @@ gulp.task('jasmine', function(){
         .pipe(jasmine({
             reporter: new reporters.JUnitXmlReporter()
         }));
+});
+
+gulp.task('jasmine-phantom', function() {
+    return gulp.src(['js/client.js', 'spec/test.js'])
+        .pipe(jasmineBrowser.specRunner({console: true}))
+        .pipe(jasmineBrowser.headless())
 });
 
 gulp.task('default', ['lint', 'jasmine', 'packageScripts', 'watch']);
