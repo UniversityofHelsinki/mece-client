@@ -45,18 +45,18 @@ meceNotifications.client = (function (view) {
     function markNotificationRead(notificationId) {
         console.log("Not implemented. markNotificationRead" + notificationId);
     }
+
     function meceHelloWorld() {
         return "Hello world!";
     }
-    function getNotificationsByChannels() {
-        console.log("BEGIN: " + "getNotificationsByChannels");
 
-        var url = meceLocalHostUrl + "notifications?" +
-            jQuery.param({channelNames: meceChannels.split(MECE_CHANNEL_SEPARATOR)}); // MECE-348: 
+    function getNotificationsByChannels() {
         
-        if (startingTime !== '0') {
-            url = url + '?startingTime=' + startingTime;
-        }
+        var query = {channelNames: meceChannels.split(MECE_CHANNEL_SEPARATOR)};
+
+        if (startingTime !== '0') { query.startingTime = startingTime; }
+
+        var url = meceLocalHostUrl + "notifications?" + jQuery.param(query); // MECE-348: 
 
         return new Promise(function (resolve, reject) {
             var req = new XMLHttpRequest();
@@ -65,7 +65,6 @@ meceNotifications.client = (function (view) {
             req.onload = function () {
                 if (req.status == 200) {
                     handleResponse_new(req.response);
-
                     resolve();
                 } else {
                     reject(Error(req.statusText));
@@ -79,7 +78,6 @@ meceNotifications.client = (function (view) {
     }
 
     function handleResponse_new(response) {
-        console.log("BEGIN: " + "handleResponse_new");
         var temps = JSON.parse(response);
         if (temps.length > 0) {
             startingTime = temps[temps.length - 1].received;
