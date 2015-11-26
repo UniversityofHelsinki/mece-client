@@ -31,7 +31,7 @@ meceNotifications.client = (function (view) {
     var meceNotifiactionUrl = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/view/new/fi';
     var meceNotifiactionChannelUrl = 'https://ohtu-devel.it.helsinki.fi/mece/channel/notifications/';
     var meceLocalHostNotificationUrl = 'http://localhost:1337/mece/mece/notifications/view/new/fi';
-    var meceLocalHostUrl = 'http://localhost:1337/mece/';
+    var meceLocalHostUrl = 'http://localhost:1337/mece';
     var startingTime = '0';
     var notifications = [];
     var meceChannels = MECE_DEFAULT_CHANNELS;
@@ -48,54 +48,51 @@ meceNotifications.client = (function (view) {
     function meceHelloWorld() {
         return "Hello world!";
     }
+
     function getNotificationsByChannels() {
-        console.log("BEGIN: " + "getNotificationsByChannels");
 
-        var url = meceLocalHostUrl + "notifications?" +
-            jQuery.param({channelNames: meceChannels.split(MECE_CHANNEL_SEPARATOR)}); // MECE-348: 
-        
-        if (startingTime !== '0') {
-            url = url + '?startingTime=' + startingTime;
-        }
+        var noauth = true; //TODO: Aleksi a temporary workaround for the local authentication
 
-        return new Promise(function (resolve, reject) {
-            var req = new XMLHttpRequest();
-            req.open('GET', url);
-            req.withCredentials = true;
-            req.onload = function () {
-                if (req.status == 200) {
-                    handleResponse_new(req.response);
+        var query = noauth ? {} : {channelNames: meceChannels.split(MECE_CHANNEL_SEPARATOR)};
 
-                    resolve();
-                } else {
-                    reject(Error(req.statusText));
-                }
-            };
-            req.onerror = function () {
-                reject(Error("Network Error"));
-            };
-            req.send();
+        if (startingTime !== '0') { query.startingTime = startingTime; }
+
+        var url = noauth
+            ? meceLocalHostUrl + "/channels/" + meceChannels + "/notifications?" + jQuery.param(query)
+            : meceLocalHostUrl + "/notifications?" + jQuery.param(query); // MECE-348: 
+
+        return new Promise( 
+          function (resolve, reject) {
+              var req = new XMLHttpRequest();
+              req.open('GET', url);
+              req.withCredentials = true;
+              req.onload = function () {
+                  if (req.status == 200) {
+                      resolve(req.response);
+                  } else {
+                      reject(Error(req.statusText));
+                  }
+              };
+              req.onerror = function () {
+                  reject(Error("Network Error"));
+              };
+              req.send();
         });
     }
 
-    function handleResponse_new(response) {
-        console.log("BEGIN: " + "handleResponse_new");
-        var temps = JSON.parse(response);
-        if (temps.length > 0) {
-            startingTime = temps[temps.length - 1].received;
-            meceNotifications.view.add(temps.map(function(n){
-                return(n.heading + ":" + n.message);
-            }));
-        }
-    }
-        
     function start() {
         // TODO: interval cancellation in error cases
         setInterval(function () {
-            getNotificationsByChannels().then(function () {
-                meceNotifications.view.add(notifications);
+            getNotificationsByChannels().then(function (response) {
+                var temps = JSON.parse(response);
+                if (temps.length > 0) {
+                    startingTime = temps[temps.length - 1].received;
+                    meceNotifications.view.add(temps.map(function(n){
+                        return(n.heading + ":" + n.message);
+                    }));
+                }
             }, function (error) {
-                console.error("Failed!", error);
+                console.error("Failed to add new notification(s) to the list!", error);
             });
         }, mecePollingInterval);
     };
