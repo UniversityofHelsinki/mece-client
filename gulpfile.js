@@ -26,12 +26,12 @@ gulp.task('packageScripts', function(){
 
 // watch files for changes
 gulp.task('watch', function(){
-    gulp.watch('js/*.js', ['lint', 'jasmine-phantom', 'packageScripts']);
+    gulp.watch(['js/*.js', 'spec/*.js'], ['lint', 'jasmine-phantom', 'packageScripts']);
 });
 
 // jasmine unit tests
 gulp.task('jasmine', function(){
-    return gulp.src('spec/test.js')
+    return gulp.src('spec/*.js')
         .pipe(jasmine({
             //reporter: new reporters.JUnitXmlReporter()
             reporter: new SpecReporter()
