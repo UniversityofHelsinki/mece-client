@@ -43,7 +43,6 @@ meceNotifications.view = (function () {
     }
 
     function add(notifications) {
-        console.log("BEGIN: " + "add");
         var ulList = jQuery(MECE_CONTENT_DIV_ID).find("ul");
         $.each(notifications, function(i, n) {
             ulList.append(jQuery("<li>").attr("id", "MN" + i).attr("class", "meceNotification").append(n));
@@ -164,13 +163,9 @@ meceNotifications.client = (function (view) {
     }
 
     function onJQueryLoaded() {
-        console.log("onJQueryLoaded: BEGIN");
         // Restore $ and window.jQuery to their previous values and store the
         // new jQuery in our local jQuery variable
         jQuery = window.jQuery.noConflict(true);
-        console.log("onJQueryLoaded:        jQuery.fn.jquery: " + jQuery.fn.jquery);
-        //console.log("onJQueryLoaded:             $.fn.jquery: " + $.fn.jquery);
-        console.log("onJQueryLoaded: window.jQuery.fn.jquery: " + window.jQuery.fn.jquery);
         meceNotifications.view.init();
         meceNotifications.client.init();
         meceNotifications.client.start();
