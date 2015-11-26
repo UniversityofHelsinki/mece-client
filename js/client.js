@@ -4,11 +4,42 @@ var MECE_CONTENT_DIV_ID = "#mece-content-div";
 var MECE_CHANNEL_SEPARATOR = ",";
 var JQUERY_VERSION = '1.4.2';
 var meceNotifications = {};
+var LOGIN_URL = 'https://ohtu-devel.it.helsinki.fi/Shibboleth.sso/HYLogin';
 
 meceNotifications.view = (function () {
 
+    function addIframe(url) {
+        var iframePromise = new Promise(function(resolve, reject) {
+            // Create a new script tag
+            var iframe = document.createElement('iframe');
+            iframe.style.display = "none";
+            iframe.src = url;
+            // Call resolve when it is loaded
+            iframe.addEventListener('load', function() {
+                resolve(url);
+            }, false);
+
+            // Reject the promise if there is an error
+            iframe.addEventListener('error', function() {
+                reject(url);
+            }, false);
+
+            // Add it to the body
+            document.body.appendChild(iframe);
+        });
+
+        // Return the Promise
+        return iframePromise;
+    }
+
     function init() {
-        jQuery(MECE_CONTENT_DIV_ID).append("<ul/>");
+        addIframe(LOGIN_URL).then(function() {
+            setTimeout(function() {
+                jQuery(MECE_CONTENT_DIV_ID).append("<ul/>");
+            }, 1000);
+        }, function (error) {
+            console.error("Failed!", error);
+        });
     }
 
     function add(notifications) {
@@ -32,6 +63,7 @@ meceNotifications.client = (function (view) {
     var meceNotifiactionChannelUrl = 'https://ohtu-devel.it.helsinki.fi/mece/channel/notifications/';
     var meceLocalHostNotificationUrl = 'http://localhost:1337/mece/mece/notifications/view/new/fi';
     var meceLocalHostUrl = 'http://localhost:1337/mece/';
+    var meceOhtuDevelUrl = 'https://ohtu-devel.it.helsinki.fi/mece/';
     var startingTime = '0';
     var notifications = [];
     var meceChannels = MECE_DEFAULT_CHANNELS;
@@ -56,7 +88,7 @@ meceNotifications.client = (function (view) {
 
         if (startingTime !== '0') { query.startingTime = startingTime; }
 
-        var url = meceLocalHostUrl + "notifications?" + jQuery.param(query); // MECE-348: 
+        var url = meceOhtuDevelUrl + "notifications?" + jQuery.param(query); // MECE-348:
 
         return new Promise(function (resolve, reject) {
             var req = new XMLHttpRequest();
@@ -96,7 +128,7 @@ meceNotifications.client = (function (view) {
                 console.error("Failed!", error);
             });
         }, mecePollingInterval);
-    };
+    }
 
     return {
         meceHelloWorld : meceHelloWorld,
