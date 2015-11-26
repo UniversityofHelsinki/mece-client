@@ -7,6 +7,7 @@ var meceNotifications = {};
 var LOGIN_URL = 'https://ohtu-devel.it.helsinki.fi/Shibboleth.sso/HYLogin';
 
 meceNotifications.view = (function () {
+    var $;
 
     function addIframe(url) {
         var iframePromise = new Promise(function(resolve, reject) {
@@ -32,10 +33,11 @@ meceNotifications.view = (function () {
         return iframePromise;
     }
 
-    function init() {
+    function init(jQuery) {
+        $ = $ || jQuery;
         addIframe(LOGIN_URL).then(function() {
             setTimeout(function() {
-                jQuery(MECE_CONTENT_DIV_ID).append("<ul/>");
+                $(MECE_CONTENT_DIV_ID).append("<ul/>");
             }, 1000);
         }, function (error) {
             console.error("Failed!", error);
@@ -43,7 +45,7 @@ meceNotifications.view = (function () {
     }
 
     function add(notifications) {
-        var ulList = jQuery(MECE_CONTENT_DIV_ID).find("ul");
+        var ulList = $(MECE_CONTENT_DIV_ID).find("ul");
         $.each(notifications, function(i, n) {
             ulList.append(jQuery("<li>").attr("id", "MN" + i).attr("class", "meceNotification").append(n));
         });
@@ -57,6 +59,8 @@ meceNotifications.view = (function () {
 })();
 
 meceNotifications.client = (function (view) {
+    var $;
+
     var meceNotifiactionUrlTest = 'https://ohtu-devel.it.helsinki.fi/mece/api/notifications/test';
     var meceNotifiactionUrl = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/view/new/fi';
     var meceNotifiactionChannelUrl = 'https://ohtu-devel.it.helsinki.fi/mece/channel/notifications/';
@@ -68,9 +72,10 @@ meceNotifications.client = (function (view) {
     var meceChannels = MECE_DEFAULT_CHANNELS;
     var mecePollingInterval = MECE_DEFAULT_POLLING_INTERVAL;
 
-    function init() {
-        mecePollingInterval = jQuery(MECE_CONTENT_DIV_ID).attr("pollingInterval") || MECE_DEFAULT_POLLING_INTERVAL;
-        meceChannels = jQuery(MECE_CONTENT_DIV_ID).attr("meceChannels") || MECE_DEFAULT_CHANNELS;
+    function init(jQuery) {
+        $ = $ || jQuery;
+        mecePollingInterval = $(MECE_CONTENT_DIV_ID).attr("pollingInterval") || MECE_DEFAULT_POLLING_INTERVAL;
+        meceChannels = $(MECE_CONTENT_DIV_ID).attr("meceChannels") || MECE_DEFAULT_CHANNELS;
     }
 
     function markNotificationRead(notificationId) {
@@ -91,7 +96,7 @@ meceNotifications.client = (function (view) {
 
         var url = noauth
             ? meceLocalHostUrl + "/channels/" + meceChannels + "/notifications?" + jQuery.param(query)
-            : meceLocalHostUrl + "/notifications?" + jQuery.param(query); // MECE-348: 
+            : meceLocalHostUrl + "/notifications?" + $.param(query); // MECE-348:
 
         return new Promise( 
           function (resolve, reject) {
@@ -119,7 +124,7 @@ meceNotifications.client = (function (view) {
                 var temps = JSON.parse(response);
                 if (temps.length > 0) {
                     startingTime = temps[temps.length - 1].received;
-                    meceNotifications.view.add(temps.map(function(n){
+                    view.add(temps.map(function(n){
                         return(n.heading + ":" + n.message);
                     }));
                 }
@@ -141,9 +146,11 @@ meceNotifications.client = (function (view) {
 
 (function() {
 
+    var jQuery;
+
     if (window.jQuery === undefined || window.jQuery.fn.jquery !== JQUERY_VERSION) {
         var script_tag = document.createElement('script');
-        var jqueryUrl = "http://ajax.googleapis.com/ajax/libs/jquery/" + JQUERY_VERSION + "/jquery.min.js";
+        var jqueryUrl = "https://ajax.googleapis.com/ajax/libs/jquery/" + JQUERY_VERSION + "/jquery.min.js";
         script_tag.setAttribute("type","text/javascript");
         script_tag.setAttribute("src", jqueryUrl);
         if (script_tag.readyState) {
@@ -160,14 +167,19 @@ meceNotifications.client = (function (view) {
     } else {
         // The jQuery version on the window is the one we want to use
         jQuery = window.jQuery;
+        init();
     }
 
     function onJQueryLoaded() {
         // Restore $ and window.jQuery to their previous values and store the
         // new jQuery in our local jQuery variable
         jQuery = window.jQuery.noConflict(true);
-        meceNotifications.view.init();
-        meceNotifications.client.init();
+        init();
+    }
+
+    function init(){
+        meceNotifications.view.init(jQuery);
+        meceNotifications.client.init(jQuery);
         meceNotifications.client.start();
     }
 
