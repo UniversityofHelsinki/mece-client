@@ -14,6 +14,7 @@ meceNotifications.view = (function () {
         $(MECE_CONTENT_DIV_ID).append("<ul/>");
     }
 
+
     function add(notifications) {
         var ulList = $(MECE_CONTENT_DIV_ID).find("ul");
         $.each(notifications, function (i, n) {

@@ -5,7 +5,8 @@ var meceNotifications = (function (mece) {
     var MECE_DEFAULT_POLLING_INTERVAL = "4000";
     var MECE_DEFAULT_CHANNELS = "";
     var LOGIN_URL = 'https://ohtu-devel.it.helsinki.fi/Shibboleth.sso/HYLogin';
-    var MECE_URL = 'http://localhost:1337/mece';
+    var MECE_URL = 'https://ohtu-devel.it.helsinki.fi/mece/'; // for ohtu-testi.it.helsinki.fi/meceapp
+    //var MECE_URL = 'http://localhost:1337/mece'; for local development
 
     var jQuery;
 
