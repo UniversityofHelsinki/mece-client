@@ -73,6 +73,7 @@ meceNotifications.view = (function () {
         }
     }
 
+
     function add(notifications) {
         console.log("BEGIN: " + "add");
         var ulList = $(MECE_CONTENT_DIV_ID).find("ul");
