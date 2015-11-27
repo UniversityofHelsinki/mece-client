@@ -6,9 +6,11 @@ var MECE_CHANNEL_SEPARATOR = ",";
 var JQUERY_VERSION = '1.4.2';
 var meceNotifications = {};
 var LOGIN_URL = 'https://ohtu-devel.it.helsinki.fi/Shibboleth.sso/HYLogin';
-var LOGIN_WITH_SHIBBO = false;
+var NOAUTH = true; //TODO: Aleksi a temporary workaround for the local authentication
+
 
 meceNotifications.view = (function () {
+    var $;
 
     function addIframe(url) {
         var iframePromise = new Promise(function(resolve, reject) {
@@ -34,8 +36,9 @@ meceNotifications.view = (function () {
         return iframePromise;
     }
 
-    function init() {
-        if(LOGIN_WITH_SHIBBO) {
+    function init(jquery) {
+        $ = $ ||jquery;
+        if(!NOAUTH) {
             addIframe(LOGIN_URL).then(function() {
                 setTimeout(function() {
                 }, 1000);
@@ -44,41 +47,41 @@ meceNotifications.view = (function () {
             });
         }
         else {
-            var div = jQuery("<div/>")
+            var div = $("<div/>")
                 .addClass("title")
                 .attr("id", "mece_widget_title_id")
                 .css("background-color", "navy")
                 .css("color", "snow")
                 .text("Notifications");
 
-            var ul = jQuery("<ul/>")
+            var ul = $("<ul/>")
                 .addClass("mece_list")
                 .css("background-color", "WhiteSmoke")
                 .css("color", "black");
 
-            jQuery(MECE_CONTENT_DIV_ID)
+            $(MECE_CONTENT_DIV_ID)
                 .css("display", "none")
                 .css("width", "500px")
                 //.css("margin", "auto")
                 .css("border", "3px solid navy");
 
 
-            jQuery(MECE_CONTENT_DIV_ID).append(div, ul);
+            $(MECE_CONTENT_DIV_ID).append(div, ul);
 
-            //jQuery(MECE_CONTENT_DIV_ID).add("<div/>").attr("id", MECE_CONTENT_DIV_TITLE).addClass("title");
-            //jQuery(MECE_CONTENT_DIV_ID).add("<ul/>").attr("class", "mece_list");
+            //$(MECE_CONTENT_DIV_ID).add("<div/>").attr("id", MECE_CONTENT_DIV_TITLE).addClass("title");
+            //$(MECE_CONTENT_DIV_ID).add("<ul/>").attr("class", "mece_list");
         }
     }
 
     function add(notifications) {
         console.log("BEGIN: " + "add");
-        var ulList = jQuery(MECE_CONTENT_DIV_ID).find("ul");
+        var ulList = $(MECE_CONTENT_DIV_ID).find("ul");
         $.each(notifications, function(i, n) {
             var pngUrl = i % 3 > 0 ? "car.png" : "photo.png";
-            var link = jQuery("<a>").attr("href", n[1]).text(n[0]);
-            var li = jQuery("<li>").attr("id", "MN" + i).css("list-style-image", "url('"+pngUrl+"')").append(link);
+            var link = $("<a>").attr("href", n[1]).text(n[0]);
+            var li = $("<li>").attr("id", "MN" + i).css("list-style-image", "url('"+pngUrl+"')").append(link);
             ulList.append(li);
-            //ulList.append(jQuery("<li>").attr("id", "MN" + i).attr("class", "meceNotification")
+            //ulList.append($("<li>").attr("id", "MN" + i).attr("class", "meceNotification")
             //.css("list-style-image", "url('"+pngUrl+"')").append(n[0]));
         });
         $("#mece_widget_title_id").text("Notifications (" + notifications.length + ")");
@@ -92,6 +95,7 @@ meceNotifications.view = (function () {
 })();
 
 meceNotifications.client = (function (view) {
+    var $;
     var meceNotifiactionUrlTest = 'https://ohtu-devel.it.helsinki.fi/mece/api/notifications/test';
     var meceNotifiactionUrl = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/view/new/fi';
     var meceNotifiactionChannelUrl = 'https://ohtu-devel.it.helsinki.fi/mece/channel/notifications/';
@@ -103,9 +107,10 @@ meceNotifications.client = (function (view) {
     var meceChannels = MECE_DEFAULT_CHANNELS;
     var mecePollingInterval = MECE_DEFAULT_POLLING_INTERVAL;
 
-    function init() {
-        mecePollingInterval = jQuery(MECE_CONTENT_DIV_ID).attr("pollingInterval") || MECE_DEFAULT_POLLING_INTERVAL;
-        meceChannels = jQuery(MECE_CONTENT_DIV_ID).attr("meceChannels") || MECE_DEFAULT_CHANNELS;
+    function init(jquery) {
+        $ = $ ||jquery;
+        mecePollingInterval = $(MECE_CONTENT_DIV_ID).attr("pollingInterval") || MECE_DEFAULT_POLLING_INTERVAL;
+        meceChannels = $(MECE_CONTENT_DIV_ID).attr("meceChannels") || MECE_DEFAULT_CHANNELS;
     }
 
     function markNotificationRead(notificationId) {
@@ -118,15 +123,13 @@ meceNotifications.client = (function (view) {
 
     function getNotificationsByChannels() {
 
-        var noauth = true; //TODO: Aleksi a temporary workaround for the local authentication
-
-        var query = noauth ? {} : {channelNames: meceChannels.split(MECE_CHANNEL_SEPARATOR)};
+        var query = NOAUTH ? {} : {channelNames: meceChannels.split(MECE_CHANNEL_SEPARATOR)};
 
         if (startingTime !== '0') { query.startingTime = startingTime; }
 
-        var url = noauth
-            ? meceLocalHostUrl + "/channels/" + meceChannels + "/notifications?" + jQuery.param(query)
-            : meceLocalHostUrl + "/notifications?" + jQuery.param(query); // MECE-348: 
+        var url = NOAUTH
+            ? meceLocalHostUrl + "/channels/" + meceChannels + "/notifications?" + $.param(query)
+            : meceLocalHostUrl + "/notifications?" + $.param(query); // MECE-348: 
 
         return new Promise( 
           function (resolve, reject) {
@@ -173,8 +176,6 @@ meceNotifications.client = (function (view) {
     };
 })(meceNotifications.view);
 
-// BEGING: Localize jQuery variable (http://alexmarandon.com/articles/web_widget_jquery/)
-
 (function() {
 
     if (window.jQuery === undefined || window.jQuery.fn.jquery !== JQUERY_VERSION) {
@@ -200,14 +201,11 @@ meceNotifications.client = (function (view) {
 
     function onJQueryLoaded() {
         console.log("onJQueryLoaded: BEGIN");
-        // Restore $ and window.jQuery to their previous values and store the
-        // new jQuery in our local jQuery variable
         jQuery = window.jQuery.noConflict(true);
         console.log("onJQueryLoaded:        jQuery.fn.jquery: " + jQuery.fn.jquery);
-        //console.log("onJQueryLoaded:             $.fn.jquery: " + $.fn.jquery);
         console.log("onJQueryLoaded: window.jQuery.fn.jquery: " + window.jQuery.fn.jquery);
-        meceNotifications.view.init();
-        meceNotifications.client.init();
+        meceNotifications.view.init(jQuery);
+        meceNotifications.client.init(jQuery);
         meceNotifications.client.start();
     }
 
@@ -225,16 +223,8 @@ meceNotifications.client = (function (view) {
                 $(".dialog").delay(100).fadeIn(200);
                 $(this).addClass("active");
             }
-
         });
 
-        /*
-        $(".radio > .button").click( function() {
-            $(".radio").find(".button.active").removeClass("active");
-            $(this).addClass("active");
-        });
-        */
-          
         function closeMenu(){
             $(".dialog").fadeOut(200);
             $("#meceIcon").removeClass("active");  
@@ -251,5 +241,4 @@ meceNotifications.client = (function (view) {
 
 })();
 
-// END: Localize jQuery variable
 
