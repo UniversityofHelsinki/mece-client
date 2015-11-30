@@ -9,22 +9,15 @@
 
 <link rel="stylesheet" href="css/normalize.min.css">
 <link rel="stylesheet" href="css/main.css">
-<!--
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
--->
+
+<!-- <link rel="stylesheet" href="js/bower_components/jquery-ui/themes/base/all.css"> -->
 
 </head>
 
 <body>
 
-<!--
--->
-<p > Hello world! This is HTML5 Boilerplate.  </p>
-
-<a id    = "meceIcon" 
-   href  = "#" 
-   class = "button add">
-Mece
+<a id = "meceIcon" href = "#" class = "button add">
+    <label> Mece </label>
 </a>
 
 <div id              = "mece-content-div"
@@ -33,276 +26,14 @@ Mece
      meceChannels    = "oodi.kurssisivu.tilastotieteenperusteet.kurssi1" >
 </div>
 
-
-
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
-<script src="js/client.js"></script>
 
-<style>
+<!-- <script src="js/bower_components/jquery/dist/jquery.min.js"></script> -->
+<!-- <script src="js/bower_components/jquery-ui/jquery-ui.min.js"></script> -->
 
-#meceIcon {
-    height: 64px;
-    background: #e74c3c;
-    padding: 0px 32px;
-    border-bottom: 1px solid #C24032;
-    text-align: left;
-    box-shadow: 0px 0px 4px #C24032;
-}
-
-/*
-
-Stolen from: http://codepen.io/markthema3/pen/BKnhk
-
-.dialog {
-    position: relative;
-    text-align: center;
-    background: skyblue;
-    margin: 13px 0 4px 4px;
-    display: inline-block;
-    width: 256px;
-    box-shadow: 0px 0px 8px rgba(68, 140, 160, 0.5);
-}
-
-.dialog:after, .dialog:before {
-    bottom: 100%;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    pointer-events: none;
-}
-
-.dialog:after {
-    border-color: rgba(255, 255, 255, 0);
-    border-bottom-color: #5C9CCE;
-    border-width: 15px;
-    left: 50%;
-    margin-left: -15px;
-}
-
-.dialog:before {
-    border-color: rgba(170, 170, 170, 0);
-    border-width: 16px;
-    left: 50%;
-    margin-left: -16px;
-}
-
-.dialog .title {
-    color: #fff;
-    font-weight: bold;
-    text-align: center;
-    border: 1px solid #5189B5;
-    border-width: 0px 0px 1px 0px;
-    margin-left: 0;
-    margin-right: 0;
-    margin-bottom: 4px;
-    margin-top: 8px;
-    padding: 8px 16px;
-    background: #5C9CCE;
-    box-shadow: 0px 1px 4px rgba(68, 120, 160, 0.1);
-    font-size: 16px;
-    line-height:2em;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  background: #fefefe;
-  text-align: center;
-  color: #444444;
-  font-family:sans-serif;
-}
-
-.dialog .title:first-child {
-    margin-top: -4px;
-}
-
-.button {
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
-    margin: 0 8px;
-    padding: 0px 32px;
-    display: block;
-    height: 100%;
-    min-width:9px;
-    line-height: 64px;
-    border: 1px solid #C24032;
-    border-width: 0px 1px;
-    box-shadow: 0px 0px 4px #C24032;
-    transition: box-shadow .2s linear;
-}
-
-.add {
-    transition: box-shadow .2s linear, margin .3s linear .5s;
-}
-
-.add.active {
-    margin:0 98px;
-    transition: box-shadow .2s linear, margin .3s linear;
-}
-
-.button:link {
-    color: #eee;
-    text-decoration: none;
-}
-
-.button:visited {
-    color: #eee;
-}
-
-.button:hover {
-    box-shadow:none;
-}
-
-.button:active, .button.active {
-    color: #eee;
-    border-color: #C24032;
-    box-shadow: 0px 0px 4px #C24032 inset;
-}
-
-form {
-    padding:16px;
-    padding-top: 0;
-}
-
-select[name=type] {
-    appearance:none;
-    border-radius: 0;
-}
-
-textarea, input[type=text], input[type=datetime-local], input[type=time], select {
-    color: #fff;
-    border: 0;
-    outline: 0;
-    resize: none;
-    margin: 0;
-    margin-top: 1em;
-    padding: .5em;
-    width:100%;
-    border-bottom: 1px dotted rgba(250, 250, 250, 0.4);
-    background:#5d92ba;
-}
-
-input[type=text]:focus, input[type=datetime-local]:focus, input[type=time]:focus {
-    background-color: #4478a0;
-}
-
-input[type=submit] {
-    border:none;
-    background: #FAFEFF;
-    padding: .5em 1em;
-    margin-top: 1em;
-    color:#4478a0;
-}
-
-input[type=submit]:active {
-    background: #E1E5E5;
-}
-
-input:-moz-placeholder, textarea:-moz-placeholder {
-    color: #FAFEFF;
-}
-
-input:-ms-input-placeholder, textarea:-ms-input-placeholder {
-    color: #FAFEFF;
-}
-
-input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
-    color:#FAFEFF;
-}
-
-*/
-
-</style>
-
-<script>
-// <![CDATA[
-
-/*
-
-Yksi mahdollisuus käyttää default template, joka näyttää viestit.
-Tutki:
-Lodash
-underscore
-
-Templaten pohjana voi käyttää tämän hetken toteutusta. https://github.com/UH-StudentServices/opintoni-frontend
-
-Comments
-
-Toni Räsänen added a comment - 2015-11-25 16:01
-
-Opintoni sivulta (https://student.helsinki.fi/app/#/opintoni) viesti-dropdownin html:
-
-<div class="user-settings__menu dropdown-content" style="display: block;">
-  <ul>
-    <li ng-show="userNotifications.length === 0" class="ng-binding" aria-hidden="false">Ei ilmoituksia.</li>
-    <!-- ngRepeat: userNotification in userNotifications -->
-  </ul>
-</div>
-
-
-Ilmoitukset kokonaisuuden html kokonaisuudessaan:
-
-<div dropdown="" class="user-menu__item user-notifications ng-isolate-scope" open-callback="isOpen = true" close-callback="isOpen = false">
-  <div class="dropdown-toggle active" ng-click="markRead()" role="button" tabindex="0">
-    <div class="icon tour-element__notifications" data-original-title="" title="">
-    <div ng-show="unreadCount > 0" class="circled-number ng-binding ng-hide" aria-hidden="true">0</div>
-    <a href="" class="user-menu__actions--action" aria-label="Ilmoitukset" role="button">
-      <span class="hy hy-notification" title="Ilmoitukset"></span>
-    </a>
-  </div>
-</div>
-<div class="user-settings__menu dropdown-content" style="display: block;">
-  <ul>
-    <li ng-show="userNotifications.length === 0" class="ng-binding" aria-hidden="false">Ei ilmoituksia.</li>
-    <!-- ngRepeat: userNotification in userNotifications -->
-  </ul>
-</div>
-</div> 
-
-*/
-
-/*
-$(document).ready( function() {
-  
-    $("#meceIcon").click(function(e){
-
-        e.stopPropagation();
-
-        if ($(this).hasClass("active"))
-        {
-            $(".dialog").fadeOut(200);
-            $(this).removeClass("active"); 
-        }
-        else
-        {
-            $(".dialog").delay(100).fadeIn(200);
-            $(this).addClass("active");
-        }
-
-    });
-
-    function closeMenu(){
-        $(".dialog").fadeOut(200);
-        $("#meceIcon").removeClass("active");  
-    }
-  
-    $(document.body).click( function(e) {
-        closeMenu();
-    });
-
-    $(".dialog").click( function(e) {
-        e.stopPropagation();
-    });
-});
-*/
-
-// ]]>
-</script>
-
+<script src="js/controller.js"></script>
+<script src="js/initializer.js"></script>
+<script src="js/view.js"></script>
 
 </body>
 </html>
