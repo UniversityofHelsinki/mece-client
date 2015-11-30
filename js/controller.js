@@ -79,9 +79,7 @@ var meceNotifications = (function (mece) {
 
         if (startingTime !== '0') { query.startingTime = startingTime; }
 
-        var url = MECE_NOAUTH
-            ? MECE_URL + "/channels/" + mece.channels + "/notifications?" + $.param(query)
-            : MECE_URL + "/notifications?" + $.param(query); // MECE-348: 
+        var url = MECE_NOAUTH ? MECE_URL + "/channels/" + mece.channels + "/notifications?" + $.param(query) : MECE_URL + "/notifications?" + $.param(query); // MECE-348:
 
         return new Promise( 
           function (resolve, reject) {
