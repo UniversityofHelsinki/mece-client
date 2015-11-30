@@ -8,6 +8,7 @@ var jasmine = require('gulp-jasmine');
 var reporters = require('jasmine-reporters');
 var jasmineBrowser = require('gulp-jasmine-browser');
 var SpecReporter = require('jasmine-spec-reporter');
+var modernizr = require('gulp-modernizr');
 
 // check javascript syntax
 gulp.task('lint', function(){
@@ -18,6 +19,7 @@ gulp.task('lint', function(){
 gulp.task('packageScripts', function(){
     return gulp.src('js/*.js')
         .pipe(concat('mece.client.js'))
+        .pipe(modernizr())
         .pipe(gulp.dest('dist'))
         .pipe(rename('mece.client.min.js'))
         .pipe(uglify())
