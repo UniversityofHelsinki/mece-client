@@ -1,7 +1,7 @@
 var MECE_JQUERY_VERSION = '1.4.2';
 var MECE_LOGIN_URL = 'https://ohtu-devel.it.helsinki.fi/Shibboleth.sso/HYLogin';
-//var MECE_URL = 'https://ohtu-devel.it.helsinki.fi/mece/'; // for ohtu-testi.it.helsinki.fi/meceapp
-var MECE_URL = 'http://localhost:1337/mece'; //for local development
+var MECE_URL = 'https://ohtu-devel.it.helsinki.fi/mece/'; // for ohtu-testi.it.helsinki.fi/meceapp
+//var MECE_URL = 'http://localhost:1337/mece'; //for local development
 var MECE_NOAUTH = false;
 
 //Modernizr code pasted here for now.
