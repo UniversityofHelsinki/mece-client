@@ -36,7 +36,7 @@ var meceNotifications = (function (mece) {
                 $(this).removeClass("active"); 
             }
             else {
-                $(".dialog").delay(100).fadeIn(200);
+                $(".dialog").delay(25).fadeIn(200);
                 $(this).addClass("active");
             }
         });
