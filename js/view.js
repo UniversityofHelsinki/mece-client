@@ -64,7 +64,6 @@ var meceNotifications = (function (mece) {
     function init() {
         if (!mece.view.ready && dependenciesLoaded()) {
             $ = $ || mece.jQuery;
-            $(mece.contentDivId).append("<ul/>");
             dialog();
             __initWidgetList();
             if (mece.controller && mece.controller.initialized) mece.controller.start();

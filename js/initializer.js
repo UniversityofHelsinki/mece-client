@@ -27,7 +27,6 @@ var meceNotifications = (function (mece) {
             } else { // Other browsers
                 script_tag.onload = function () {
                     mece.jQuery = window.jQuery.noConflict(true);
-                    console.log(mece.jQuery);
                     init();
                 };
             }
