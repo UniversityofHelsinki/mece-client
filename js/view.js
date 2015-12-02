@@ -6,22 +6,45 @@ var meceNotifications = (function (mece) {
         $(mece.contentDivId).append(ul);
     }
 
-    // one notification inside li-element
+
+    // Notification li-element
+    //
+    // <li id="MN0" class="msg-item">
+    //   <div class="notification-detail-view">
+    //     <div class="avatar">
+    //       <img src="http://localhost:63342/mece-client/images/photo.png" alt="msg-sender">
+    //     </div>
+    //     <div class="notification-fields">
+    //       <div class="msg-title">Terveiset DOOsta. 0</div>
+    //       <div class="msg-content">When Chuck Norris is in a crowded area, he doesn't walk around people. He walks through them._FI</div>
+    //       <div class="link"><a href="http://wiki.helsinki.fi/pages/editpage.action?pageId=180358612">Link</a></div>
+    //     </div>
+    //   </div>
+    // </li>
     function __addWidgetIteminitWidget(offset, notification) {
         var ulList = $(mece.contentDivId).find("ul");
-        var link = $("<a>")
-            .attr("href", notification[1]).text(notification[2])
-            .addClass("msg-title");
-        var message = $("<p>").text(notification[0]);
-        var title = $("<h4>").text(notification[3]);
+
+        var link = $("<a>").attr("href", notification[1]).text(notification[2]);
+        var image = $("<img>").attr("src", "http://localhost:63342/mece-client/images/photo.png");
+
+        var titleDiv = $("<div>").text(notification[3]).addClass("msg-title");
+        var contentDiv = $("<div>").addClass("msg-content").text(notification[0]);
+        var linkDiv = $("<div>").addClass("link").append(link);
+
+        var outerDiv = $("<div>").addClass("notification-detail-view");
+        var avatarDiv = $("<div>").addClass("avatar").append(image);
+        var detailsDiv = $("<div>").addClass("notification-fields")
+            .append(titleDiv)
+            .append(contentDiv)
+            .append(linkDiv);
+        outerDiv.append(avatarDiv).append(detailsDiv);
+
         var li = $("<li>").attr("id", "MN" + offset)
             .addClass("msg-item")
-            .css("list-style-image", "url('images/" + (offset % 3 > 0 ? "car" : "photo") + ".png')")
-            .append(title)
-            .append(message)
-            .append(link);
+            .append(outerDiv);
         ulList.append(li);
     }
+
 
     function dialog() {
         $("#meceIcon").click(function (e) {
