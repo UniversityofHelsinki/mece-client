@@ -1,3 +1,11 @@
+if (!Modernizr.promises) {
+    console.log("Promise not found, using ES6 Promise");
+    var Promise = ES6Promise.Promise;
+}
+else {
+    console.log("Promise found!");
+}
+
 var meceNotifications = (function (mece) {
 
 //var MECE_URL = 'https://ohtu-devel.it.helsinki.fi/mece/'; // for ohtu-testi.it.helsinki.fi/meceapp
