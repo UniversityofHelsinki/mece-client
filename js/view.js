@@ -14,16 +14,13 @@ var meceNotifications = (function (mece) {
     //    something else?
     //
     function __addWidgetIteminitWidget(offset, notification) {
-        console.log("notification: " + notification);
         var ulList = $(mece.contentDivId).find("ul");
-        var link = $("<a>").attr("href", notification[0]).text(notification[0]);
-            link.css("color", "#005479")
-            .css("text-decoration", "none");
+        var link = $("<a>")
+            .attr("href", notification[0]).text(notification[0])
+            .addClass("msg-title");
         var li = $("<li>").attr("id", "MN" + offset)
+            .addClass("msg-item")
             .css("list-style-image", "url('images/" + (offset % 3 > 0 ? "car" : "photo") + ".png')")
-            .css("height", "100px")
-            .css("border-bottom", "2px solid #f5f5f5")
-            .css("background-color", "#FFF")
             .append(link);
         ulList.append(li);
     }
