@@ -34,8 +34,11 @@ var meceNotifications = (function (mece) {
                     var temps = JSON.parse(response);
                     if (temps.length > 0) {
                         startingTime = temps[temps.length - 1].received;
-                        meceNotifications.view.notifications.add(temps.map(function (n) {
-                            return ([n.message, n.link]);
+                        meceNotifications.view.notifications.add(temps.map(function (notification) {
+                            return ([notification.message,
+                                     notification.link,
+                                     notification.linkText,
+                                     notification.heading]);
                         }));
                     }
                 }, function (error) {

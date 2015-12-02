@@ -7,20 +7,18 @@ var meceNotifications = (function (mece) {
     }
 
     // one notification inside li-element
-    // content:
-    //    notification heading
-    //    notification message
-    //    notification link
-    //    something else?
-    //
     function __addWidgetIteminitWidget(offset, notification) {
         var ulList = $(mece.contentDivId).find("ul");
         var link = $("<a>")
-            .attr("href", notification[0]).text(notification[0])
+            .attr("href", notification[1]).text(notification[2])
             .addClass("msg-title");
+        var message = $("<p>").text(notification[0]);
+        var title = $("<h4>").text(notification[3]);
         var li = $("<li>").attr("id", "MN" + offset)
             .addClass("msg-item")
             .css("list-style-image", "url('images/" + (offset % 3 > 0 ? "car" : "photo") + ".png')")
+            .append(title)
+            .append(message)
             .append(link);
         ulList.append(li);
     }
