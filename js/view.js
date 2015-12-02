@@ -1,14 +1,10 @@
 var meceNotifications = (function (mece) {
     var $;
     function __initWidgetList() {
-        var ul = $("<ul/>")
-            .addClass("mece_list")
-        $(mece.contentDivId).append(ul);
+         $(mece.contentDivId).append($("<ul/>").addClass("mece_list"));
     }
 
-
-    // Notification li-element
-    //
+    // Notification li-element //
     // <li id="MN0" class="msg-item">
     //   <div class="notification-detail-view">
     //     <div class="avatar">
@@ -22,11 +18,16 @@ var meceNotifications = (function (mece) {
     //   </div>
     // </li>
     function __addWidgetIteminitWidget(offset, notification) {
+
+        var avatar = function () {
+            var DEFAULT_AVATAR_URL = "images/avatar.png",
+                urlFoundInTheMassage = null; // TODO
+            return urlFoundInTheMassage || DEFAULT_AVATAR_URL;
+        };
+
         var ulList = $(mece.contentDivId).find("ul");
-
         var link = $("<a>").attr("href", notification[1]).text(notification[2]);
-        var image = $("<img>").attr("src", "http://localhost:63342/mece-client/images/photo.png");
-
+        var image = $("<img>").attr("src", avatar()).text("avatar image");
         var titleDiv = $("<div>").text(notification[3]).addClass("msg-title");
         var contentDiv = $("<div>").addClass("msg-content").text(notification[0]);
         var linkDiv = $("<div>").addClass("link").append(link);
@@ -44,7 +45,6 @@ var meceNotifications = (function (mece) {
             .append(outerDiv);
         ulList.append(li);
     }
-
 
     function dialog() {
         $("#meceIcon").click(function (e) {
