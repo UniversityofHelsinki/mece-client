@@ -3,25 +3,7 @@ var meceNotifications = (function (mece) {
     function __initWidgetList() {
         var ul = $("<ul/>")
             .addClass("mece_list")
-            .css("background-color", "#FFF")
-            .css("color", "black");
-        $(mece.contentDivId)
-            .css("font-size", ".8em")
-            .css("font-family", "Open Sans,Helvetica,Arial,sans-serif,Nimbus Sans L")
-            .css("display", "none")
-            .css("width", "320px")
-            .css("height", "330px")
-            .css("overflow", "auto")
-            .css("background-color", "#FFF")
-            .css("border", "0px");
         $(mece.contentDivId).append(ul);
-        $(mece.iconId).css("border", "3px solid navy")
-            .css("height", "64px")
-            .css("background", "#FFF")
-            .css("padding", "0px 32px")
-            .css("border-bottom", "1px solid #C24032")
-            .css("text-align", "left")
-            .css("box-shadow", "0px 0px 4px #C24032");
     }
 
     // one notification inside li-element
