@@ -57,6 +57,11 @@ var meceNotifications = (function (mece) {
         ulList.append(li);
     }
 
+    function __icon() {
+        var BELL_ICON_URL = "images/bell.png";
+        $("#meceIcon").append($("<img>").attr("src", BELL_ICON_URL).text("bell image"));
+    }
+
     function dialog() {
         $("#meceIcon").click(function (e) {
             e.stopPropagation();
@@ -87,6 +92,7 @@ var meceNotifications = (function (mece) {
     function init() {
         if (!mece.view.ready && dependenciesLoaded()) {
             $ = $ || mece.jQuery;
+            __icon();
             dialog();
             __initWidgetList();
             if (mece.controller && mece.controller.initialized) mece.controller.start();
