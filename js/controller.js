@@ -43,11 +43,14 @@ var meceNotifications = (function (mece) {
                     if (temps.length > 0) {
                         startingTime = temps[temps.length - 1].received;
                         meceNotifications.view.notifications.add(temps.map(function (notification) {
-                            return ([notification.message,
+                            return ([notification._id,
+                                     notification.message,
                                      notification.link,
                                      notification.linkText,
                                      notification.heading,
-                                     notification.avatar]); //MECE-368: avatar kentää ei ole vielä olemassä mece kannassa
+                                     notification.avatar, //MECE-368: avatar kentää ei ole vielä olemassä mece kannassa
+                                     notification.received]);
+
                         }));
                     }
                 }, function (error) {

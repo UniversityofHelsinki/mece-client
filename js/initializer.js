@@ -1,5 +1,5 @@
 var meceNotifications = (function (mece) {
-    var MECE_JQUERY_VERSION = '1.4.2';
+    var MECE_JQUERY_VERSION = '1.11.3';
 
     mece.contentDivId = "#mece-content-div";
     mece.iconDivId = "#mece-icon-div";
@@ -9,6 +9,15 @@ var meceNotifications = (function (mece) {
         mece.initializer.ready = true;
         if (mece.controller) mece.controller.init();
         if (mece.view) mece.view.init();
+    }
+
+    function loadMomentJS() {
+        if (window.moment === undefined) {
+            var script_tag = document.createElement('script');
+            script_tag.setAttribute("type", "text/javascript");
+            script_tag.setAttribute("src", "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.min.js");
+            (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
+        }
     }
 
     function loadJQuery() {
@@ -40,6 +49,7 @@ var meceNotifications = (function (mece) {
 
     (function bootstrap() {
         mece.initializer = {init: init};
+        loadMomentJS();
         loadJQuery();
     }());
 

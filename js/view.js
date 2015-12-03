@@ -24,7 +24,7 @@ var meceNotifications = (function (mece) {
 
         var avatar = function () {
             var DEFAULT_AVATAR_URL = "images/avatar.png",
-                urlFoundInTheMassage = notification[4]; //notification.avatar
+                urlFoundInTheMassage = notification[5]; //notification.avatar
             return urlFoundInTheMassage || DEFAULT_AVATAR_URL;
         };
 
@@ -39,24 +39,54 @@ var meceNotifications = (function (mece) {
             }
         };
 
+        var determineTime = function (received) {
+            return moment(received).locale('fi').fromNow();
+        }
+
         var ulList = $(mece.contentDivId).find("ul");
         // TODO: MECE-365 "Otsikko on linkki. Otsikon teksti on joko viestin otsikko tai linkin otsikko."
-        var link = $("<a>").attr("href", notification[1]).text(notification[2]);
+        var link = $("<a>").attr("href", notification[2]).text(notification[3]);
         var image = $("<img>").attr("src", avatar()).text("avatar image");
         var titleDiv = $("<div>").append(link);
-        var contentDiv = $("<div>").addClass("msg-content").text(shortenMessage(notification[0]));
+        var contentDiv = $("<div>").addClass("msg-content").text(shortenMessage(notification[1]));
+        var received = $("<div>").text(determineTime(notification[6]).toUpperCase());
 
         var outerDiv = $("<div>").addClass("notification-detail-view");
         var avatarDiv = $("<div>").addClass("avatar").append(image);
         var detailsDiv = $("<div>").addClass("notification-fields")
             .append(titleDiv)
-            .append(contentDiv);
+            .append(contentDiv)
+            .append(received);
+
         outerDiv.append(avatarDiv).append(detailsDiv);
 
-        var li = $("<li>").attr("id", "MN" + offset)
+        var li = $("<li>").attr("id", notification[0])
             .addClass("msg-item")
             .append(outerDiv);
         ulList.append(li);
+    }
+
+    function markNotificationAsRead() {
+        $(document).ready(function () {
+            $('ul').on('click', 'li', function () {
+                console.log(this.id);
+                $.ajax({
+                    url: 'http://localhost:1337/mece/notifications/markRead/' + this.id,
+                    type: 'GET',
+                    crossDomain: true,
+                    dataType: "json",
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    success: function (data) {
+                        console.log(data);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                    }
+                });
+            });
+        });
     }
 
     function dialog() {
@@ -93,6 +123,7 @@ var meceNotifications = (function (mece) {
             $ = $ || mece.jQuery;
             __initWidgetList();
             dialog();
+            markNotificationAsRead();
             if (mece.controller && mece.controller.initialized) mece.controller.start();
             mece.view.ready = true;
         }
