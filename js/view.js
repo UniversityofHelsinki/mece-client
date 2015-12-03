@@ -1,7 +1,8 @@
 var meceNotifications = (function (mece) {
     var $;
+
     function __initWidgetList() {
-         $(mece.contentDivId).append($("<ul/>").addClass("mece_list"));
+        $(mece.contentDivId).append($("<ul/>").addClass("mece_list"));
     }
 
     // Notification li-element //
@@ -25,12 +26,23 @@ var meceNotifications = (function (mece) {
             return urlFoundInTheMassage || DEFAULT_AVATAR_URL;
         };
 
+        var shortenMessage = function (notificationMessageText) {
+            var characterLimit = 75;
+            if (!notificationMessageText) {
+                return '';
+            } else if (notificationMessageText.length > characterLimit) {
+                return notificationMessageText.slice(0, characterLimit) + '...';
+            } else {
+                return notificationMessageText;
+            }
+        };
+
         var ulList = $(mece.contentDivId).find("ul");
         // TODO: MECE-365 "Otsikko on linkki. Otsikon teksti on joko viestin otsikko tai linkin otsikko."
         var link = $("<a>").attr("href", notification[1]).text(notification[2]);
         var image = $("<img>").attr("src", avatar()).text("avatar image");
         var titleDiv = $("<div>").append(link);
-        var contentDiv = $("<div>").addClass("msg-content").text(notification[0]);
+        var contentDiv = $("<div>").addClass("msg-content").text(shortenMessage(notification[0]));
 
         var outerDiv = $("<div>").addClass("notification-detail-view");
         var avatarDiv = $("<div>").addClass("avatar").append(image);
@@ -79,7 +91,7 @@ var meceNotifications = (function (mece) {
             __initWidgetList();
             if (mece.controller && mece.controller.initialized) mece.controller.start();
             mece.view.ready = true;
-         }
+        }
     }
 
     function dependenciesLoaded() {
