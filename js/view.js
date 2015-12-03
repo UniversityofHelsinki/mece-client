@@ -21,7 +21,7 @@ var meceNotifications = (function (mece) {
 
         var avatar = function () {
             var DEFAULT_AVATAR_URL = "images/avatar.png",
-                urlFoundInTheMassage = null; // TODO
+                urlFoundInTheMassage = notification[4]; //notification.avatar
             return urlFoundInTheMassage || DEFAULT_AVATAR_URL;
         };
 

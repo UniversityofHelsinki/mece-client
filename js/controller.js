@@ -46,7 +46,8 @@ var meceNotifications = (function (mece) {
                             return ([notification.message,
                                      notification.link,
                                      notification.linkText,
-                                     notification.heading]);
+                                     notification.heading,
+                                     notification.avatar]); //MECE-368: avatar kentää ei ole vielä olemassä mece kannassa
                         }));
                     }
                 }, function (error) {
