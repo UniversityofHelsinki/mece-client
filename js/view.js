@@ -43,11 +43,11 @@ var meceNotifications = (function (mece) {
 
         var ulList = $(mece.contentDivId).find("ul");
         // TODO: MECE-365 "Otsikko on linkki. Otsikon teksti on joko viestin otsikko tai linkin otsikko."
-        var link = $("<a>").attr("href", notification[1]).text(notification[2]);
+        var link = $("<a>").attr("href", notification[2]).text(notification[3]);
         var image = $("<img>").attr("src", avatar()).text("avatar image");
         var titleDiv = $("<div>").append(link);
-        var contentDiv = $("<div>").addClass("msg-content").text(shortenMessage(notification[0]));
-        var received = $("<div>").text(determineTime(notification[5]).toUpperCase());
+        var contentDiv = $("<div>").addClass("msg-content").text(shortenMessage(notification[1]));
+        var received = $("<div>").text(determineTime(notification[6]).toUpperCase());
 
         var outerDiv = $("<div>").addClass("notification-detail-view");
         var avatarDiv = $("<div>").addClass("avatar").append(image);
@@ -58,7 +58,7 @@ var meceNotifications = (function (mece) {
 
         outerDiv.append(avatarDiv).append(detailsDiv);
 
-        var li = $("<li>").attr("id", "MN" + offset)
+        var li = $("<li>").attr("id", notification[0])
             .addClass("msg-item")
             .append(outerDiv);
         ulList.append(li);
@@ -67,6 +67,29 @@ var meceNotifications = (function (mece) {
     function __icon() {
         var BELL_ICON_URL = "images/bell.png";
         $("#meceIcon").append($("<img>").attr("src", BELL_ICON_URL).text("bell image"));
+    }
+
+    function markNotificationAsRead() {
+        $(document).ready(function () {
+            $('ul').on('click', 'li', function () {
+                console.log(this.id);
+                $.ajax({
+                    url: 'http://localhost:1337/mece/notifications/markRead/' + this.id,
+                    type: 'GET',
+                    crossDomain: true,
+                    dataType: "json",
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    success: function (data) {
+                        console.log(data);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                    }
+                });
+            });
+        });
     }
 
     function dialog() {
@@ -102,6 +125,7 @@ var meceNotifications = (function (mece) {
             __icon();
             dialog();
             __initWidgetList();
+            markNotificationAsRead();
             if (mece.controller && mece.controller.initialized) mece.controller.start();
             mece.view.ready = true;
         }

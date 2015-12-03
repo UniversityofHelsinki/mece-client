@@ -1,5 +1,5 @@
 var meceNotifications = (function (mece) {
-    var MECE_JQUERY_VERSION = '1.4.2';
+    var MECE_JQUERY_VERSION = '1.11.3';
 
     mece.contentDivId = "#mece-content-div";
     mece.iconId = "#meceIcon";
