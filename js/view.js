@@ -26,18 +26,17 @@ var meceNotifications = (function (mece) {
         };
 
         var ulList = $(mece.contentDivId).find("ul");
+        // TODO: MECE-365 "Otsikko on linkki. Otsikon teksti on joko viestin otsikko tai linkin otsikko."
         var link = $("<a>").attr("href", notification[1]).text(notification[2]);
         var image = $("<img>").attr("src", avatar()).text("avatar image");
-        var titleDiv = $("<div>").text(notification[3]).addClass("msg-title");
+        var titleDiv = $("<div>").append(link);
         var contentDiv = $("<div>").addClass("msg-content").text(notification[0]);
-        var linkDiv = $("<div>").addClass("link").append(link);
 
         var outerDiv = $("<div>").addClass("notification-detail-view");
         var avatarDiv = $("<div>").addClass("avatar").append(image);
         var detailsDiv = $("<div>").addClass("notification-fields")
             .append(titleDiv)
-            .append(contentDiv)
-            .append(linkDiv);
+            .append(contentDiv);
         outerDiv.append(avatarDiv).append(detailsDiv);
 
         var li = $("<li>").attr("id", "MN" + offset)
