@@ -40,6 +40,11 @@ var meceNotifications = (function (mece) {
             setInterval(function () {
                 getNotificationsByChannels().then(function (response) {
                     var temps = JSON.parse(response);
+
+                    temps.sort(function (a, b) {
+                        return a.submitted > b.submitted;
+                    });
+
                     if (temps.length > 0) {
                         startingTime = temps[temps.length - 1].received;
                         meceNotifications.view.notifications.add(temps.map(function (notification) {

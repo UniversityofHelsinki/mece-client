@@ -32,6 +32,7 @@ var meceNotifications = (function (mece) {
     // </li>
 
     function __addWidgetIteminitWidget(offset, notification) {
+        var language = 'fi'; //TODO: Get this from main page
 
         var avatar = function () {
             var DEFAULT_AVATAR_URL = "images/avatar.png",
@@ -50,9 +51,10 @@ var meceNotifications = (function (mece) {
             }
         };
 
-        var determineTime = function (received) {
-            return moment(received).locale('fi').fromNow();
-        }
+        var determineTime = function (received, language) {
+            return moment(received).locale(language).calendar(); //TODO: Decide format
+            //return moment(received).locale(language).fromNow();
+        };
 
         var ulList = $(mece.contentDivId).find("ul");
         // TODO: MECE-365 "Otsikko on linkki. Otsikon teksti on joko viestin otsikko tai linkin otsikko."
@@ -60,7 +62,7 @@ var meceNotifications = (function (mece) {
         var image = $("<img>").attr("src", avatar()).text("avatar image");
         var titleDiv = $("<div>").append(link);
         var contentDiv = $("<div>").addClass("msg-content").text(shortenMessage(notification[1]));
-        var received = $("<div>").text(determineTime(notification[6]).toUpperCase());
+        var received = $("<div>").text(determineTime(notification[6], language).toUpperCase());
 
         var outerDiv = $("<div>").addClass("notification-detail-view");
         var avatarDiv = $("<div>").addClass("avatar").append(image);
