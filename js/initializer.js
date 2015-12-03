@@ -11,6 +11,15 @@ var meceNotifications = (function (mece) {
         if (mece.view) mece.view.init();
     }
 
+    function loadMomentJS() {
+        if (window.moment === undefined) {
+            var script_tag = document.createElement('script');
+            script_tag.setAttribute("type", "text/javascript");
+            script_tag.setAttribute("src", "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.min.js");
+            (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
+        }
+    }
+
     function loadJQuery() {
         if (window.jQuery === undefined || window.jQuery.fn.jquery !== MECE_JQUERY_VERSION) {
             var script_tag = document.createElement('script');
@@ -40,6 +49,7 @@ var meceNotifications = (function (mece) {
 
     (function bootstrap() {
         mece.initializer = {init: init};
+        loadMomentJS();
         loadJQuery();
     }());
 
