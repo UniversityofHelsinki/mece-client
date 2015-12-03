@@ -2,7 +2,7 @@ var meceNotifications = (function (mece) {
     var MECE_JQUERY_VERSION = '1.4.2';
 
     mece.contentDivId = "#mece-content-div";
-    mece.iconId = "#meceIcon";
+    mece.iconDivId = "#mece-icon-div";
     mece.jQuery = null;
 
     function init() {

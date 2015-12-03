@@ -2,6 +2,8 @@ var meceNotifications = (function (mece) {
     var $;
 
     function __initWidgetList() {
+        //var BELL_ICON_URL = "images/bell.png";
+        //$(mece.contentDivId).append($("<img/>").attr("id", "meceIcon").attr("src", BELL_ICON_URL).text("bell image"));
         $(mece.contentDivId).append($("<ul/>").addClass("mece_list"));
     }
 
@@ -57,13 +59,10 @@ var meceNotifications = (function (mece) {
         ulList.append(li);
     }
 
-    function __icon() {
-        var BELL_ICON_URL = "images/bell.png";
-        $("#meceIcon").append($("<img>").attr("src", BELL_ICON_URL).text("bell image"));
-    }
-
     function dialog() {
-        $("#meceIcon").click(function (e) {
+        var BELL_ICON_URL = "images/bell.png";
+        $(mece.iconDivId).append($("<img>").attr("src", BELL_ICON_URL).text("bell image"));
+        $(mece.iconDivId).click(function (e) {
             e.stopPropagation();
             if ($(this).hasClass("active")) {
                 $(".dialog").fadeOut(200);
@@ -76,7 +75,7 @@ var meceNotifications = (function (mece) {
         });
         function closeMenu() {
             $(".dialog").fadeOut(200);
-            $("#meceIcon").removeClass("active");
+            $(mece.iconDivId).removeClass("active");
         }
 
         $(document.body).click(function (e) {
@@ -92,9 +91,8 @@ var meceNotifications = (function (mece) {
     function init() {
         if (!mece.view.ready && dependenciesLoaded()) {
             $ = $ || mece.jQuery;
-            __icon();
-            dialog();
             __initWidgetList();
+            dialog();
             if (mece.controller && mece.controller.initialized) mece.controller.start();
             mece.view.ready = true;
         }
