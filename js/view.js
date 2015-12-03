@@ -101,7 +101,7 @@ var meceNotifications = (function (mece) {
     }
 
     function dependenciesLoaded() {
-        return mece.initializer && mece.initializer.ready && mece.loggedIn
+        return mece.initializer && mece.initializer.ready && mece.loggedIn;
     }
 
 
