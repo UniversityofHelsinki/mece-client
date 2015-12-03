@@ -55,6 +55,7 @@ var meceNotifications = (function (mece) {
                     }
                 }, function (error) {
                 });
+                meceNotifications.view.notifications.check();
             }, pollingInterval);
             mece.controller.running = true;
         }

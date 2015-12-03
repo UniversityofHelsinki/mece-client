@@ -5,6 +5,16 @@ var meceNotifications = (function (mece) {
         //var BELL_ICON_URL = "images/bell.png";
         //$(mece.contentDivId).append($("<img/>").attr("id", "meceIcon").attr("src", BELL_ICON_URL).text("bell image"));
         $(mece.contentDivId).append($("<ul/>").addClass("mece_list"));
+        $(mece.contentDivId).append($("<div/>").attr("ID", "meceNoNotificationsDiv"));
+    }
+
+    function checkIfNoNotifications() {
+        if($(mece.contentDivId).find("li").length == 0) {
+            $("#meceNoNotificationsDiv").text("Ei viestejä");
+        }
+        else {
+            $("#meceNoNotificationsDiv").text("");
+        }
     }
 
     // Notification li-element //
@@ -20,6 +30,7 @@ var meceNotifications = (function (mece) {
     //     </div>
     //   </div>
     // </li>
+
     function __addWidgetIteminitWidget(offset, notification) {
 
         var avatar = function () {
@@ -141,7 +152,7 @@ var meceNotifications = (function (mece) {
     }
 
     (function __bootstrap() {
-        mece.view = {init: init, notifications: {add: add}};
+        mece.view = {init: init, notifications: {add: add, check: checkIfNoNotifications}};
         mece.view.init();
     }());
 
