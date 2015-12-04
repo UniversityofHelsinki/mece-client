@@ -18,6 +18,7 @@ var meceNotifications = (function (mece) {
     var startingTime = '0';
     var notifications = [];
     var $;
+    var USE_TRANSLATIONS = true;
 
     function init() {
         if (!mece.controller.ready && dependenciesLoaded()) {
@@ -48,6 +49,27 @@ var meceNotifications = (function (mece) {
                     if (temps.length > 0) {
                         startingTime = temps[temps.length - 1].received;
                         meceNotifications.view.notifications.add(temps.map(function (notification) {
+                            var translations = {
+                                en: {
+                                    heading: notification.headingEN,
+                                    message: notification.messageEN,
+                                    link: notification.linkEN,
+                                    linkText: notification.linkTextEN,
+                                },
+                                fi: {
+                                    heading: notification.headingFI,
+                                    message: notification.messageFI,
+                                    link: notification.linkFI,
+                                    linkText: notification.linkTextFI,
+                                },
+                                sv: {
+                                    heading: notification.headingSV,
+                                    message: notification.messageSV,
+                                    link: notification.linkSV,
+                                    linkText: notification.linkTextSV,
+                                }
+                            };
+
                             return ([notification._id,
                                      notification.message,
                                      notification.link,
@@ -55,7 +77,8 @@ var meceNotifications = (function (mece) {
                                      notification.heading,
                                      notification.avatar, //MECE-368: avatar kentää ei ole vielä olemassä mece kannassa
                                      notification.received,
-                                     notification._recipients[0]
+                                     notification._recipients?notification._recipients[0]:null,
+                                     USE_TRANSLATIONS?translations:{}
                             ]);
 
                         }));

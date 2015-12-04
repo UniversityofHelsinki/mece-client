@@ -59,10 +59,20 @@ var meceNotifications = (function (mece) {
 
         var ulList = $(mece.contentDivId).find("ul");
         // TODO: MECE-365 "Otsikko on linkki. Otsikon teksti on joko viestin otsikko tai linkin otsikko."
-        var link = $("<a>").attr("href", notification[2]).text(notification[3]);
+
+        console.log(notification);
+
+        //Oh so pretty
+        var myLink = notification[8][language]&&notification[8][language].link?notification[8][language].link:notification[2];
+        var myLinkText = notification[8][language]&&notification[8][language].linkText?notification[8][language].linkText:notification[3];
+        var myMessage = notification[8][language]&&notification[8][language].message?notification[8][language].message:notification[1];
+        //Why isn't heading used?
+        var myHeading = notification[8][language]&&notification[8][language].heading?notification[8][language].link:notification[4];
+
+        var link = $("<a>").attr("href", myLink).text(myLinkText);
         var image = $("<img>").attr("src", avatar()).text("avatar image");
         var titleDiv = $("<div>").append(link);
-        var contentDiv = $("<div>").addClass("msg-content").text(shortenMessage(notification[1]));
+        var contentDiv = $("<div>").addClass("msg-content").text(shortenMessage(myMessage));
         var received = $("<div>").text(determineTime(notification[6], language).toUpperCase());
 
         var outerDiv = $("<div>").addClass("notification-detail-view");
@@ -75,7 +85,7 @@ var meceNotifications = (function (mece) {
         outerDiv.append(avatarDiv).append(detailsDiv);
 
         var li = $("<li>").attr("id", notification[0]).addClass("msg-item");
-        if (notification[7].read) {
+        if (notification[7] && notification[7].read) {
             li.addClass("read-message");
         }
         li.append(outerDiv);
@@ -141,9 +151,9 @@ var meceNotifications = (function (mece) {
             markNotificationAsRead();
             if (mece.controller && mece.controller.initialized) mece.controller.start();
             mece.view.ready = true;
-        }
 
-        language = $(mece.contentDivId).attr("language") || language;
+            language = $(mece.contentDivId).attr("language") || language;
+        }
     }
 
     function dependenciesLoaded() {
