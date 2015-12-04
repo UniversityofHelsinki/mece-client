@@ -3,6 +3,7 @@ var meceNotifications = (function (mece) {
 
     mece.contentDivId = "#mece-content-div";
     mece.iconDivId = "#mece-icon-div";
+    mece.unreadCountSpanId = "#unread-count";
     mece.jQuery = null;
 
     function init() {

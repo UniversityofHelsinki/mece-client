@@ -1,6 +1,8 @@
 var meceNotifications = (function (mece) {
     //var MARK_READ_URL = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/markRead/';
     var MARK_READ_URL = 'http://localhost:1337/mece/notifications/markRead/';
+    //var UNREAD_NOTIFICATIONS_COUNT = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/unreadNotificationsCount';
+    var UNREAD_NOTIFICATIONS_COUNT = 'http://localhost:1337/mece/notifications/unreadNotificationsCount';
     var $;
     var language = 'fi';
 
@@ -17,6 +19,7 @@ var meceNotifications = (function (mece) {
         }
         else {
             $("#meceNoNotificationsDiv").text("");
+            getUnreadNotificationsCount(false);
         }
     }
 
@@ -89,6 +92,28 @@ var meceNotifications = (function (mece) {
         ulList.append(li);
     }
 
+    function getUnreadNotificationsCount(append) {
+        $.ajax({
+            url: UNREAD_NOTIFICATIONS_COUNT,
+            type: 'GET',
+            crossDomain: true,
+            dataType: "json",
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                if(append) {
+                    $(mece.iconDivId).append($("<span>").attr("id", "unread-count").text(data).addClass('badge'));
+                } else {
+                    $(mece.unreadCountSpanId).html($("<span>").text(data).addClass('badge'));
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+            }
+        });
+    }
+
     function markNotificationAsRead() {
         $(document).ready(function () {
             $('ul').on('click', 'li', function () {
@@ -102,6 +127,7 @@ var meceNotifications = (function (mece) {
                     },
                     success: function (data) {
                         $('#' + data._id).addClass("read-message");
+                        getUnreadNotificationsCount(false);
                     },
                     error: function (xhr, status, error) {
                         console.log(xhr.responseText);
@@ -144,6 +170,7 @@ var meceNotifications = (function (mece) {
         if (!mece.view.ready && dependenciesLoaded()) {
             $ = $ || mece.jQuery;
             __initWidgetList();
+            getUnreadNotificationsCount(true);
             dialog();
             markNotificationAsRead();
             if (mece.controller && mece.controller.initialized) mece.controller.start();
