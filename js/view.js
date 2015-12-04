@@ -6,6 +6,18 @@ var meceNotifications = (function (mece) {
     var $;
     var language = 'fi';
 
+    var translations = {
+        no_messages: {
+            en: "No messages",
+            fi: "Ei viestejä",
+            sv: "Inga meddelanden"
+        }
+    };
+
+    function translate(key, myLanguage) {
+        return translations[key][myLanguage||language];
+    }
+
     function __initWidgetList() {
         //var BELL_ICON_URL = "images/bell.png";
         //$(mece.contentDivId).append($("<img/>").attr("id", "meceIcon").attr("src", BELL_ICON_URL).text("bell image"));
@@ -15,7 +27,8 @@ var meceNotifications = (function (mece) {
 
     function checkIfNoNotifications() {
         if($(mece.contentDivId).find("li").length === 0) {
-            $("#meceNoNotificationsDiv").text("Ei viestejä");
+            //$("#meceNoNotificationsDiv").text("Ei viestejä");
+            $("#meceNoNotificationsDiv").text(translate('no_messages'));
         }
         else {
             $("#meceNoNotificationsDiv").text("");
