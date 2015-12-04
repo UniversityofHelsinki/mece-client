@@ -51,6 +51,10 @@ textarea {
     padding: 0.2em 0;
 }
 
+.read-message {
+    background-color: #e3e6ea !important;
+}
+
 
 /* ==========================================================================
    Author's custom styles

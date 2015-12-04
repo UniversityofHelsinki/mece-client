@@ -1,4 +1,6 @@
 var meceNotifications = (function (mece) {
+    //var MARK_READ_URL = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/markRead/';
+    var MARK_READ_URL = 'http://localhost:1337/mece/notifications/markRead/';
     var $;
 
     function __initWidgetList() {
@@ -73,18 +75,19 @@ var meceNotifications = (function (mece) {
 
         outerDiv.append(avatarDiv).append(detailsDiv);
 
-        var li = $("<li>").attr("id", notification[0])
-            .addClass("msg-item")
-            .append(outerDiv);
+        var li = $("<li>").attr("id", notification[0]).addClass("msg-item");
+        if (notification[7].read) {
+            li.addClass("read-message");
+        }
+        li.append(outerDiv);
         ulList.append(li);
     }
 
     function markNotificationAsRead() {
         $(document).ready(function () {
             $('ul').on('click', 'li', function () {
-                console.log(this.id);
                 $.ajax({
-                    url: 'http://localhost:1337/mece/notifications/markRead/' + this.id,
+                    url: MARK_READ_URL + this.id,
                     type: 'GET',
                     crossDomain: true,
                     dataType: "json",
@@ -92,7 +95,7 @@ var meceNotifications = (function (mece) {
                         withCredentials: true
                     },
                     success: function (data) {
-                        console.log(data);
+                        $('#' + data._id).addClass("read-message");
                     },
                     error: function (xhr, status, error) {
                         console.log(xhr.responseText);
