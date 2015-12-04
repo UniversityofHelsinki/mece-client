@@ -7,9 +7,8 @@ else {
 }
 
 var meceNotifications = (function (mece) {
-
-//var MECE_URL = 'https://ohtu-devel.it.helsinki.fi/mece/'; // for ohtu-testi.it.helsinki.fi/meceapp
-    var MECE_URL = 'http://localhost:1337/mece'; //for local development
+    var MECE_URL = 'https://ohtu-devel.it.helsinki.fi/mece/'; // for ohtu-testi.it.helsinki.fi/meceapp
+    //var MECE_URL = 'http://localhost:1337/mece'; //for local development
     var MECE_NOAUTH = false;
     var MECE_DEFAULT_POLLING_INTERVAL = 4000;
     var pollingInterval;
