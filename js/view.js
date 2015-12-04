@@ -2,6 +2,7 @@ var meceNotifications = (function (mece) {
     //var MARK_READ_URL = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/markRead/';
     var MARK_READ_URL = 'http://localhost:1337/mece/notifications/markRead/';
     var $;
+    var language = 'fi';
 
     function __initWidgetList() {
         //var BELL_ICON_URL = "images/bell.png";
@@ -34,8 +35,6 @@ var meceNotifications = (function (mece) {
     // </li>
 
     function __addWidgetIteminitWidget(offset, notification) {
-        var language = 'fi'; //TODO: Get this from main page
-
         var avatar = function () {
             var DEFAULT_AVATAR_URL = "images/avatar.png",
                 urlFoundInTheMassage = notification[5]; //notification.avatar
@@ -143,6 +142,8 @@ var meceNotifications = (function (mece) {
             if (mece.controller && mece.controller.initialized) mece.controller.start();
             mece.view.ready = true;
         }
+
+        language = $(mece.contentDivId).attr("language") || language;
     }
 
     function dependenciesLoaded() {
