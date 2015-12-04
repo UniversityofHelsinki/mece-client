@@ -14,7 +14,7 @@ var meceNotifications = (function (mece) {
     }
 
     function checkIfNoNotifications() {
-        if($(mece.contentDivId).find("li").length == 0) {
+        if($(mece.contentDivId).find("li").length === 0) {
             $("#meceNoNotificationsDiv").text("Ei viestejä");
         }
         else {
