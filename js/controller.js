@@ -1,9 +1,9 @@
 if (!Modernizr.promises) {
-    console.log("Promise not found, using ES6 Promise");
+    //console.log("Promise not found, using ES6 Promise");
     var Promise = ES6Promise.Promise;
 }
 else {
-    console.log("Promise found!");
+    //console.log("Promise found!");
 }
 
 var meceNotifications = (function (mece) {
@@ -78,7 +78,7 @@ var meceNotifications = (function (mece) {
                                      notification.avatar, //MECE-368: avatar kentää ei ole vielä olemassä mece kannassa
                                      notification.received,
                                      notification._recipients?notification._recipients[0]:null,
-                                     USE_TRANSLATIONS?translations:{}
+                                     USE_TRANSLATIONS?translations:{en:{}, fi:{}, sv:{}}
                             ]);
 
                         }));

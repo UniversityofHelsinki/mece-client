@@ -60,14 +60,11 @@ var meceNotifications = (function (mece) {
         var ulList = $(mece.contentDivId).find("ul");
         // TODO: MECE-365 "Otsikko on linkki. Otsikon teksti on joko viestin otsikko tai linkin otsikko."
 
-        console.log(notification);
-
-        //Oh so pretty
-        var myLink = notification[8][language]&&notification[8][language].link?notification[8][language].link:notification[2];
-        var myLinkText = notification[8][language]&&notification[8][language].linkText?notification[8][language].linkText:notification[3];
-        var myMessage = notification[8][language]&&notification[8][language].message?notification[8][language].message:notification[1];
+        var myLink = notification[8][language].link||notification[2];
+        var myLinkText = notification[8][language].linkText||notification[3];
+        var myMessage = notification[8][language].message||notification[1];
         //Why isn't heading used?
-        var myHeading = notification[8][language]&&notification[8][language].heading?notification[8][language].link:notification[4];
+        var myHeading = notification[8][language].link||notification[4];
 
         var link = $("<a>").attr("href", myLink).text(myLinkText);
         var image = $("<img>").attr("src", avatar()).text("avatar image");
