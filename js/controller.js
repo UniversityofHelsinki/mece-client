@@ -1,11 +1,3 @@
-if (!Modernizr.promises) {
-    //console.log("Promise not found, using ES6 Promise");
-    var Promise = ES6Promise.Promise;
-}
-else {
-    //console.log("Promise found!");
-}
-
 var meceNotifications = (function (mece) {
     var MECE_URL = 'https://ohtu-devel.it.helsinki.fi/mece'; // for ohtu-testi.it.helsinki.fi/meceapp
    // var MECE_URL = 'http://localhost:1337/mece'; //for local development
@@ -34,13 +26,36 @@ var meceNotifications = (function (mece) {
         return mece.initializer && mece.initializer.ready && mece.loggedIn;
     }
 
+    function getNotificationsByChannels() {
+        var query = MECE_NOAUTH ? {} : {channelNames: mece.channels.split(MECE_CHANNEL_SEPARATOR)};
+        if (startingTime !== '0') {
+            query.startingTime = startingTime;
+        }
+        var channelUrl = MECE_NOAUTH ? MECE_URL + "/channels/" + mece.channels + "/notifications?" + $.param(query) : MECE_URL + "/notifications?" + $.param(query); // MECE-348:
+
+        return $.ajax({
+            url: channelUrl,
+            type: 'GET',
+            crossDomain: true,
+            dataType: "json",
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                return data;
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+            }
+        });
+    }
 
     function start() {
         if (!mece.controller.running) {
             // TODO: interval cancellation in error cases
             setInterval(function () {
-                getNotificationsByChannels().then(function (response) {
-                    var temps = JSON.parse(response);
+                getNotificationsByChannels().done(function (response) {
+                    var temps = response;
 
                     temps.sort(function (a, b) {
                         return a.submitted > b.submitted;
@@ -54,19 +69,19 @@ var meceNotifications = (function (mece) {
                                     heading: notification.headingEN,
                                     message: notification.messageEN,
                                     link: notification.linkEN,
-                                    linkText: notification.linkTextEN,
+                                    linkText: notification.linkTextEN
                                 },
                                 fi: {
                                     heading: notification.headingFI,
                                     message: notification.messageFI,
                                     link: notification.linkFI,
-                                    linkText: notification.linkTextFI,
+                                    linkText: notification.linkTextFI
                                 },
                                 sv: {
                                     heading: notification.headingSV,
                                     message: notification.messageSV,
                                     link: notification.linkSV,
-                                    linkText: notification.linkTextSV,
+                                    linkText: notification.linkTextSV
                                 }
                             };
 
@@ -91,31 +106,6 @@ var meceNotifications = (function (mece) {
         }
     }
 
-    function getNotificationsByChannels() {
-        var query = MECE_NOAUTH ? {} : {channelNames: mece.channels.split(MECE_CHANNEL_SEPARATOR)};
-        if (startingTime !== '0') {
-            query.startingTime = startingTime;
-        }
-        var url = MECE_NOAUTH ? MECE_URL + "/channels/" + mece.channels + "/notifications?" + $.param(query) : MECE_URL + "/notifications?" + $.param(query); // MECE-348:
-        return new Promise(
-            function (resolve, reject) {
-                var req = new XMLHttpRequest();
-                req.open('GET', url);
-                req.withCredentials = true;
-                req.onload = function () {
-                    if (req.status == 200) {
-                        resolve(req.response);
-                    } else {
-                        reject(Error(req.statusText));
-                    }
-                };
-                req.onerror = function () {
-                    reject(Error("Network Error"));
-                };
-                req.send();
-            });
-    }
-
     (function bootstrap() {
         mece.controller = {
             init: init,
@@ -127,5 +117,3 @@ var meceNotifications = (function (mece) {
     return mece;
 
 })(meceNotifications || {});
-
-
