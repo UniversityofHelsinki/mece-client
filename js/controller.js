@@ -19,6 +19,7 @@ var meceNotifications = (function (mece) {
     var $;
     var USE_TRANSLATIONS = true;
 
+    
     function init() {
         if (!mece.controller.ready && dependenciesLoaded()) {
             $ = $ || mece.jQuery;
