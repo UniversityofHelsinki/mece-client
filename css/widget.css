@@ -80,3 +80,7 @@
     background-color: #2948cd;
     border-radius: 10px;
 }
+
+.read-message {
+    background-color: #e3e6ea !important;
+}
