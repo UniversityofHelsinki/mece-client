@@ -46,7 +46,7 @@ var meceNotifications = (function (mece) {
         };
 
         var shortenMessage = function (notificationMessageText) {
-            var characterLimit = 75;
+            var characterLimit = 60;
             if (!notificationMessageText) {
                 return '';
             } else if (notificationMessageText.length > characterLimit) {
