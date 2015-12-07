@@ -106,7 +106,7 @@ var meceNotifications = (function (mece) {
                 if(append) {
                     $(mece.iconDivId).append($("<span>").attr("id", "unread-count").text(data).addClass('mece-badge'));
                 } else {
-                    $(mece.unreadCountSpanId).html($("<span>").text(data).addClass('mece-badge'));
+                    $(mece.unreadCountSpanId).html($("<span>").text(data));
                 }
             },
             error: function (xhr, status, error) {
