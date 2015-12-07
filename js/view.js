@@ -21,7 +21,7 @@ var meceNotifications = (function (mece) {
     function __initWidgetList() {
         //var BELL_ICON_URL = "images/bell.png";
         //$(mece.contentDivId).append($("<img/>").attr("id", "meceIcon").attr("src", BELL_ICON_URL).text("bell image"));
-        $(mece.contentDivId).append($("<ul/>").addClass("mece_list"));
+        $(mece.contentDivId).append($("<ul/>").addClass("mece-list"));
         $(mece.contentDivId).append($("<div/>").attr("ID", "meceNoNotificationsDiv"));
     }
 
