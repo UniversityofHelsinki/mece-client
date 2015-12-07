@@ -6,7 +6,7 @@ var meceNotifications = (function (mece) {
     var CHANNELS_UNREAD_NOTIFICATIONS_COUNT = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/channelsUnreadNotificationsCount';
     //var UNREAD_NOTIFICATIONS_COUNT = 'http://localhost:1337/mece/notifications/unreadNotificationsCount';
     var $;
-    var language = 'fi';
+    var language = 'fi'; //Set in init(). This is just default.
 
     var translations = {
         no_messages: {
