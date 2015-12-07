@@ -17,9 +17,9 @@ gulp.task('lint', function(){
 
 // concatenate and minify javascript files
 gulp.task('packageScripts', function(){
-    return gulp.src('js/*.js')
+    return gulp.src(['js/libs/modernizr.js', 'js/libs/es6-promise/es6-promise.js', 'js/shibboLogin.js', 'js/controller.js', 'js/initializer.js', 'js/view.js'])
         .pipe(concat('mece.client.js'))
-        .pipe(modernizr())
+       // .pipe(modernizr())
         .pipe(gulp.dest('dist'))
         .pipe(rename('mece.client.min.js'))
         .pipe(uglify())
