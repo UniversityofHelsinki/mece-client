@@ -2,6 +2,8 @@ var meceNotifications = (function (mece) {
     var MARK_READ_URL = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/markRead/';
     //var MARK_READ_URL = 'http://localhost:1337/mece/notifications/markRead/';
     var UNREAD_NOTIFICATIONS_COUNT = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/unreadNotificationsCount';
+    //var CHANNELS_UNREAD_NOTIFICATIONS_COUNT = 'http://localhost:1337/mece/notifications/channelsUnreadNotificationsCount';
+    var CHANNELS_UNREAD_NOTIFICATIONS_COUNT = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/channelsUnreadNotificationsCount';
     //var UNREAD_NOTIFICATIONS_COUNT = 'http://localhost:1337/mece/notifications/unreadNotificationsCount';
     var $;
     var language = 'fi';
@@ -95,7 +97,7 @@ var meceNotifications = (function (mece) {
 
     function getUnreadNotificationsCount(append) {
         $.ajax({
-            url: UNREAD_NOTIFICATIONS_COUNT,
+            url: mece.channels ? CHANNELS_UNREAD_NOTIFICATIONS_COUNT + '/' + mece.channels : UNREAD_NOTIFICATIONS_COUNT,
             type: 'GET',
             crossDomain: true,
             dataType: "json",
