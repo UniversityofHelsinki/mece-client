@@ -33,6 +33,11 @@
     background-color: #FFF;
 }
 
+/* link inside the notification message */
+.mece-msg-content a {
+    color: #178feb;
+}
+
 /* notification title aka the link */
 .mece-msg-title a{
     /*color: #3794C9;*/
