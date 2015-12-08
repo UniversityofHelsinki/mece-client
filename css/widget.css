@@ -67,9 +67,8 @@
 }
 
 .mece-badge {
-    display: inline-block;
     min-width: 10px;
-    padding: 3px 7px;
+    padding: 2px 4px;
     font-size: 12px;
     font-weight: 700;
     line-height: 1;
@@ -77,8 +76,11 @@
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
-    background-color: #2948cd;
+    background-color: #ffd204;
     border-radius: 10px;
+    left:25px;
+    top:15px;
+    position: absolute;
 }
 
 .read-message {
