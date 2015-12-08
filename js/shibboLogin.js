@@ -1,6 +1,6 @@
 var meceNotifications = (function (mece) {
     var MECE_LOGIN_URL = 'https://ohtu-devel.it.helsinki.fi/Shibboleth.sso/HYLogin';
-    createIframe();
+
     function createIframe() {
         var iframe = document.createElement('iframe');
         iframe.style.display = "none";
@@ -16,6 +16,8 @@ var meceNotifications = (function (mece) {
         }, false);
         document.body.appendChild(iframe);
     }
+
+    createIframe();
 
     return mece;
 })(meceNotifications || {});
