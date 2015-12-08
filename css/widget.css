@@ -35,6 +35,12 @@
     background-color: #FFF;
 }
 
+/* initial color for the so called private message. */
+.private-message{
+    background-color: #E5F3F9 !important;
+}
+
+
 /* link inside the notification's message */
 .mece-msg-content a {
     color: #178feb;
@@ -51,6 +57,11 @@
     color: #178feb;
     text-decoration: none;
     font-weight: bold;
+}
+
+/* the text containing the receival information of the notification */
+.mece-msg-received {
+    color: #777777;
 }
 
 /* notification container, holds avatar and notification data */
@@ -94,6 +105,7 @@
     position: absolute;
 }
 
+/* color for the so called private message after it is clicked */
 .read-message {
-    background-color: #e3e6ea !important;
+    background-color: #FFF !important;
 }
