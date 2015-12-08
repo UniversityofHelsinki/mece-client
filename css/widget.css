@@ -33,8 +33,10 @@
     background-color: #FFF;
 }
 
-.mece-msg-title {
-    color: #005479;
+/* notification title aka the link */
+.mece-msg-title a{
+    /*color: #3794C9;*/
+    color: #178feb;
     text-decoration: none;
     font-weight: bold;
 }
