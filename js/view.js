@@ -82,9 +82,9 @@ var meceNotifications = (function (mece) {
         link.append(linkDiv);
 
         var image = $("<img>").attr("src", avatar()).text("avatar image");
-        var titleDiv = $("<div>").append(link);
-        var contentDiv = $("<div>").addClass("msg-content").html(shortenMessage(myMessage)).contents();
-        var received = $("<div>").text(determineTime(notification[6], language).toUpperCase());
+        var titleDiv = $("<div>").append(link).addClass("mece-msg-title");
+        var contentDiv = $("<div>").html(shortenMessage(myMessage)).addClass("mece-msg-content");
+        var received = $("<div>").text(determineTime(notification[6], language).toUpperCase()).addClass("mece-msg-received");
 
         var outerDiv = $("<div>").addClass("mece-notification-detail-view");
         var avatarDiv = $("<div>").addClass("mece-avatar").append(image);
