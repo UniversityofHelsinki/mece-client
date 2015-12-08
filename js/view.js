@@ -34,8 +34,8 @@ var meceNotifications = (function (mece) {
         }
         else {
             $("#meceNoNotificationsDiv").text("");
-            getUnreadNotificationsCount(false);
         }
+        getUnreadNotificationsCount(false);
     }
 
 
@@ -95,6 +95,8 @@ var meceNotifications = (function (mece) {
         var li = $("<li>").attr("id", notification[0]).addClass("mece-msg-item");
         if(notification[7]) {
             li.addClass("private-message");
+        } else {
+            li.addClass("public-message");
         }
         if (notification[7] && notification[7].read) {
             li.addClass("read-message");
@@ -104,25 +106,12 @@ var meceNotifications = (function (mece) {
     }
 
     function getUnreadNotificationsCount(append) {
-        $.ajax({
-            url: mece.channels ? CHANNELS_UNREAD_NOTIFICATIONS_COUNT + '/' + mece.channels : UNREAD_NOTIFICATIONS_COUNT,
-            type: 'GET',
-            crossDomain: true,
-            dataType: "json",
-            xhrFields: {
-                withCredentials: true
-            },
-            success: function (data) {
-                if(append) {
-                    $(mece.iconDivId).append($("<span>").attr("id", "unread-count").text(data).addClass('mece-badge'));
-                } else {
-                    $(mece.unreadCountSpanId).html($("<span>").text(data));
-                }
-            },
-            error: function (xhr, status, error) {
-                console.log(xhr.responseText);
-            }
-        });
+        var unreadMessagesLength = $(mece.contentDivId).find("ul li.private-message").filter("li:not(.read-message)").length;
+        if(append) {
+            $(mece.iconDivId).append($("<span>").attr("id", "unread-count").text(unreadMessagesLength).addClass('mece-badge'));
+        } else {
+            $(mece.unreadCountSpanId).html($("<span>").text(unreadMessagesLength));
+        }
     }
 
     function markNotificationAsRead() {
@@ -175,7 +164,7 @@ var meceNotifications = (function (mece) {
         });
     }
 
-    // Public members
+// Public members
 
     function init() {
         if (!mece.view.ready && dependenciesLoaded()) {
