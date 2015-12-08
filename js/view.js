@@ -77,7 +77,10 @@ var meceNotifications = (function (mece) {
         //Why isn't heading used?
         var myHeading = notification[8][language].link||notification[4];
 
-        var link = $("<a>").attr("href", myLink).html(myLinkText).contents();
+        var linkDiv = $("<div>").html(myLinkText).contents();
+        var link = $("<a>").attr("href", myLink);
+        link.append(linkDiv);
+
         var image = $("<img>").attr("src", avatar()).text("avatar image");
         var titleDiv = $("<div>").append(link);
         var contentDiv = $("<div>").addClass("msg-content").html(shortenMessage(myMessage)).contents();
