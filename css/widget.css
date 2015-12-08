@@ -21,21 +21,28 @@
 
 }
 
+/* the ul-element containing all the notifications */
 .mece-list {
     background-color: #FFF;
     color: black;
     list-style: none;
 }
 
+/* the li-element containing one notification */
 .mece-msg-item {
     height: 100px;
     border-bottom: 2px solid #f5f5f5;
     background-color: #FFF;
 }
 
-/* link inside the notification message */
+/* link inside the notification's message */
 .mece-msg-content a {
     color: #178feb;
+}
+
+/* notification's message text */
+.mece-msg-content {
+    color: #424242;
 }
 
 /* notification title aka the link */
@@ -52,7 +59,7 @@
     height: 100%;
 }
 
-/* left side image*/
+/* left side image */
 .mece-avatar {
     float:left;
     display:inline-block;
