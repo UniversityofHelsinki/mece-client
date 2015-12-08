@@ -1,17 +1,14 @@
 
 #mece-content-div {
-
     font-size: .8em;
-    font-family: Open Sans, Helvetica, Arial, sans-serif, Nimbus Sans L;
+    font-family: 'Open Sans';
     display: none;
     width: 320px;
     height: 330px;
     overflow: auto;
     background-color: #FFF;
     border: 0px;
-
 }
-
 
 #meceIcon {
     border: 3px solid navy;
