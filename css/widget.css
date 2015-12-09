@@ -8,7 +8,7 @@
 /* div-element containing the mece client */
 #mece-content-div {
     font-size: .8em;
-    font-family: 'Open Sans';
+    fot-family: 'Open Sans', Helvetica, Arial, sans-serif, 'Nimbus Sans L';
     display: none;
     width: 346px;
     height: 330px;
@@ -76,6 +76,9 @@
 /* the text containing the receival information of the notification */
 .mece-msg-received {
     color: #777777;
+    font-size: 10px;
+    height: 14px;
+    text-transform: uppercase;
 }
 
 /* the notification counter element */
