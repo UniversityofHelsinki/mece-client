@@ -8,7 +8,7 @@
 /* div-element containing the mece client */
 #mece-content-div {
     font-size: .8em;
-    font-family: 'Open Sans';
+    font-family: 'Open Sans', Helvetica, Arial, sans-serif, 'Nimbus Sans L';
     display: none;
     width: 346px;
     height: 330px;
@@ -21,6 +21,7 @@
 .mece-list {
     background-color: #FFF;
     color: black;
+    padding: 0px;
     list-style: none;
 }
 
@@ -57,25 +58,30 @@
 
 /* possible link inside the notification's message content */
 .mece-msg-content a {
-    color: #178feb;
+    color: rgb(0, 152, 208);
+    height: 36px;
 }
 
 /* notification's message content */
 .mece-msg-content {
-    color: #424242;
+    color: rgb(66, 66, 66);
 }
 
 /* notification title aka the link */
 .mece-msg-title a{
-    /*color: #3794C9;*/
-    color: #178feb;
+    color: rgb(0, 152, 208);
     text-decoration: none;
     font-weight: bold;
+    height: 18px;
 }
 
 /* the text containing the receival information of the notification */
 .mece-msg-received {
-    color: #777777;
+    color: rgb(109, 109, 109);
+    font-size: 10px;
+    height: 14px;
+    text-transform: uppercase;
+    bottom: 8px;
 }
 
 /* the notification counter element */
@@ -97,11 +103,11 @@
 }
 
 /* initial color for the so called private message. */
-.private-message{
+.mece-private-message{
     background-color: #E5F3F9 !important;
 }
 
 /* color for the so called private message after it is clicked */
-.read-message {
+.mece-read-message {
     background-color: #FFF !important;
 }

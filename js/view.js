@@ -97,7 +97,7 @@ var meceNotifications = (function (mece) {
         var image = $("<img>").attr("src", avatar()).text("avatar image");
         var titleDiv = $("<div>").append(link).addClass("mece-msg-title");
         var contentDiv = $("<div>").html(shortenMessage(myMessage)).addClass("mece-msg-content");
-        var received = $("<div>").text(determineTime(notification[6], language).toUpperCase()).addClass("mece-msg-received");
+        var received = $("<div>").text(determineTime(notification[6], language)).addClass("mece-msg-received");
 
         var outerDiv = $("<div>").addClass("mece-notification-detail-view");
         var avatarDiv = $("<div>").addClass("mece-avatar").append(image);
@@ -110,19 +110,19 @@ var meceNotifications = (function (mece) {
 
         var li = $("<li>").attr("id", notification[0]).addClass("mece-msg-item");
         if(notification[7]) {
-            li.addClass("private-message");
+            li.addClass("mece-private-message");
         } else {
-            li.addClass("public-message");
+            li.addClass("mece-public-message");
         }
         if (notification[7] && notification[7].read) {
-            li.addClass("read-message");
+            li.addClass("mece-read-message");
         }
         li.append(outerDiv);
         ulList.append(li);
     }
 
     function getUnreadNotificationsCount(append) {
-        var unreadMessagesLength = $(mece.contentDivId).find("ul li.private-message").filter("li:not(.read-message)").length;
+        var unreadMessagesLength = $(mece.contentDivId).find("ul li.mece-private-message").filter("li:not(.mece-read-message)").length;
         if(append) {
             $(mece.iconDivId).append($("<span>").attr("id", "unread-count").text(unreadMessagesLength).addClass('mece-badge'));
         } else {
@@ -132,7 +132,7 @@ var meceNotifications = (function (mece) {
 
     function markNotificationAsRead() {
         $(document).ready(function () {
-            $('ul').on('click', 'li.private-message', function () {
+            $('ul').on('click', 'li.mece-private-message', function () {
                 $.ajax({
                     url: MARK_READ_URL + this.id,
                     type: 'GET',
@@ -142,7 +142,7 @@ var meceNotifications = (function (mece) {
                         withCredentials: true
                     },
                     success: function (data) {
-                        $('#' + data._id).addClass("read-message");
+                        $('#' + data._id).addClass("mece-read-message");
                         getUnreadNotificationsCount(false);
                     },
                     error: function (xhr, status, error) {
