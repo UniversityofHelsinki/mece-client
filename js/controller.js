@@ -1,7 +1,6 @@
 var meceNotifications = (function (mece) {
     var MECE_URL = 'https://ohtu-devel.it.helsinki.fi/mece'; // for ohtu-testi.it.helsinki.fi/meceapp
-   // var MECE_URL = 'http://localhost:1337/mece'; //for local development
-    var MECE_NOAUTH = false;
+    //MECE_URL = 'https://localhost/mece'; //for local development ARO
     var MECE_DEFAULT_POLLING_INTERVAL = 4000;
     var pollingInterval;
     var MECE_DEFAULT_CHANNELS = "";
@@ -27,11 +26,12 @@ var meceNotifications = (function (mece) {
     }
 
     function getNotificationsByChannels() {
-        var query = MECE_NOAUTH ? {} : {channelNames: mece.channels.split(MECE_CHANNEL_SEPARATOR)};
+        var query = {channelNames: mece.channels.split(MECE_CHANNEL_SEPARATOR).map(function(s){return(s.trim());})};
+        console.log(JSON.stringify(query));
         if (startingTime !== '0') {
             query.startingTime = startingTime;
         }
-        var channelUrl = MECE_NOAUTH ? MECE_URL + "/channels/" + mece.channels + "/notifications?" + $.param(query) : MECE_URL + "/notifications?" + $.param(query); // MECE-348:
+        var channelUrl = MECE_URL + "/notifications?" + $.param(query);
 
         return $.ajax({
             url: channelUrl,

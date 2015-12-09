@@ -1,10 +1,18 @@
 var meceNotifications = (function (mece) {
-    var MARK_READ_URL = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/markRead/';
+    var MARK_READ_URL = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/markRead/';                                                                                                                                                  
     //var MARK_READ_URL = 'http://localhost:1337/mece/notifications/markRead/';
     var UNREAD_NOTIFICATIONS_COUNT = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/unreadNotificationsCount';
     //var CHANNELS_UNREAD_NOTIFICATIONS_COUNT = 'http://localhost:1337/mece/notifications/channelsUnreadNotificationsCount';
     var CHANNELS_UNREAD_NOTIFICATIONS_COUNT = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/channelsUnreadNotificationsCount';
     //var UNREAD_NOTIFICATIONS_COUNT = 'http://localhost:1337/mece/notifications/unreadNotificationsCount';
+
+    //ARO
+    //var LD = 'https://localhost:443';
+    //MARK_READ_URL = LD + '/mece/notifications/markRead/';
+    //CHANNELS_UNREAD_NOTIFICATIONS_COUNT = LD + '/mece/notifications/channelsUnreadNotificationsCount';
+    //UNREAD_NOTIFICATIONS_COUNT = LD + '/mece/notifications/unreadNotificationsCount';
+
+    var SHORTEN_MESSAGE_LEN = 58;
     var $;
     var language = 'fi'; //Set in init(). This is just default.
 
@@ -16,6 +24,7 @@ var meceNotifications = (function (mece) {
         }
     };
 
+
     function translate(key, myLanguage) {
         return translations[key][myLanguage||language];
     }
@@ -23,6 +32,13 @@ var meceNotifications = (function (mece) {
     function __initWidgetList() {
         $(mece.contentDivId).append($("<ul/>").addClass("mece-list"));
         $(mece.contentDivId).append($("<div/>").attr("ID", "meceNoNotificationsDiv"));
+        $(mece.contentDivId)
+            .mouseover(function() {
+                $(mece.contentDivId).css("overflow", "auto");
+            })
+            .mouseout(function() {
+                $(mece.contentDivId).css("overflow", "hidden");
+            });
     }
 
     function checkIfNoNotifications() {
@@ -35,7 +51,6 @@ var meceNotifications = (function (mece) {
         }
         getUnreadNotificationsCount(false);
     }
-
 
 
     function __addWidgetIteminitWidget(offset, notification) {
@@ -51,7 +66,7 @@ var meceNotifications = (function (mece) {
         };
 
         var shortenMessage = function (notificationMessageText) {
-            var characterLimit = 60;
+            var characterLimit = SHORTEN_MESSAGE_LEN;
             if (!notificationMessageText) {
                 return '';
             } else if (notificationMessageText.length > characterLimit) {

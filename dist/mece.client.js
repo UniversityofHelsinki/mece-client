@@ -21,10 +21,10 @@ var meceNotifications = (function (mece) {
 
     return mece;
 })(meceNotifications || {});
+
 var meceNotifications = (function (mece) {
     var MECE_URL = 'https://ohtu-devel.it.helsinki.fi/mece'; // for ohtu-testi.it.helsinki.fi/meceapp
-   // var MECE_URL = 'http://localhost:1337/mece'; //for local development
-    var MECE_NOAUTH = false;
+    //MECE_URL = 'https://localhost/mece'; //for local development ARO
     var MECE_DEFAULT_POLLING_INTERVAL = 4000;
     var pollingInterval;
     var MECE_DEFAULT_CHANNELS = "";
@@ -50,11 +50,12 @@ var meceNotifications = (function (mece) {
     }
 
     function getNotificationsByChannels() {
-        var query = MECE_NOAUTH ? {} : {channelNames: mece.channels.split(MECE_CHANNEL_SEPARATOR)};
+        var query = {channelNames: mece.channels.split(MECE_CHANNEL_SEPARATOR).map(function(s){return(s.trim());})};
+        console.log(JSON.stringify(query));
         if (startingTime !== '0') {
             query.startingTime = startingTime;
         }
-        var channelUrl = MECE_NOAUTH ? MECE_URL + "/channels/" + mece.channels + "/notifications?" + $.param(query) : MECE_URL + "/notifications?" + $.param(query); // MECE-348:
+        var channelUrl = MECE_URL + "/notifications?" + $.param(query);
 
         return $.ajax({
             url: channelUrl,
@@ -204,12 +205,20 @@ var meceNotifications = (function (mece) {
 
 
 var meceNotifications = (function (mece) {
-    var MARK_READ_URL = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/markRead/';
+    var MARK_READ_URL = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/markRead/';                                                                                                                                                  
     //var MARK_READ_URL = 'http://localhost:1337/mece/notifications/markRead/';
     var UNREAD_NOTIFICATIONS_COUNT = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/unreadNotificationsCount';
     //var CHANNELS_UNREAD_NOTIFICATIONS_COUNT = 'http://localhost:1337/mece/notifications/channelsUnreadNotificationsCount';
     var CHANNELS_UNREAD_NOTIFICATIONS_COUNT = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/channelsUnreadNotificationsCount';
     //var UNREAD_NOTIFICATIONS_COUNT = 'http://localhost:1337/mece/notifications/unreadNotificationsCount';
+
+    //ARO
+    //var LD = 'https://localhost:443';
+    //MARK_READ_URL = LD + '/mece/notifications/markRead/';
+    //CHANNELS_UNREAD_NOTIFICATIONS_COUNT = LD + '/mece/notifications/channelsUnreadNotificationsCount';
+    //UNREAD_NOTIFICATIONS_COUNT = LD + '/mece/notifications/unreadNotificationsCount';
+
+    var SHORTEN_MESSAGE_LEN = 58;
     var $;
     var language = 'fi'; //Set in init(). This is just default.
 
@@ -221,6 +230,7 @@ var meceNotifications = (function (mece) {
         }
     };
 
+
     function translate(key, myLanguage) {
         return translations[key][myLanguage||language];
     }
@@ -228,6 +238,13 @@ var meceNotifications = (function (mece) {
     function __initWidgetList() {
         $(mece.contentDivId).append($("<ul/>").addClass("mece-list"));
         $(mece.contentDivId).append($("<div/>").attr("ID", "meceNoNotificationsDiv"));
+        $(mece.contentDivId)
+            .mouseover(function() {
+                $(mece.contentDivId).css("overflow", "auto");
+            })
+            .mouseout(function() {
+                $(mece.contentDivId).css("overflow", "hidden");
+            });
     }
 
     function checkIfNoNotifications() {
@@ -240,7 +257,6 @@ var meceNotifications = (function (mece) {
         }
         getUnreadNotificationsCount(false);
     }
-
 
 
     function __addWidgetIteminitWidget(offset, notification) {
@@ -256,7 +272,7 @@ var meceNotifications = (function (mece) {
         };
 
         var shortenMessage = function (notificationMessageText) {
-            var characterLimit = 60;
+            var characterLimit = SHORTEN_MESSAGE_LEN;
             if (!notificationMessageText) {
                 return '';
             } else if (notificationMessageText.length > characterLimit) {
