@@ -1,6 +1,6 @@
 var meceNotifications = (function (mece) {
     var MECE_LOGIN_URL = 'https://ohtu-devel.it.helsinki.fi/Shibboleth.sso/HYLogin';
-    createIframe();
+
     function createIframe() {
         var iframe = document.createElement('iframe');
         iframe.style.display = "none";
@@ -16,6 +16,8 @@ var meceNotifications = (function (mece) {
         }, false);
         document.body.appendChild(iframe);
     }
+
+    createIframe();
 
     return mece;
 })(meceNotifications || {});
@@ -142,6 +144,7 @@ var meceNotifications = (function (mece) {
 var meceNotifications = (function (mece) {
     var MECE_JQUERY_VERSION = '1.11.3';
 
+    mece.boxDivId = "#mece-box-div";
     mece.contentDivId = "#mece-content-div";
     mece.iconDivId = "#mece-icon-div";
     mece.unreadCountSpanId = "#unread-count";
@@ -223,8 +226,6 @@ var meceNotifications = (function (mece) {
     }
 
     function __initWidgetList() {
-        //var BELL_ICON_URL = "images/bell.png";
-        //$(mece.contentDivId).append($("<img/>").attr("id", "meceIcon").attr("src", BELL_ICON_URL).text("bell image"));
         $(mece.contentDivId).append($("<ul/>").addClass("mece-list"));
         $(mece.contentDivId).append($("<div/>").attr("ID", "meceNoNotificationsDiv"));
     }
@@ -279,11 +280,14 @@ var meceNotifications = (function (mece) {
         //Why isn't heading used?
         var myHeading = notification[8][language].link||notification[4];
 
-        var link = $("<a>").attr("href", myLink).text(myLinkText);
+        var linkDiv = $("<div>").html(myLinkText).contents();
+        var link = $("<a>").attr("href", myLink);
+        link.append(linkDiv);
+
         var image = $("<img>").attr("src", avatar()).text("avatar image");
-        var titleDiv = $("<div>").append(link);
-        var contentDiv = $("<div>").addClass("msg-content").text(shortenMessage(myMessage));
-        var received = $("<div>").text(determineTime(notification[6], language).toUpperCase());
+        var titleDiv = $("<div>").append(link).addClass("mece-msg-title");
+        var contentDiv = $("<div>").html(shortenMessage(myMessage)).addClass("mece-msg-content");
+        var received = $("<div>").text(determineTime(notification[6], language).toUpperCase()).addClass("mece-msg-received");
 
         var outerDiv = $("<div>").addClass("mece-notification-detail-view");
         var avatarDiv = $("<div>").addClass("mece-avatar").append(image);

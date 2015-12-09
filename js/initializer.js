@@ -1,6 +1,7 @@
 var meceNotifications = (function (mece) {
     var MECE_JQUERY_VERSION = '1.11.3';
 
+    mece.boxDivId = "#mece-box-div";
     mece.contentDivId = "#mece-content-div";
     mece.iconDivId = "#mece-icon-div";
     mece.unreadCountSpanId = "#unread-count";
