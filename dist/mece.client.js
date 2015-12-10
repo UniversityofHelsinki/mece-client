@@ -48,13 +48,13 @@ var meceNotifications = (function (mece) {
     }
 
     function readAndInitializeAttributeValues(){
-        var lang = readLanguageAttribute();
+        //var lang = readLanguageAttribute();
         // set language to view
-        var languageChanged = meceNotifications.view.notifications.setLanguage(lang);
-        if(languageChanged){
+        // var languageChanged = meceNotifications.view.notifications.setLanguage(lang);
+        // if(languageChanged){
             //console.log('readAndInitializeAttributeValues language changed: set starting time 0' + lang);
-            startingTime = '0';
-        }
+        //    startingTime = '0';
+        //}
 
         pollingInterval = readPollingIntervalAttribute();
         mece.channels = readChannelsAttribute();
@@ -103,7 +103,7 @@ var meceNotifications = (function (mece) {
             // TODO: interval cancellation in error cases
             setInterval(function () {
 
-                readAndInitializeAttributeValues();
+                //readAndInitializeAttributeValues();
 
                 getNotificationsByChannels().done(function (response) {
                     var temps = response;
@@ -349,12 +349,7 @@ var meceNotifications = (function (mece) {
 
     function __addWidgetIteminitWidget(offset, notification) {
         var avatar = function () {
-            var DEFAULT_AVATAR_URL = "";
-            if(notification[7]) {
-                DEFAULT_AVATAR_URL = "images/avatar.png";
-            } else {
-                DEFAULT_AVATAR_URL = "images/users.png";
-            }
+            var DEFAULT_AVATAR_URL = (notification[7]) ?  "images/avatar.png" : "images/avatar-group.png";
             var urlFoundInTheMassage = notification[5]; //notification.avatar
             return urlFoundInTheMassage || DEFAULT_AVATAR_URL;
         };
@@ -495,7 +490,7 @@ var meceNotifications = (function (mece) {
     }
 
     function redrawNotificationList(){
-        //console.log('redrawNotificationList ');
+        console.log('redrawNotificationList ');
         $(".mece-list").remove();
         __initWidgetList();
     }

@@ -55,12 +55,7 @@ var meceNotifications = (function (mece) {
 
     function __addWidgetIteminitWidget(offset, notification) {
         var avatar = function () {
-            var DEFAULT_AVATAR_URL = "";
-            if(notification[7]) {
-                DEFAULT_AVATAR_URL = "images/avatar.png";
-            } else {
-                DEFAULT_AVATAR_URL = "images/users.png";
-            }
+            var DEFAULT_AVATAR_URL = (notification[7]) ?  "images/avatar.png" : "images/avatar-group.png";
             var urlFoundInTheMassage = notification[5]; //notification.avatar
             return urlFoundInTheMassage || DEFAULT_AVATAR_URL;
         };
