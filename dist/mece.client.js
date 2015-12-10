@@ -34,12 +34,36 @@ var meceNotifications = (function (mece) {
     var $;
     var USE_TRANSLATIONS = true;
 
+
+    function readPollingIntervalAttribute(){
+        return $(mece.contentDivId).attr("pollingInterval") || MECE_DEFAULT_POLLING_INTERVAL;
+    }
+
+    function readChannelsAttribute(){
+        return $(mece.contentDivId).attr("meceChannels") || MECE_DEFAULT_CHANNELS;
+    }
+
+    function readLanguageAttribute(){
+        return $(mece.contentDivId).attr("language");
+    }
+
+    function readAndInitializeAttributeValues(){
+        var lang = readLanguageAttribute();
+        // set language to view
+        var languageChanged = meceNotifications.view.notifications.setLanguage(lang);
+        if(languageChanged){
+            //console.log('readAndInitializeAttributeValues language changed: set starting time 0' + lang);
+            startingTime = '0';
+        }
+
+        pollingInterval = readPollingIntervalAttribute();
+        mece.channels = readChannelsAttribute();
+    }
     
     function init() {
         if (!mece.controller.ready && dependenciesLoaded()) {
             $ = $ || mece.jQuery;
-            pollingInterval = $(mece.contentDivId).attr("pollingInterval") || MECE_DEFAULT_POLLING_INTERVAL;
-            mece.channels = $(mece.contentDivId).attr("meceChannels") || MECE_DEFAULT_CHANNELS;
+            readAndInitializeAttributeValues();
             start();
             mece.controller.ready = true;
         }
@@ -51,7 +75,7 @@ var meceNotifications = (function (mece) {
 
     function getNotificationsByChannels() {
         var query = {channelNames: mece.channels.split(MECE_CHANNEL_SEPARATOR).map(function(s){return(s.trim());})};
-        console.log(JSON.stringify(query));
+        //console.log(JSON.stringify(query));
         if (startingTime !== '0') {
             query.startingTime = startingTime;
         }
@@ -78,6 +102,9 @@ var meceNotifications = (function (mece) {
         if (!mece.controller.running) {
             // TODO: interval cancellation in error cases
             setInterval(function () {
+
+                readAndInitializeAttributeValues();
+
                 getNotificationsByChannels().done(function (response) {
                     var temps = response;
 
@@ -467,6 +494,21 @@ var meceNotifications = (function (mece) {
         return mece.initializer && mece.initializer.ready && mece.loggedIn;
     }
 
+    function redrawNotificationList(){
+        //console.log('redrawNotificationList ');
+        $(".mece-list").remove();
+        __initWidgetList();
+    }
+
+    function setLanguage(lang){
+        if(language !== lang){
+            //console.log('view.setLanguage update! refresh view: ' + lang);
+            language = lang;
+            redrawNotificationList();
+            return true;
+        }
+        return false;
+    }
 
     function add(notifications) {
         var sortedNotifications = notifications.sort(function (a, b) {
@@ -478,7 +520,14 @@ var meceNotifications = (function (mece) {
     }
 
     (function __bootstrap() {
-        mece.view = {init: init, notifications: {add: add, check: checkIfNoNotifications}};
+        mece.view = {
+            init: init,
+            notifications: {
+                add: add,
+                check: checkIfNoNotifications,
+                setLanguage: setLanguage
+            }
+        };
         mece.view.init();
     }());
 

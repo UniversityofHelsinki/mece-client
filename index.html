@@ -9,7 +9,18 @@
 
     <link rel="stylesheet" href="dist/css/widget.css">
 
-    <!-- <link rel="stylesheet" href="js/bower_components/jquery-ui/themes/base/all.css"> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.language-demo-links a').click(function () {
+
+                var lang = $(this).text();
+                //console.log('click:' + lang);
+                $('#mece-content-div').attr('language', lang);
+            });
+        })
+    </script>
 
 </head>
 
@@ -27,14 +38,20 @@
         >
 </div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<div class="language-demo-links">
+    <a href="#">en</a>
+    <a href="#">fi</a>
+    <a href="#">sv</a>
+</div>
 
 
-<script src="js/shibboLogin.js"></script>
-<script src="js/controller.js"></script>
-<script src="js/initializer.js"></script>
-<script src="js/view.js"></script>
-<!--<script src="dist/mece.client.js"></script>-->
+
+
+<!--<script src="js/shibboLogin.js"></script>-->
+<!--<script src="js/controller.js"></script>-->
+<!--<script src="js/initializer.js"></script>-->
+<!--<script src="js/view.js"></script>-->
+<script src="dist/mece.client.js"></script>
 
 </body>
 </html>

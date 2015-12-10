@@ -201,6 +201,21 @@ var meceNotifications = (function (mece) {
         return mece.initializer && mece.initializer.ready && mece.loggedIn;
     }
 
+    function redrawNotificationList(){
+        console.log('redrawNotificationList ');
+        $(".mece-list").remove();
+        __initWidgetList();
+    }
+
+    function setLanguage(lang){
+        if(language !== lang){
+            //console.log('view.setLanguage update! refresh view: ' + lang);
+            language = lang;
+            redrawNotificationList();
+            return true;
+        }
+        return false;
+    }
 
     function add(notifications) {
         var sortedNotifications = notifications.sort(function (a, b) {
@@ -212,7 +227,14 @@ var meceNotifications = (function (mece) {
     }
 
     (function __bootstrap() {
-        mece.view = {init: init, notifications: {add: add, check: checkIfNoNotifications}};
+        mece.view = {
+            init: init,
+            notifications: {
+                add: add,
+                check: checkIfNoNotifications,
+                setLanguage: setLanguage
+            }
+        };
         mece.view.init();
     }());
 
