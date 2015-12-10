@@ -52,8 +52,62 @@ var meceNotifications = (function (mece) {
     (function bootstrap() {
         mece.initializer = {init: init};
         loadMomentJS();
+        initLocales();
         loadJQuery();
     }());
+
+
+    function initLocales() {
+        waitForElement();
+        function waitForElement(){
+            if(typeof moment !== "undefined"){
+                //Everything else is default, except sameDay.
+
+                moment.locale('fi', {
+                    calendar: {
+                        sameDay: function () {
+                            return '[' + moment(this).locale('fi').fromNow() + ']';
+                        },
+                        nextDay : '[huomenna] [klo] LT',
+                        nextWeek : 'dddd [klo] LT',
+                        lastDay : '[eilen] [klo] LT',
+                        lastWeek : '[viime] dddd[na] [klo] LT',
+                        sameElse : 'L'
+
+                    }
+                });
+                moment.locale('sv', {
+                    calendar: {
+                        sameDay: function () {
+                            return '[' + moment(this).locale('sv').fromNow() + ']';
+                        },
+                        nextDay: '[Imorgon] LT',
+                        lastDay: '[Ig\xE5r] LT',
+                        nextWeek: '[P\xE5] dddd LT',
+                        lastWeek: '[I] dddd[s] LT',
+                        sameElse: 'L'
+                    }
+                });
+                moment.locale('en', {
+                    calendar: {
+                        sameDay: function () {
+                            return '[' + moment(this).locale('en').fromNow() + ']';
+                        },
+                        nextDay : '[Tomorrow at] LT',
+                        nextWeek : 'dddd [at] LT',
+                        lastDay : '[Yesterday at] LT',
+                        lastWeek : '[Last] dddd [at] LT',
+                        sameElse : 'L'
+                    }
+                });
+            }
+            else{
+                setTimeout(function(){
+                    waitForElement();
+                },250);
+            }
+        }
+    }
 
     return mece;
 
