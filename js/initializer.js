@@ -92,11 +92,19 @@ var meceNotifications = (function (mece) {
                         sameDay: function () {
                             return '[' + moment(this).locale('en').fromNow() + ']';
                         },
-                        nextDay : '[Tomorrow at] LT',
-                        nextWeek : 'dddd [at] LT',
-                        lastDay : '[Yesterday at] LT',
-                        lastWeek : '[Last] dddd [at] LT',
-                        sameElse : 'L'
+                        nextDay: '[Tomorrow at] LT',
+                        nextWeek: 'dddd [at] LT',
+                        lastDay: '[Yesterday at] LT',
+                        lastWeek: '[Last] dddd [at] LT',
+                        sameElse: 'L'
+                    } ,
+                    longDateFormat: { //Forcing 24-hour clock
+                        LT: 'HH:mm',
+                        LTS: 'HH:mm:ss',
+                        L: 'DD/MM/YYYY',
+                        LL: 'D MMMM YYYY',
+                        LLL: 'D MMMM YYYY HH:mm',
+                        LLLL: 'dddd, D MMMM YYYY HH:mm'
                     }
                 });
             }
