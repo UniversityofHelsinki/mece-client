@@ -92,7 +92,7 @@ var meceNotifications = (function (mece) {
 
         var linkDiv = $("<div>").html(myLinkText).contents();
         var link = $("<a>").attr("href", myLink);
-        link.append(linkDiv);
+        link.prepend(linkDiv);
 
         var image = $("<img>").attr("src", avatar()).text("avatar image");
         var titleDiv = $("<div>").append(link).addClass("mece-msg-title");
@@ -102,11 +102,11 @@ var meceNotifications = (function (mece) {
         var outerDiv = $("<div>").addClass("mece-notification-detail-view");
         var avatarDiv = $("<div>").addClass("mece-avatar").append(image);
         var detailsDiv = $("<div>").addClass("mece-notification-fields")
-            .append(titleDiv)
-            .append(contentDiv)
-            .append(received);
+            .prepend(titleDiv)
+            .prepend(contentDiv)
+            .prepend(received);
 
-        outerDiv.append(avatarDiv).append(detailsDiv);
+        outerDiv.prepend(avatarDiv).prepend(detailsDiv);
 
         var li = $("<li>").attr("id", notification[0]).addClass("mece-msg-item");
         if(notification[7]) {
@@ -117,8 +117,8 @@ var meceNotifications = (function (mece) {
         if (notification[7] && notification[7].read) {
             li.addClass("mece-read-message");
         }
-        li.append(outerDiv);
-        ulList.append(li);
+        li.prepend(outerDiv);
+        ulList.prepend(li);
     }
 
     function getUnreadNotificationsCount(append) {
@@ -202,7 +202,10 @@ var meceNotifications = (function (mece) {
 
 
     function add(notifications) {
-        $.each(notifications, function (i, n) {
+        var sortedNotifications = notifications.sort(function (a, b) {
+            return a[6] > b[6];
+        });
+        $.each(sortedNotifications, function (i, n) {
             __addWidgetIteminitWidget(i, n);
         });
     }
