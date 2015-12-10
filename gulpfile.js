@@ -8,6 +8,7 @@ var jasmine = require('gulp-jasmine');
 var reporters = require('jasmine-reporters');
 var jasmineBrowser = require('gulp-jasmine-browser');
 var SpecReporter = require('jasmine-spec-reporter');
+var sass = require('gulp-sass');
 
 // check javascript syntax
 gulp.task('lint', function(){
@@ -26,7 +27,7 @@ gulp.task('packageScripts', function(){
 
 // watch files for changes
 gulp.task('watch', function(){
-    gulp.watch(['js/*.js', 'spec/*.js'], ['lint', 'jasmine-phantom', 'packageScripts']);
+    gulp.watch(['js/*.js', 'spec/*.js', 'sass/**/*.scss'], ['lint', 'jasmine-phantom', 'packageScripts', 'styles']);
 });
 
 // jasmine unit tests
@@ -44,4 +45,11 @@ gulp.task('jasmine-phantom', function() {
         .pipe(jasmineBrowser.headless())
 });
 
+gulp.task('styles', function() {
+    gulp.src('sass/**/*.scss')
+        .pipe(sass().on('error', sass.logError))
+        .pipe(gulp.dest('./css/'));
+});
+
 gulp.task('default', ['lint', 'jasmine-phantom', 'packageScripts', 'watch']);
+
