@@ -48,7 +48,7 @@ gulp.task('jasmine-phantom', function() {
 gulp.task('styles', function() {
     gulp.src('sass/**/*.scss')
         .pipe(sass().on('error', sass.logError))
-        .pipe(gulp.dest('./css/'));
+        .pipe(gulp.dest('./dist/css/'));
 });
 
 gulp.task('default', ['lint', 'jasmine-phantom', 'packageScripts', 'watch']);
