@@ -145,7 +145,6 @@ var meceNotifications = (function (mece) {
 var meceNotifications = (function (mece) {
     var MECE_JQUERY_VERSION = '1.11.3';
 
-    mece.boxDivId = "#mece-box-div";
     mece.contentDivId = "#mece-content-div";
     mece.iconDivId = "#mece-icon-div";
     mece.unreadCountSpanId = "#unread-count";
@@ -196,8 +195,70 @@ var meceNotifications = (function (mece) {
     (function bootstrap() {
         mece.initializer = {init: init};
         loadMomentJS();
+        initLocales();
         loadJQuery();
     }());
+
+
+    function initLocales() {
+        waitForElement();
+        function waitForElement(){
+            if(typeof moment !== "undefined"){
+                //Everything else is default, except sameDay.
+
+                moment.locale('fi', {
+                    calendar: {
+                        sameDay: function () {
+                            return '[' + moment(this).locale('fi').fromNow() + ']';
+                        },
+                        nextDay : '[huomenna] [klo] LT',
+                        nextWeek : 'dddd [klo] LT',
+                        lastDay : '[eilen] [klo] LT',
+                        lastWeek : '[viime] dddd[na] [klo] LT',
+                        sameElse : 'L'
+
+                    }
+                });
+                moment.locale('sv', {
+                    calendar: {
+                        sameDay: function () {
+                            return '[' + moment(this).locale('sv').fromNow() + ']';
+                        },
+                        nextDay: '[Imorgon] LT',
+                        lastDay: '[Ig\xE5r] LT',
+                        nextWeek: '[P\xE5] dddd LT',
+                        lastWeek: '[I] dddd[s] LT',
+                        sameElse: 'L'
+                    }
+                });
+                moment.locale('en', {
+                    calendar: {
+                        sameDay: function () {
+                            return '[' + moment(this).locale('en').fromNow() + ']';
+                        },
+                        nextDay: '[Tomorrow at] LT',
+                        nextWeek: 'dddd [at] LT',
+                        lastDay: '[Yesterday at] LT',
+                        lastWeek: '[Last] dddd [at] LT',
+                        sameElse: 'L'
+                    } ,
+                    longDateFormat: { //Forcing 24-hour clock
+                        LT: 'HH:mm',
+                        LTS: 'HH:mm:ss',
+                        L: 'DD/MM/YYYY',
+                        LL: 'D MMMM YYYY',
+                        LLL: 'D MMMM YYYY HH:mm',
+                        LLLL: 'dddd, D MMMM YYYY HH:mm'
+                    }
+                });
+            }
+            else{
+                setTimeout(function(){
+                    waitForElement();
+                },250);
+            }
+        }
+    }
 
     return mece;
 
@@ -298,7 +359,7 @@ var meceNotifications = (function (mece) {
 
         var linkDiv = $("<div>").html(myLinkText).contents();
         var link = $("<a>").attr("href", myLink);
-        link.append(linkDiv);
+        link.prepend(linkDiv);
 
         var image = $("<img>").attr("src", avatar()).text("avatar image");
         var titleDiv = $("<div>").append(link).addClass("mece-msg-title");
@@ -323,8 +384,8 @@ var meceNotifications = (function (mece) {
         if (notification[7] && notification[7].read) {
             li.addClass("mece-read-message");
         }
-        li.append(outerDiv);
-        ulList.append(li);
+        li.prepend(outerDiv);
+        ulList.prepend(li);
     }
 
     function getUnreadNotificationsCount(append) {
@@ -408,7 +469,10 @@ var meceNotifications = (function (mece) {
 
 
     function add(notifications) {
-        $.each(notifications, function (i, n) {
+        var sortedNotifications = notifications.sort(function (a, b) {
+            return a[6] > b[6];
+        });
+        $.each(sortedNotifications, function (i, n) {
             __addWidgetIteminitWidget(i, n);
         });
     }
