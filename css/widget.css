@@ -1,10 +1,4 @@
 
-#mece-box-div {
-    height:330px;
-    width:320px;
-    overflow:hidden;
-}
-
 /* div-element containing the mece client */
 #mece-content-div {
     font-size: .8em;
