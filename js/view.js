@@ -102,11 +102,11 @@ var meceNotifications = (function (mece) {
         var outerDiv = $("<div>").addClass("mece-notification-detail-view");
         var avatarDiv = $("<div>").addClass("mece-avatar").append(image);
         var detailsDiv = $("<div>").addClass("mece-notification-fields")
-            .prepend(titleDiv)
-            .prepend(contentDiv)
-            .prepend(received);
+            .append(titleDiv)
+            .append(contentDiv)
+            .append(received);
 
-        outerDiv.prepend(avatarDiv).prepend(detailsDiv);
+        outerDiv.append(avatarDiv).append(detailsDiv);
 
         var li = $("<li>").attr("id", notification[0]).addClass("mece-msg-item");
         if(notification[7]) {
