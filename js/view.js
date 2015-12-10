@@ -201,7 +201,7 @@ var meceNotifications = (function (mece) {
     }
 
     function redrawNotificationList(){
-        //console.log('redrawNotificationList ');
+        console.log('redrawNotificationList ');
         $(".mece-list").remove();
         __initWidgetList();
     }
