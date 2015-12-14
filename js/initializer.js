@@ -6,10 +6,22 @@ var meceNotifications = (function (mece) {
     mece.unreadCountSpanId = "#unread-count";
     mece.jQuery = null;
 
+    function debug(txt){
+        console.log('module: INITIALIZER -- ' + txt + ' : ' + Date().toString());
+    }
+
     function init() {
+        debug('init');
         mece.initializer.ready = true;
-        if (mece.controller) mece.controller.init();
-        if (mece.view) mece.view.init();
+        if (mece.controller){
+            debug('mece.controller');
+            mece.controller.init();
+        }
+        if (mece.view) {
+            debug('mece.view');
+            mece.view.init();
+        }
+        debug('init out');
     }
 
     function loadMomentJS() {
@@ -49,10 +61,12 @@ var meceNotifications = (function (mece) {
     }
 
     (function bootstrap() {
+        debug('bootstrap');
         mece.initializer = {init: init};
         loadMomentJS();
         initLocales();
         loadJQuery();
+        debug('bootstrap out');
     }());
 
 

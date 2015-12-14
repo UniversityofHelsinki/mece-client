@@ -11,6 +11,10 @@ var meceNotifications = (function (mece) {
     var USE_TRANSLATIONS = true;
 
 
+    function debug(txt){
+        console.log('module: CONTROLLER -- ' + txt + ' : ' + Date().toString());
+    }
+
     function readPollingIntervalAttribute(){
         return $(mece.contentDivId).attr("pollingInterval") || MECE_DEFAULT_POLLING_INTERVAL;
     }
@@ -37,12 +41,15 @@ var meceNotifications = (function (mece) {
     }
     
     function init() {
+        debug('init');
         if (!mece.controller.ready && dependenciesLoaded()) {
+            debug('init !mece.controller.ready && dependenciesLoaded()');
             $ = $ || mece.jQuery;
             readAndInitializeAttributeValues();
             start();
             mece.controller.ready = true;
         }
+        debug('init out');
     }
 
     function dependenciesLoaded() {
@@ -75,6 +82,7 @@ var meceNotifications = (function (mece) {
     }
 
     function start() {
+        debug('start');
         if (!mece.controller.running) {
             // TODO: interval cancellation in error cases
             setInterval(function () {
@@ -134,11 +142,13 @@ var meceNotifications = (function (mece) {
     }
 
     (function bootstrap() {
+        debug('bootstrap');
         mece.controller = {
             init: init,
             start: start
         };
         mece.controller.init();
+        debug('bootstrap out');
     }());
 
     return mece;

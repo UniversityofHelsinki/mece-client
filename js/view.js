@@ -24,12 +24,16 @@ var meceNotifications = (function (mece) {
         }
     };
 
+    function debug(txt){
+        console.log('module: VIEW -- ' + txt + ' : ' + Date().toString());
+    }
 
     function translate(key, myLanguage) {
         return translations[key][myLanguage||language];
     }
 
     function __initWidgetList() {
+        debug('__initWidgetList');
         $(mece.contentDivId).append($("<ul/>").addClass("mece-list"));
         $(mece.contentDivId).append($("<div/>").attr("ID", "meceNoNotificationsDiv"));
         $(mece.contentDivId)
@@ -39,6 +43,7 @@ var meceNotifications = (function (mece) {
             .mouseout(function() {
                 $(mece.contentDivId).css("overflow", "hidden");
             });
+        debug('__initWidgetList out');
     }
 
     function checkIfNoNotifications() {
@@ -149,6 +154,7 @@ var meceNotifications = (function (mece) {
     }
 
     function dialog() {
+        debug('dialog');
         var BELL_ICON_URL = "images/bell.png";
         $(mece.iconDivId).append($("<img>").attr("src", BELL_ICON_URL).text("bell image"));
         $(mece.iconDivId).click(function (e) {
@@ -173,12 +179,15 @@ var meceNotifications = (function (mece) {
         $(".dialog").click(function (e) {
             e.stopPropagation();
         });
+        debug('dialog out');
     }
 
 // Public members
 
     function init() {
+        debug('init');
         if (!mece.view.ready && dependenciesLoaded()) {
+            debug('init !mece.view.ready && dependenciesLoaded()');
             $ = $ || mece.jQuery;
             __initWidgetList();
             getUnreadNotificationsCount(true);
@@ -189,6 +198,7 @@ var meceNotifications = (function (mece) {
 
             language = $(mece.contentDivId).attr("language") || language;
         }
+        debug('init out');
     }
 
     function dependenciesLoaded() {
@@ -196,7 +206,6 @@ var meceNotifications = (function (mece) {
     }
 
     function redrawNotificationList(){
-        console.log('redrawNotificationList ');
         $(".mece-list").remove();
         __initWidgetList();
     }
@@ -221,6 +230,7 @@ var meceNotifications = (function (mece) {
     }
 
     (function __bootstrap() {
+        debug('bootstrap');
         mece.view = {
             init: init,
             notifications: {
@@ -230,6 +240,7 @@ var meceNotifications = (function (mece) {
             }
         };
         mece.view.init();
+        debug('bootstrap out');
     }());
 
     return mece;
