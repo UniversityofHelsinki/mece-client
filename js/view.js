@@ -13,6 +13,7 @@ var meceNotifications = (function (mece) {
     //UNREAD_NOTIFICATIONS_COUNT = LD + '/mece/notifications/unreadNotificationsCount';
 
     var SHORTEN_MESSAGE_LEN = 58;
+
     var $;
     var language = 'fi'; //Set in init(). This is just default.
 
@@ -60,7 +61,7 @@ var meceNotifications = (function (mece) {
 
     function __addWidgetIteminitWidget(offset, notification) {
         var avatar = function () {
-            var DEFAULT_AVATAR_URL = (notification[7]) ?  "images/avatar.png" : "images/avatar-group.png";
+            var DEFAULT_AVATAR_URL = (notification[7]) ?  "https://rawgit.com/UniversityofHelsinki/mece-client/master/images/avatar.png" : "https://rawgit.com/UniversityofHelsinki/mece-client/master/images/avatar-group.png";
             var urlFoundInTheMassage = notification[5]; //notification.avatar
             return urlFoundInTheMassage || DEFAULT_AVATAR_URL;
         };
