@@ -1,5 +1,5 @@
 var meceNotifications = (function (mece) {
-    var MARK_READ_URL = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/markRead/';
+    var MARK_READ_URL = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/markRead/';                                                                                                                                                  
     //var MARK_READ_URL = 'http://localhost:1337/mece/notifications/markRead/';
     var UNREAD_NOTIFICATIONS_COUNT = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/unreadNotificationsCount';
     //var CHANNELS_UNREAD_NOTIFICATIONS_COUNT = 'http://localhost:1337/mece/notifications/channelsUnreadNotificationsCount';
@@ -24,12 +24,16 @@ var meceNotifications = (function (mece) {
         }
     };
 
+    function debug(txt){
+        console.log('module: VIEW -- ' + txt + ' : ' + Date().toString());
+    }
 
     function translate(key, myLanguage) {
         return translations[key][myLanguage||language];
     }
 
     function __initWidgetList() {
+        debug('__initWidgetList');
         $(mece.contentDivId).append($("<ul/>").addClass("mece-list"));
         $(mece.contentDivId).append($("<div/>").attr("ID", "meceNoNotificationsDiv"));
         $(mece.contentDivId)
@@ -39,6 +43,7 @@ var meceNotifications = (function (mece) {
             .mouseout(function() {
                 $(mece.contentDivId).css("overflow", "hidden");
             });
+        debug('__initWidgetList out');
     }
 
     function checkIfNoNotifications() {
@@ -149,8 +154,8 @@ var meceNotifications = (function (mece) {
     }
 
     function dialog() {
-        //var BELL_ICON_URL = "images/bell.png";
-        var BELL_ICON_URL = "https://rawgit.com/UniversityofHelsinki/mece-client/master/images/bell.png";
+        debug('dialog');
+        var BELL_ICON_URL = "images/bell.png";
         $(mece.iconDivId).append($("<img>").attr("src", BELL_ICON_URL).text("bell image"));
         $(mece.iconDivId).click(function (e) {
             e.stopPropagation();
@@ -174,12 +179,15 @@ var meceNotifications = (function (mece) {
         $(".dialog").click(function (e) {
             e.stopPropagation();
         });
+        debug('dialog out');
     }
 
 // Public members
 
     function init() {
+        debug('init');
         if (!mece.view.ready && dependenciesLoaded()) {
+            debug('init !mece.view.ready && dependenciesLoaded()');
             $ = $ || mece.jQuery;
             __initWidgetList();
             getUnreadNotificationsCount(true);
@@ -190,26 +198,11 @@ var meceNotifications = (function (mece) {
 
             language = $(mece.contentDivId).attr("language") || language;
         }
+        debug('init out');
     }
 
     function dependenciesLoaded() {
         return mece.initializer && mece.initializer.ready && mece.loggedIn;
-    }
-
-    function redrawNotificationList(){
-        console.log('redrawNotificationList ');
-        $(".mece-list").remove();
-        __initWidgetList();
-    }
-
-    function setLanguage(lang){
-        if(language !== lang){
-            //console.log('view.setLanguage update! refresh view: ' + lang);
-            language = lang;
-            redrawNotificationList();
-            return true;
-        }
-        return false;
     }
 
     function add(notifications) {
@@ -222,15 +215,16 @@ var meceNotifications = (function (mece) {
     }
 
     (function __bootstrap() {
+        debug('bootstrap');
         mece.view = {
             init: init,
             notifications: {
                 add: add,
-                check: checkIfNoNotifications,
-                setLanguage: setLanguage
+                check: checkIfNoNotifications
             }
         };
         mece.view.init();
+        debug('bootstrap out');
     }());
 
     return mece;
