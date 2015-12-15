@@ -124,10 +124,13 @@ var meceNotifications = (function (mece) {
 
     function getUnreadNotificationsCount(append) {
         var unreadMessagesLength = $(mece.contentDivId).find("ul li.mece-private-message").filter("li:not(.mece-read-message)").length;
-        if(append) {
-            $(mece.iconDivId).append($("<span>").attr("id", "unread-count").text(unreadMessagesLength).addClass('mece-badge'));
-        } else {
-            $(mece.unreadCountSpanId).html($("<span>").text(unreadMessagesLength));
+        if (unreadMessagesLength > 0) {
+            if(append) {
+                $(mece.iconDivId).append($("<span>").attr("id", "unread-count").text(unreadMessagesLength).addClass('mece-badge'));
+            } else {
+                $(mece.unreadCountSpanId).html($("<span>").text(unreadMessagesLength));
+            }
+
         }
     }
 
