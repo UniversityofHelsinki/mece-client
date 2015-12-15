@@ -10,7 +10,7 @@ div#mece-content-div {
   font-family: $font-stack;
   display: none;
   width: 346px;
-  height: 330px;
+  max-height: 350px;
   overflow: auto;
   background-color: $white;
   border: 0px;
@@ -28,7 +28,7 @@ div#mece-content-div {
       height: 100px;
       border-bottom: 2px solid $whitesmoke;
       background-color: $white;
-      padding-top: 10px;
+      padding-top: 0px;
       margin-right: 12.8px;
 
       /* notification container, holds avatar and notification data */

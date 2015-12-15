@@ -21,7 +21,7 @@ div#mece-content-div {
   font-family: Open Sans, Helvetica, Arial, sans-serif, Nimbus Sans L;
   display: none;
   width: 346px;
-  height: 330px;
+  max-height: 350px;
   overflow: auto;
   background-color: #FFF;
   border: 0px;
@@ -37,7 +37,7 @@ div#mece-content-div {
       height: 100px;
       border-bottom: 2px solid #F5F5F5;
       background-color: #FFF;
-      padding-top: 10px;
+      padding-top: 0px;
       margin-right: 12.8px;
       /* notification container, holds avatar and notification data */ }
       div#mece-content-div ul.mece-list li.mece-msg-item .mece-notification-detail-view {
