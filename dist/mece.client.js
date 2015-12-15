@@ -478,7 +478,7 @@ var meceNotifications = (function (mece) {
 
     function dialog() {
         debug('dialog');
-        var BELL_ICON_URL = "images/bell.png";
+        var BELL_ICON_URL = "https://rawgit.com/UniversityofHelsinki/mece-client/master/images/bell.png";
         $(mece.iconDivId).append($("<img>").attr("src", BELL_ICON_URL).text("bell image"));
         $(mece.iconDivId).click(function (e) {
             e.stopPropagation();
