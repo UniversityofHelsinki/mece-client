@@ -61,7 +61,11 @@ div#mece-content-div {
             font-weight: bold;
             height: 18px; }
           div#mece-content-div ul.mece-list li.mece-msg-item .mece-notification-detail-view .mece-notification-fields .mece-msg-content {
-            color: #424242; }
+            color: #424242;
+            /* truncate text */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 50px; }
             div#mece-content-div ul.mece-list li.mece-msg-item .mece-notification-detail-view .mece-notification-fields .mece-msg-content a {
               color: #0098d0;
               height: 36px; }
