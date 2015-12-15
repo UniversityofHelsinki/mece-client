@@ -20,6 +20,7 @@ div#mece-content-div {
     background-color: $white;
     color: black;
     padding: 0px;
+    margin: 0px;
     list-style: none;
 
     /* the li-element containing one notification */
@@ -88,6 +89,7 @@ div#mece-content-div {
 /* initial color for the so called private message. */
 .mece-private-message{
   background-color: #E5F3F9 !important;
+  width: 100%;
 }
 
 /* color for the so called private message after it is clicked */
