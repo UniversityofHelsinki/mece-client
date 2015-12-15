@@ -62,6 +62,11 @@ div#mece-content-div {
           .mece-msg-content {
             color: rgb(66, 66, 66);
 
+            /* truncate text */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 50px;
+
             a {
               color: $strongblue;
               height: 36px;
