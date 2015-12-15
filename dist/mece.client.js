@@ -1,20 +1,34 @@
 var meceNotifications = (function (mece) {
     var MECE_LOGIN_URL = 'https://ohtu-devel.it.helsinki.fi/Shibboleth.sso/HYLogin';
 
+    function debug(txt){
+        console.log('module: SHIBBOLOGIN -- ' + txt + ' : ' + Date().toString());
+    }
+
     function createIframe() {
+        debug('createIframe');
         var iframe = document.createElement('iframe');
         iframe.style.display = "none";
         iframe.src = MECE_LOGIN_URL;
         iframe.addEventListener('load', function () {
             setTimeout(function () {
+                debug('loggedIn');
                 mece.loggedIn = true;
-                if (mece.controller) mece.controller.init();
-                if (mece.view) mece.view.init();
+                if (mece.controller){
+                    debug('mece.controller');
+                    mece.controller.init();
+                }
+                if (mece.view){
+                    debug('mece.view');
+                    mece.view.init();
+                }
             }, 1000);
         }, false);
         iframe.addEventListener('error', function () {
+            debug('error');
         }, false);
         document.body.appendChild(iframe);
+        debug('createIframe out');
     }
 
     createIframe();
@@ -35,6 +49,10 @@ var meceNotifications = (function (mece) {
     var USE_TRANSLATIONS = true;
 
 
+    function debug(txt){
+        console.log('module: CONTROLLER -- ' + txt + ' : ' + Date().toString());
+    }
+
     function readPollingIntervalAttribute(){
         return $(mece.contentDivId).attr("pollingInterval") || MECE_DEFAULT_POLLING_INTERVAL;
     }
@@ -48,25 +66,20 @@ var meceNotifications = (function (mece) {
     }
 
     function readAndInitializeAttributeValues(){
-        //var lang = readLanguageAttribute();
-        // set language to view
-        // var languageChanged = meceNotifications.view.notifications.setLanguage(lang);
-        // if(languageChanged){
-            //console.log('readAndInitializeAttributeValues language changed: set starting time 0' + lang);
-        //    startingTime = '0';
-        //}
-
         pollingInterval = readPollingIntervalAttribute();
         mece.channels = readChannelsAttribute();
     }
     
     function init() {
+        debug('init');
         if (!mece.controller.ready && dependenciesLoaded()) {
+            debug('init !mece.controller.ready && dependenciesLoaded()');
             $ = $ || mece.jQuery;
             readAndInitializeAttributeValues();
             start();
             mece.controller.ready = true;
         }
+        debug('init out');
     }
 
     function dependenciesLoaded() {
@@ -99,11 +112,10 @@ var meceNotifications = (function (mece) {
     }
 
     function start() {
+        debug('start');
         if (!mece.controller.running) {
             // TODO: interval cancellation in error cases
             setInterval(function () {
-
-                //readAndInitializeAttributeValues();
 
                 getNotificationsByChannels().done(function (response) {
                     var temps = response;
@@ -158,11 +170,13 @@ var meceNotifications = (function (mece) {
     }
 
     (function bootstrap() {
+        debug('bootstrap');
         mece.controller = {
             init: init,
             start: start
         };
         mece.controller.init();
+        debug('bootstrap out');
     }());
 
     return mece;
@@ -177,10 +191,22 @@ var meceNotifications = (function (mece) {
     mece.unreadCountSpanId = "#unread-count";
     mece.jQuery = null;
 
+    function debug(txt){
+        console.log('module: INITIALIZER -- ' + txt + ' : ' + Date().toString());
+    }
+
     function init() {
+        debug('init');
         mece.initializer.ready = true;
-        if (mece.controller) mece.controller.init();
-        if (mece.view) mece.view.init();
+        if (mece.controller){
+            debug('mece.controller');
+            mece.controller.init();
+        }
+        if (mece.view) {
+            debug('mece.view');
+            mece.view.init();
+        }
+        debug('init out');
     }
 
     function loadMomentJS() {
@@ -220,10 +246,12 @@ var meceNotifications = (function (mece) {
     }
 
     (function bootstrap() {
+        debug('bootstrap');
         mece.initializer = {init: init};
         loadMomentJS();
         initLocales();
         loadJQuery();
+        debug('bootstrap out');
     }());
 
 
@@ -307,6 +335,7 @@ var meceNotifications = (function (mece) {
     //UNREAD_NOTIFICATIONS_COUNT = LD + '/mece/notifications/unreadNotificationsCount';
 
     var SHORTEN_MESSAGE_LEN = 58;
+
     var $;
     var language = 'fi'; //Set in init(). This is just default.
 
@@ -318,12 +347,16 @@ var meceNotifications = (function (mece) {
         }
     };
 
+    function debug(txt){
+        console.log('module: VIEW -- ' + txt + ' : ' + Date().toString());
+    }
 
     function translate(key, myLanguage) {
         return translations[key][myLanguage||language];
     }
 
     function __initWidgetList() {
+        debug('__initWidgetList');
         $(mece.contentDivId).append($("<ul/>").addClass("mece-list"));
         $(mece.contentDivId).append($("<div/>").attr("ID", "meceNoNotificationsDiv"));
         $(mece.contentDivId)
@@ -333,6 +366,7 @@ var meceNotifications = (function (mece) {
             .mouseout(function() {
                 $(mece.contentDivId).css("overflow", "hidden");
             });
+        debug('__initWidgetList out');
     }
 
     function checkIfNoNotifications() {
@@ -349,7 +383,7 @@ var meceNotifications = (function (mece) {
 
     function __addWidgetIteminitWidget(offset, notification) {
         var avatar = function () {
-            var DEFAULT_AVATAR_URL = (notification[7]) ?  "images/avatar.png" : "images/avatar-group.png";
+            var DEFAULT_AVATAR_URL = (notification[7]) ?  "https://rawgit.com/UniversityofHelsinki/mece-client/master/images/avatar.png" : "https://rawgit.com/UniversityofHelsinki/mece-client/master/images/avatar-group.png";
             var urlFoundInTheMassage = notification[5]; //notification.avatar
             return urlFoundInTheMassage || DEFAULT_AVATAR_URL;
         };
@@ -443,6 +477,7 @@ var meceNotifications = (function (mece) {
     }
 
     function dialog() {
+        debug('dialog');
         var BELL_ICON_URL = "images/bell.png";
         $(mece.iconDivId).append($("<img>").attr("src", BELL_ICON_URL).text("bell image"));
         $(mece.iconDivId).click(function (e) {
@@ -467,12 +502,15 @@ var meceNotifications = (function (mece) {
         $(".dialog").click(function (e) {
             e.stopPropagation();
         });
+        debug('dialog out');
     }
 
 // Public members
 
     function init() {
+        debug('init');
         if (!mece.view.ready && dependenciesLoaded()) {
+            debug('init !mece.view.ready && dependenciesLoaded()');
             $ = $ || mece.jQuery;
             __initWidgetList();
             getUnreadNotificationsCount(true);
@@ -483,26 +521,11 @@ var meceNotifications = (function (mece) {
 
             language = $(mece.contentDivId).attr("language") || language;
         }
+        debug('init out');
     }
 
     function dependenciesLoaded() {
         return mece.initializer && mece.initializer.ready && mece.loggedIn;
-    }
-
-    function redrawNotificationList(){
-        console.log('redrawNotificationList ');
-        $(".mece-list").remove();
-        __initWidgetList();
-    }
-
-    function setLanguage(lang){
-        if(language !== lang){
-            //console.log('view.setLanguage update! refresh view: ' + lang);
-            language = lang;
-            redrawNotificationList();
-            return true;
-        }
-        return false;
     }
 
     function add(notifications) {
@@ -515,15 +538,16 @@ var meceNotifications = (function (mece) {
     }
 
     (function __bootstrap() {
+        debug('bootstrap');
         mece.view = {
             init: init,
             notifications: {
                 add: add,
-                check: checkIfNoNotifications,
-                setLanguage: setLanguage
+                check: checkIfNoNotifications
             }
         };
         mece.view.init();
+        debug('bootstrap out');
     }());
 
     return mece;
