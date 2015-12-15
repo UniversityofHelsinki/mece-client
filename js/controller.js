@@ -28,14 +28,6 @@ var meceNotifications = (function (mece) {
     }
 
     function readAndInitializeAttributeValues(){
-        //var lang = readLanguageAttribute();
-        // set language to view
-        // var languageChanged = meceNotifications.view.notifications.setLanguage(lang);
-        // if(languageChanged){
-            //console.log('readAndInitializeAttributeValues language changed: set starting time 0' + lang);
-        //    startingTime = '0';
-        //}
-
         pollingInterval = readPollingIntervalAttribute();
         mece.channels = readChannelsAttribute();
     }
@@ -86,8 +78,6 @@ var meceNotifications = (function (mece) {
         if (!mece.controller.running) {
             // TODO: interval cancellation in error cases
             setInterval(function () {
-
-                //readAndInitializeAttributeValues();
 
                 getNotificationsByChannels().done(function (response) {
                     var temps = response;

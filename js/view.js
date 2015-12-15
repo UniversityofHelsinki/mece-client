@@ -205,21 +205,6 @@ var meceNotifications = (function (mece) {
         return mece.initializer && mece.initializer.ready && mece.loggedIn;
     }
 
-    function redrawNotificationList(){
-        $(".mece-list").remove();
-        __initWidgetList();
-    }
-
-    function setLanguage(lang){
-        if(language !== lang){
-            //console.log('view.setLanguage update! refresh view: ' + lang);
-            language = lang;
-            redrawNotificationList();
-            return true;
-        }
-        return false;
-    }
-
     function add(notifications) {
         var sortedNotifications = notifications.sort(function (a, b) {
             return a[6] > b[6];
@@ -235,8 +220,7 @@ var meceNotifications = (function (mece) {
             init: init,
             notifications: {
                 add: add,
-                check: checkIfNoNotifications,
-                setLanguage: setLanguage
+                check: checkIfNoNotifications
             }
         };
         mece.view.init();
