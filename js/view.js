@@ -62,7 +62,7 @@ var meceNotifications = (function (mece) {
     function __addWidgetIteminitWidget(offset, notification) {
         var avatar = function () {
             var DEFAULT_AVATAR_URL = (notification[7]) ?  "https://rawgit.com/UniversityofHelsinki/mece-client/master/images/avatar.png" : "https://rawgit.com/UniversityofHelsinki/mece-client/master/images/avatar-group.png";
-            var urlFoundInTheMassage = notification[5]; //notification.avatar
+            var urlFoundInTheMassage = notification[5]; //notification.avatarImageUrl
             return urlFoundInTheMassage || DEFAULT_AVATAR_URL;
         };
 
