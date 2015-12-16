@@ -153,7 +153,7 @@ var meceNotifications = (function (mece) {
                                      notification.link,
                                      notification.linkText,
                                      notification.heading,
-                                     notification.avatar, //MECE-368: avatar kentää ei ole vielä olemassä mece kannassa
+                                     notification.avatarImageUrl, //MECE-368: avatar kentää ei ole vielä olemassä mece kannassa
                                      notification.received,
                                      notification._recipients?notification._recipients[0]:null,
                                      USE_TRANSLATIONS?translations:{en:{}, fi:{}, sv:{}}
@@ -384,7 +384,7 @@ var meceNotifications = (function (mece) {
     function __addWidgetIteminitWidget(offset, notification) {
         var avatar = function () {
             var DEFAULT_AVATAR_URL = (notification[7]) ?  "https://rawgit.com/UniversityofHelsinki/mece-client/master/images/avatar.png" : "https://rawgit.com/UniversityofHelsinki/mece-client/master/images/avatar-group.png";
-            var urlFoundInTheMassage = notification[5]; //notification.avatar
+            var urlFoundInTheMassage = notification[5]; //notification.avatarImageUrl
             return urlFoundInTheMassage || DEFAULT_AVATAR_URL;
         };
 
