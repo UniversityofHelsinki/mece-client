@@ -120,12 +120,14 @@ var meceNotifications = (function (mece) {
                 getNotificationsByChannels().done(function (response) {
                     var temps = response;
 
+                    // take the startingTime before sorting
+                    startingTime = temps[0].received;
+
                     temps.sort(function (a, b) {
                         return a.submitted > b.submitted;
                     });
 
                     if (temps.length > 0) {
-                        startingTime = temps[temps.length - 1].received;
                         meceNotifications.view.notifications.add(temps.map(function (notification) {
                             var translations = {
                                 en: {
