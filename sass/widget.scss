@@ -42,14 +42,20 @@ div#mece-content-div {
           width: 70px;
           height: 100%;
         }
-
+        .mece-avatar-picture {
+          width: 70px;
+          height: 70px;
+          margin-top: 15px;
+          margin-left: 10px;
+        }
         .mece-notification-fields {
           float: left;
           display: inline-block;
-          width: -moz-calc(100% - 70px);
-          width: -webkit-calc(100% - 70px);
-          width: calc(100% - 70px);
+          width: -moz-calc(100% - 100px);
+          width: -webkit-calc(100% - 100px);
+          width: calc(100% - 100px);
           height: 100%;
+          margin-left: 20px;
 
           .mece-msg-title {
             a {

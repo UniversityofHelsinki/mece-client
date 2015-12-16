@@ -48,13 +48,19 @@ div#mece-content-div {
           display: inline-block;
           width: 70px;
           height: 100%; }
+        div#mece-content-div ul.mece-list li.mece-msg-item .mece-notification-detail-view .mece-avatar-picture {
+          width: 70px;
+          height: 70px;
+          margin-top: 15px;
+          margin-left: 10px; }
         div#mece-content-div ul.mece-list li.mece-msg-item .mece-notification-detail-view .mece-notification-fields {
           float: left;
           display: inline-block;
-          width: -moz-calc(100% - 70px);
-          width: -webkit-calc(100% - 70px);
-          width: calc(100% - 70px);
-          height: 100%; }
+          width: -moz-calc(100% - 100px);
+          width: -webkit-calc(100% - 100px);
+          width: calc(100% - 100px);
+          height: 100%;
+          margin-left: 20px; }
           div#mece-content-div ul.mece-list li.mece-msg-item .mece-notification-detail-view .mece-notification-fields .mece-msg-title a {
             color: #0098d0;
             text-decoration: none;

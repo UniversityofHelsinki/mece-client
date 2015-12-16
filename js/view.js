@@ -96,6 +96,7 @@ var meceNotifications = (function (mece) {
         link.prepend(linkDiv);
 
         var image = $("<img>").attr("src", avatar()).text("avatar image");
+        image.addClass("mece-avatar-picture");
         var titleDiv = $("<div>").append(link).addClass("mece-msg-title");
         var contentDiv = $("<div>").html(shortenMessage(myMessage)).addClass("mece-msg-content");
         var received = $("<div>").text(determineTime(notification[6], language)).addClass("mece-msg-received");
