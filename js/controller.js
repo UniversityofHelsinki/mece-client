@@ -1,6 +1,6 @@
 var meceNotifications = (function (mece) {
     var MECE_URL = 'https://ohtu-devel.it.helsinki.fi/mece'; // for ohtu-testi.it.helsinki.fi/meceapp
-    //MECE_URL = 'https://localhost/mece'; //for local development ARO
+    //var MECE_URL = 'http://localhost:1337/mece'; //for local development ARO
     var MECE_DEFAULT_POLLING_INTERVAL = 4000;
     var pollingInterval;
     var MECE_DEFAULT_CHANNELS = "";
@@ -83,7 +83,9 @@ var meceNotifications = (function (mece) {
                     var temps = response;
 
                     // take the startingTime before sorting
-                    startingTime = temps[0].received;
+                    if(temps && temps.length > 0) {
+                        startingTime = temps[0].received;
+                    }
 
                     temps.sort(function (a, b) {
                         return a.submitted > b.submitted;
