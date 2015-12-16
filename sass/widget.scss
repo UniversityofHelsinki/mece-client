@@ -54,8 +54,9 @@ div#mece-content-div {
           width: -moz-calc(100% - 100px);
           width: -webkit-calc(100% - 100px);
           width: calc(100% - 100px);
-          height: 100%;
+          /*height: 100%;*/
           margin-left: 20px;
+          margin-top: 10px;
 
           .mece-msg-title {
             a {

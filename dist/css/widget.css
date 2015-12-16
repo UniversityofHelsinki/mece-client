@@ -59,8 +59,9 @@ div#mece-content-div {
           width: -moz-calc(100% - 100px);
           width: -webkit-calc(100% - 100px);
           width: calc(100% - 100px);
-          height: 100%;
-          margin-left: 20px; }
+          /*height: 100%;*/
+          margin-left: 20px;
+          margin-top: 10px; }
           div#mece-content-div ul.mece-list li.mece-msg-item .mece-notification-detail-view .mece-notification-fields .mece-msg-title a {
             color: #0098d0;
             text-decoration: none;
