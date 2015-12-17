@@ -5,7 +5,6 @@ var meceNotifications = (function (mece) {
     //var CHANNELS_UNREAD_NOTIFICATIONS_COUNT = 'http://localhost:1337/mece/notifications/channelsUnreadNotificationsCount';
     var CHANNELS_UNREAD_NOTIFICATIONS_COUNT = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/channelsUnreadNotificationsCount';
     //var UNREAD_NOTIFICATIONS_COUNT = 'http://localhost:1337/mece/notifications/unreadNotificationsCount';
-
     //ARO
     //var LD = 'https://localhost:443';
     //MARK_READ_URL = LD + '/mece/notifications/markRead/';
@@ -16,6 +15,19 @@ var meceNotifications = (function (mece) {
 
     var $;
     var language = 'fi'; //Set in init(). This is just default.
+
+    //notification property indexies
+    var NOTIF_ID_IND=0;
+    var NOTIF_MSG_IND=1;
+    var NOTIF_LINK_IND=2;
+    var NOTIF_LINK_TEXT_IND=3;
+    var NOTIF_HEADING_IND=4;
+    var NOTIF_AVATAR_IND = 5;
+    var NOTIF_RECEIVED_IND=6;
+    var NOTIF_RECIPIENTS_IND = 7;
+    var NOTIF_USE_TRANSLATION_IND = 8;
+    var NOTIF_SUBMITTED_IND=9;
+
 
     var translations = {
         no_messages: {
@@ -61,8 +73,8 @@ var meceNotifications = (function (mece) {
 
     function __addWidgetIteminitWidget(offset, notification) {
         var avatar = function () {
-            var DEFAULT_AVATAR_URL = (notification[7]) ?  "https://rawgit.com/UniversityofHelsinki/mece-client/master/images/avatar.png" : "https://rawgit.com/UniversityofHelsinki/mece-client/master/images/avatar-group.png";
-            var urlFoundInTheMassage = notification[5]; //notification.avatarImageUrl
+            var DEFAULT_AVATAR_URL = (notification[NOTIF_RECIPIENTS_IND]) ?  "https://rawgit.com/UniversityofHelsinki/mece-client/master/images/avatar.png" : "https://rawgit.com/UniversityofHelsinki/mece-client/master/images/avatar-group.png";
+            var urlFoundInTheMassage = notification[NOTIF_AVATAR_IND]; //notification.avatarImageUrl
             return urlFoundInTheMassage || DEFAULT_AVATAR_URL;
         };
 
@@ -85,11 +97,11 @@ var meceNotifications = (function (mece) {
         var ulList = $(mece.contentDivId).find("ul");
         // TODO: MECE-365 "Otsikko on linkki. Otsikon teksti on joko viestin otsikko tai linkin otsikko."
 
-        var myLink = notification[8][language].link||notification[2];
-        var myLinkText = notification[8][language].linkText||notification[3];
-        var myMessage = notification[8][language].message||notification[1];
+        var myLink = notification[NOTIF_USE_TRANSLATION_IND][language].link||notification[NOTIF_LINK_IND];
+        var myLinkText = notification[NOTIF_USE_TRANSLATION_IND][language].linkText||notification[NOTIF_LINK_TEXT_IND];
+        var myMessage = notification[NOTIF_USE_TRANSLATION_IND][language].message||notification[NOTIF_MSG_IND];
         //Why isn't heading used?
-        var myHeading = notification[8][language].link||notification[4];
+        var myHeading = notification[NOTIF_USE_TRANSLATION_IND][language].link||notification[NOTIF_HEADING_IND];
 
         var linkDiv = $("<div>").html(myLinkText).contents();
         var link = $("<a>").attr("href", myLink);
@@ -99,24 +111,24 @@ var meceNotifications = (function (mece) {
         image.addClass("mece-avatar-picture");
         var titleDiv = $("<div>").append(link).addClass("mece-msg-title");
         var contentDiv = $("<div>").html(shortenMessage(myMessage)).addClass("mece-msg-content");
-        var received = $("<div>").text(determineTime(notification[6], language)).addClass("mece-msg-received");
+        var submitted = $("<div>").text(determineTime(notification[NOTIF_SUBMITTED_IND], language)).addClass("mece-msg-received");
 
         var outerDiv = $("<div>").addClass("mece-notification-detail-view");
         var avatarDiv = $("<div>").addClass("mece-avatar").append(image);
         var detailsDiv = $("<div>").addClass("mece-notification-fields")
             .append(titleDiv)
             .append(contentDiv)
-            .append(received);
+            .append(submitted);
 
         outerDiv.append(avatarDiv).append(detailsDiv);
 
-        var li = $("<li>").attr("id", notification[0]).addClass("mece-msg-item");
-        if(notification[7]) {
+        var li = $("<li>").attr("id", notification[NOTIF_ID_IND]).addClass("mece-msg-item");
+        if(notification[NOTIF_RECIPIENTS_IND]) {
             li.addClass("mece-private-message");
         } else {
             li.addClass("mece-public-message");
         }
-        if (notification[7] && notification[7].read) {
+        if (notification[NOTIF_RECIPIENTS_IND] && notification[NOTIF_RECIPIENTS_IND].read) {
             li.addClass("mece-read-message");
         }
         li.prepend(outerDiv);

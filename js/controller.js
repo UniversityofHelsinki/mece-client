@@ -119,10 +119,11 @@ var meceNotifications = (function (mece) {
                                      notification.link,
                                      notification.linkText,
                                      notification.heading,
-                                     notification.avatarImageUrl, //MECE-368: avatar kentää ei ole vielä olemassä mece kannassa
+                                     notification.avatarImageUrl,
                                      notification.received,
                                      notification._recipients?notification._recipients[0]:null,
-                                     USE_TRANSLATIONS?translations:{en:{}, fi:{}, sv:{}}
+                                     USE_TRANSLATIONS?translations:{en:{}, fi:{}, sv:{}},
+                                     notification.submitted
                             ]);
 
                         }));
