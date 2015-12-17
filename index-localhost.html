@@ -1,0 +1,200 @@
+<!doctype html>
+
+<html class="no-js" lang="">
+
+<head>
+
+<meta charset="utf-8">
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+<title></title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="dist/css/widget.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script>
+$(document).ready(function () {
+$('.language-demo-links a').click(function () {
+var lang = $(this).text();
+//console.log('click:' + lang);
+$('#mece-content-div').attr('language', lang);
+});
+})
+</script>
+
+
+<link rel="stylesheet" href="index.css">
+
+</head>
+
+<body bgcolor="#E6E6FA">
+
+<div class="language-demo-links">
+    <a href="#">en</a>
+    <a href="#">fi</a>
+    <a href="#">sv</a>
+</div>
+
+<div class="ng-scope" ng-include="'app/partials/_page_navigation.html'">
+
+    <div class="page-navigation hide_mobile_only ng-scope">
+
+        <div class="wrapper">
+
+            <nav role="navigation">
+                <ul class="main-menu">
+                    <li class="main-menu_home">
+                        <a href="#/" class="active">HOME</a>
+                    </li>
+                    <li class="ng-scope" ng-repeat="link in primaryLinks">
+                        <a href="#/" class="active">WEBOODI</a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="user-menu">
+                <div class="user_menu__item search-icon ng-isolate-scope">
+                    <div tabindex="0" role="button" aria-label="Öppna sök" class="dropdown-toggle" ng-click="toggle()" ng-class="{'active' : active === true}">
+                        <div class="icon tour-element__search">
+                        <a class="user_menu__actions__action"> <span>SEARCH</span> </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="user_menu__item hide_mobile_only search-bar ng-isolate-scope">
+                <div aria-hidden="true" ng-show="active" class="search-bar ng-hide">
+                    <label tabindex="0" role="button" aria-label="" for="search-input" ng-click="search()">
+                        <i class="hy">Hello world</i>
+                    </label>
+                    <div class="input-container">
+                        <form class="ng-pristine">
+                            <input type="text">
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+                <div class="hide_mobile_only user_menu__item start-tour ng-isolate-scope">
+                    <a tabindex="0" href="" role="button" aria-label="börja turen" ng-click="startTour()">
+                        <span class="hy hy-info-stroke" title="Introduktionstur"> </span>
+                    </a>
+                </div>
+
+                        <!-- MECE BEGIN -->
+
+                        <div dropdown="" class="user_menu__item user_notifications ng-isolate-scope" open-callback="isOpen = true" close-callback="isOpen = false">
+
+                            <!-- OLD MECE BEGIN -->
+
+                            <div id="mece-icon-div" > </div>
+
+                            <div id              = "mece-content-div"
+                                 class           = "dialog"
+                                 pollingInterval = "5000"
+                                 meceDomain="https://localhost"
+                                 meceChannels    = "oodi.kurssisivu.tilastotieteenjatko.kurssi1,
+                                                    oodi.kurssisivu.tilastotieteenperusteet.kurssi1"
+                                 language        = "fi"
+                                    >
+                            </div>
+
+                            <!-- OLD MECE   END -->
+
+                            <!--div tabindex="0" role="button" class="dropdown-toggle" ng-click="markRead()">
+                                <div class="icon tour-element__notifications">
+                                    <div aria-hidden="true" ng-show="unreadCount > 0" class="circled-number ng-binding ng-hide">0</div>
+                                    <a href="" class="user_menu__actions__action" aria-label="" role="button">
+                                        <span class="hy hy_notification" title="Notifikationer"> </span>
+                                    </a>
+                                </div>
+                            </div-->
+
+                            <!--div style="display: block;" class="user_settings__menu dropdown-content">
+
+                                <ul>
+
+                                    <li style="display: none" aria-hidden="true" class="ng-binding ng-hide" ng-show="userNotifications.length === 0">
+                                        Inga notifikationer.
+                                    </li>
+
+                                    <li style="" class="divider ng-scope" ng-repeat="userNotification in userNotifications">
+                                        <div class="user-avatar default" ng-class="{'default' : userNotification.avatarUri.indexOf('png') !== -1}">
+                                            <img src="https://qa.student.helsinki.fi/app/assets/icons/avatar.png" ng-src="https://qa.student.helsinki.fi/app/assets/icons/avatar.png">
+                                        </div>
+                                        <div class="content">
+                                            <div class="notification_time ng-binding">för en dag sedan</div>
+                                        </div>
+                                    </li>
+
+                                    <li style="" class="divider ng-scope" ng-repeat="userNotification in userNotifications">
+                                        <div class="user-avatar default" ng-class="{'default' : userNotification.avatarUri.indexOf('png') !== -1}">
+                                            <img src="https://qa.student.helsinki.fi/app/assets/icons/avatar.png" ng-src="https://qa.student.helsinki.fi/app/assets/icons/avatar.png">
+                                        </div>
+                                        <div class="content">
+                                            <div class="notification_time ng-binding">för 5 dagar sedan</div>
+                                        </div>
+                                    </li>
+
+                                    <-li style="" class="divider ng-scope" ng-repeat="userNotification in userNotifications">
+                                        <div class="user-avatar default" ng-class="{'default' : userNotification.avatarUri.indexOf('png') !== -1}">
+                                            <img src="https://qa.student.helsinki.fi/app/assets/icons/avatar.png" ng-src="https://qa.student.helsinki.fi/app/assets/icons/avatar.png">
+                                        </div>
+                                        <div class="content">
+                                            <div class="notification_time ng-binding">för 5 dagar sedan</div>
+                                        </div>
+                                    </li>
+
+                                    <li style="" class="divider ng-scope" ng-repeat="userNotification in userNotifications">
+                                        <div class="user-avatar default" ng-class="{'default' : userNotification.avatarUri.indexOf('png') !== -1}">
+                                            <img src="https://qa.student.helsinki.fi/app/assets/icons/avatar.png" ng-src="https://qa.student.helsinki.fi/app/assets/icons/avatar.png">
+                                        </div>
+                                        <div class="content">
+                                            <div class="notification_time ng-binding">för 5 dagar sedan</div>
+                                        </div>
+                                    </li>
+
+
+                                </ul>
+
+                            </div-->
+
+                        </div>
+
+                        <!-- MECE   END -->
+
+                        <!-- LOGOUT BEGIN -->
+                        <div class="hide_mobile_only user_menu__item">
+                            <a aria-label="Logga ut" role="button" href="/saml/logout?local=true">
+                                <span class="hy hy-logout" title="Logga ut">
+                                </span> <span class="show_mobile_only ng-binding">Logga ut</span>
+                            </a>
+                        </div>
+                        <!-- LOGOUT   END -->
+
+                        <div dropdown="" class="user_menu__item user_settings" close-callback="resetMenu()">
+                            <div class="dropdown-toggle">
+                                <a href="" class="user_menu__actions__action" ng-class="{active : showMenu}" aria-label="Inställningar" role="button">
+                                    <div class="user-avatar__small ng-isolate-scope" img-src="session.avatarUrl" img-alt="session.name">
+                                        <div class="user-avatar" ng-class="{teacher : isTeacher, default: isDefault()}">
+                                            <img src="https://qa.student.helsinki.fi/api/public/v1/images/avatar/80" class="user-avatar__icon" ng-src="https://qa.student.helsinki.fi/api/public/v1/images/avatar/80" alt="Maggie Simpson">
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div style="display: block;" role="menu" class="user_settings__menu dropdown-content">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="dist/mece.client.js"></script>
+
+    </body>
+
+</html>
+
