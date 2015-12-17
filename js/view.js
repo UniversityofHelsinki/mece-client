@@ -153,7 +153,7 @@ var meceNotifications = (function (mece) {
         $(document).ready(function () {
             $('ul').on('click', 'li.mece-private-message', function () {
                 $.ajax({
-                    url: MARK_READ_URL + this.id,
+                    url: mece.domain + "/mece/notifications/markRead/" + this.id,
                     type: 'GET',
                     crossDomain: true,
                     dataType: "json",
