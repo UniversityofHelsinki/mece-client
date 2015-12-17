@@ -1,5 +1,6 @@
 var meceNotifications = (function (mece) {
     var MECE_JQUERY_VERSION = '1.11.3';
+    var MECE_DEFAULT_DOMAIN = 'https://mece.it.helsinki.fi';
 
     mece.contentDivId = "#mece-content-div";
     mece.iconDivId = "#mece-icon-div";
@@ -13,6 +14,7 @@ var meceNotifications = (function (mece) {
     function init() {
         debug('init');
         mece.initializer.ready = true;
+        mece.domain = $(mece.contentDivId).attr("meceDomain") || MECE_DEFAULT_DOMAIN;
         if (mece.controller){
             debug('mece.controller');
             mece.controller.init();
