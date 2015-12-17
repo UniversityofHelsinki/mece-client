@@ -1,5 +1,5 @@
 var meceNotifications = (function (mece) {
-    var MARK_READ_URL = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/markRead/';                                                                                                                                                  
+    var MARK_READ_URL = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/markRead/';
     //var MARK_READ_URL = 'http://localhost:1337/mece/notifications/markRead/';
     var UNREAD_NOTIFICATIONS_COUNT = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/unreadNotificationsCount';
     //var CHANNELS_UNREAD_NOTIFICATIONS_COUNT = 'http://localhost:1337/mece/notifications/channelsUnreadNotificationsCount';
@@ -213,10 +213,7 @@ var meceNotifications = (function (mece) {
     }
 
     function add(notifications) {
-        var sortedNotifications = notifications.sort(function (a, b) {
-            return a[6] > b[6];
-        });
-        $.each(sortedNotifications, function (i, n) {
+        $.each(notifications, function (i, n) {
             __addWidgetIteminitWidget(i, n);
         });
     }
