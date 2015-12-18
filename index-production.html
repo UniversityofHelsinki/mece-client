@@ -1,0 +1,60 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <link rel="stylesheet" href="https://rawgit.com/UniversityofHelsinki/mece-client/master/dist/css/widget.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.language-demo-links a').click(function () {
+
+                var lang = $(this).text();
+                //console.log('click:' + lang);
+                $('#mece-content-div').attr('language', lang);
+            });
+        })
+    </script>
+</head>
+
+<body bgcolor="#E6E6FA">
+
+
+<div id="mece-icon-div">
+</div>
+
+<div id="mece-box-div">
+    <div id="mece-content-div"
+         class="dialog"
+         pollingInterval="5000"
+         language="en"
+         meceDomain="https://mece.it.helsinki.fi"
+         meceChannels="oodi.kurssisivu.tilastotieteenperusteet.kurssi1,course.123">
+    </div>
+</div>
+<!--<div class="language-demo-links">-->
+<!--<a href="#">en</a>-->
+<!--<a href="#">fi</a>-->
+<!--<a href="#">sv</a>-->
+<!--</div>-->
+
+
+<!--<script src="https://rawgit.com/UniversityofHelsinki/mece-client/master/js/shibboLogin.js"></script>-->
+<!--<script src="https://rawgit.com/UniversityofHelsinki/mece-client/master/js/controller.js"></script>-->
+<!--<script src="https://rawgit.com/UniversityofHelsinki/mece-client/master/js/initializer.js"></script>-->
+<!--<script src="https://rawgit.com/UniversityofHelsinki/mece-client/master/js/view.js"></script>-->
+
+<script src="https://rawgit.com/UniversityofHelsinki/mece-client/master/dist/mece.client.js"></script>
+
+
+</body>
+</html>
+
+
+
