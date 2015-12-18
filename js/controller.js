@@ -29,7 +29,7 @@ var meceNotifications = (function (mece) {
         pollingInterval = readPollingIntervalAttribute();
         mece.channels = readChannelsAttribute();
     }
-    
+
     function init() {
         debug('init');
         if (!mece.controller.ready && dependenciesLoaded()) {
@@ -76,7 +76,8 @@ var meceNotifications = (function (mece) {
         if (!mece.controller.running) {
             // TODO: interval cancellation in error cases
             setInterval(function () {
-
+                //updateTimes
+                meceNotifications.view.notifications.updateTime();
                 getNotificationsByChannels().done(function (response) {
                     var temps = response;
 
@@ -129,6 +130,7 @@ var meceNotifications = (function (mece) {
                 }, function (error) {
                 });
                 meceNotifications.view.notifications.check();
+
             }, pollingInterval);
             mece.controller.running = true;
         }

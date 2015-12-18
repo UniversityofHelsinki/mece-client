@@ -69,7 +69,12 @@ var meceNotifications = (function (mece) {
         }
         getUnreadNotificationsCount(false);
     }
-
+    function updateNotificationTime() {
+         //NOT YET IMPLEMENTED
+        //käy läpi kaikki mece-list -ul elementin rivit.
+        //jokaisella rivillä submitted-aika on tallennettu diviin, jonka luokka on hiddenSubmittedTime
+        //sen voi passata determineTime -funktiolle.
+    }
 
     function __addWidgetIteminitWidget(offset, notification) {
         var avatar = function () {
@@ -112,15 +117,16 @@ var meceNotifications = (function (mece) {
         var titleDiv = $("<div>").append(link).addClass("mece-msg-title");
         var contentDiv = $("<div>").html(shortenMessage(myMessage)).addClass("mece-msg-content");
         var submitted = $("<div>").text(determineTime(notification[NOTIF_SUBMITTED_IND], language)).addClass("mece-msg-received");
-
+        var submittedOrig = notification[NOTIF_SUBMITTED_IND];
         var outerDiv = $("<div>").addClass("mece-notification-detail-view");
         var avatarDiv = $("<div>").addClass("mece-avatar").append(image);
         var detailsDiv = $("<div>").addClass("mece-notification-fields")
             .append(titleDiv)
             .append(contentDiv)
             .append(submitted);
+        var hiddenSubmittedDiv = $("<div style='display: none' class='hiddenSubmittedTime'>").append(submittedOrig);
 
-        outerDiv.append(avatarDiv).append(detailsDiv);
+        outerDiv.append(avatarDiv).append(detailsDiv).append(hiddenSubmittedDiv);
 
         var li = $("<li>").attr("id", notification[NOTIF_ID_IND]).addClass("mece-msg-item");
         if(notification[NOTIF_RECIPIENTS_IND]) {
@@ -236,7 +242,8 @@ var meceNotifications = (function (mece) {
             init: init,
             notifications: {
                 add: add,
-                check: checkIfNoNotifications
+                check: checkIfNoNotifications,
+                updateTime: updateNotificationTime
             }
         };
         mece.view.init();
