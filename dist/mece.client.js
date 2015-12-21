@@ -358,6 +358,7 @@ var meceNotifications = (function (mece) {
     var NOTIF_SUBMITTED_IND=9;
     var IMAGES_URI = "https://rawgit.com/UniversityofHelsinki/mece-client/master/images";
 
+    var MECE_MSG_RECEIVED = "mece-msg-received";
 
     var translations = {
         no_messages: {
@@ -399,11 +400,26 @@ var meceNotifications = (function (mece) {
         }
         getUnreadNotificationsCount(false);
     }
+
+    var determineTime = function (received, language) {
+        return moment(received).locale(language).calendar(); //TODO: Decide format
+        //return moment(received).locale(language).fromNow();
+    };
+
+    // MECE-445:
+    // käy läpi kaikki mece-list -ul elementin rivit. jokaisella
+    // rivillä submitted-aika on tallennettu diviin, jonka luokka on
+    // hiddenSubmittedTime sen voi passata determineTime -funktiolle.
     function updateNotificationTime() {
-         //NOT YET IMPLEMENTED
-        //käy läpi kaikki mece-list -ul elementin rivit.
-        //jokaisella rivillä submitted-aika on tallennettu diviin, jonka luokka on hiddenSubmittedTime
-        //sen voi passata determineTime -funktiolle.
+        $(mece.contentDivId).find("ul").each(function() {
+            $(this).find("li").each(function() {
+                var submitted = $(this).find(".hiddenSubmittedTime").first().text(),
+                    div = $(this).find("." + MECE_MSG_RECEIVED).first();
+                if(div && submitted) {
+                    div.text(determineTime(submitted, language));
+                }
+            });
+        });
     }
 
     function __addWidgetIteminitWidget(offset, notification) {
@@ -424,11 +440,6 @@ var meceNotifications = (function (mece) {
             }
         };
 
-        var determineTime = function (received, language) {
-            return moment(received).locale(language).calendar(); //TODO: Decide format
-            //return moment(received).locale(language).fromNow();
-        };
-
         var ulList = $(mece.contentDivId).find("ul");
         // TODO: MECE-365 "Otsikko on linkki. Otsikon teksti on joko viestin otsikko tai linkin otsikko."
 
@@ -442,21 +453,17 @@ var meceNotifications = (function (mece) {
         var link = $("<a>").attr("href", myLink);
         link.prepend(linkDiv);
 
-        var image = $("<img>").attr("src", avatar()).text("avatar image");
-        image.addClass("mece-avatar-picture");
+        var image = $("<img>").attr("src", avatar()).text("avatar image").addClass("mece-avatar-picture");
+        var avatarDiv = $("<div>").addClass("mece-avatar").append(image);
+
         var titleDiv = $("<div>").append(link).addClass("mece-msg-title");
         var contentDiv = $("<div>").html(shortenMessage(myMessage)).addClass("mece-msg-content");
         var submitted = $("<div>").text(determineTime(notification[NOTIF_SUBMITTED_IND], language)).addClass("mece-msg-received");
-        var submittedOrig = notification[NOTIF_SUBMITTED_IND];
-        var outerDiv = $("<div>").addClass("mece-notification-detail-view");
-        var avatarDiv = $("<div>").addClass("mece-avatar").append(image);
-        var detailsDiv = $("<div>").addClass("mece-notification-fields")
-            .append(titleDiv)
-            .append(contentDiv)
-            .append(submitted);
-        var hiddenSubmittedDiv = $("<div style='display: none' class='hiddenSubmittedTime'>").append(submittedOrig);
+        var detailsDiv = $("<div>").addClass("mece-notification-fields").append(titleDiv).append(contentDiv).append(submitted);
 
-        outerDiv.append(avatarDiv).append(detailsDiv).append(hiddenSubmittedDiv);
+        var hiddenSubmittedDiv = $("<div style='display: none' class='hiddenSubmittedTime'>").text(notification[NOTIF_SUBMITTED_IND]);
+
+        var outerDiv = $("<div>").addClass("mece-notification-detail-view").append(avatarDiv).append(detailsDiv).append(hiddenSubmittedDiv);
 
         var li = $("<li>").attr("id", notification[NOTIF_ID_IND]).addClass("mece-msg-item");
         if(notification[NOTIF_RECIPIENTS_IND]) {
