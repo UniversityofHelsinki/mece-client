@@ -37,8 +37,6 @@ var meceNotifications = (function (mece) {
 })(meceNotifications || {});
 
 var meceNotifications = (function (mece) {
-    var MECE_URL = 'https://ohtu-devel.it.helsinki.fi/mece'; // for ohtu-testi.it.helsinki.fi/meceapp
-    //var MECE_URL = 'http://localhost:1337/mece'; //for local development ARO
     var MECE_DEFAULT_POLLING_INTERVAL = 4000;
     var pollingInterval;
     var MECE_DEFAULT_CHANNELS = "";
@@ -69,7 +67,7 @@ var meceNotifications = (function (mece) {
         pollingInterval = readPollingIntervalAttribute();
         mece.channels = readChannelsAttribute();
     }
-    
+
     function init() {
         debug('init');
         if (!mece.controller.ready && dependenciesLoaded()) {
@@ -92,7 +90,7 @@ var meceNotifications = (function (mece) {
         if (startingTime !== '0') {
             query.startingTime = startingTime;
         }
-        var channelUrl = MECE_URL + "/notifications?" + $.param(query);
+        var channelUrl = mece.domain + "/mece/notifications?" + $.param(query);
 
         return $.ajax({
             url: channelUrl,
@@ -116,7 +114,8 @@ var meceNotifications = (function (mece) {
         if (!mece.controller.running) {
             // TODO: interval cancellation in error cases
             setInterval(function () {
-
+                //updateTimes
+                meceNotifications.view.notifications.updateTime();
                 getNotificationsByChannels().done(function (response) {
                     var temps = response;
 
@@ -124,9 +123,9 @@ var meceNotifications = (function (mece) {
                     if(temps && temps.length > 0) {
                         startingTime = temps[0].received;
                     }
-
+                    // sort notifications based on submitted field
                     temps.sort(function (a, b) {
-                        return a.submitted > b.submitted;
+                        return new Date(b.submitted) - new Date(a.submitted);
                     });
 
                     if (temps.length > 0) {
@@ -157,10 +156,11 @@ var meceNotifications = (function (mece) {
                                      notification.link,
                                      notification.linkText,
                                      notification.heading,
-                                     notification.avatarImageUrl, //MECE-368: avatar kentää ei ole vielä olemassä mece kannassa
+                                     notification.avatarImageUrl,
                                      notification.received,
                                      notification._recipients?notification._recipients[0]:null,
-                                     USE_TRANSLATIONS?translations:{en:{}, fi:{}, sv:{}}
+                                     USE_TRANSLATIONS?translations:{en:{}, fi:{}, sv:{}},
+                                     notification.submitted
                             ]);
 
                         }));
@@ -168,6 +168,7 @@ var meceNotifications = (function (mece) {
                 }, function (error) {
                 });
                 meceNotifications.view.notifications.check();
+
             }, pollingInterval);
             mece.controller.running = true;
         }
@@ -189,6 +190,7 @@ var meceNotifications = (function (mece) {
 
 var meceNotifications = (function (mece) {
     var MECE_JQUERY_VERSION = '1.11.3';
+    var MECE_DEFAULT_DOMAIN = 'https://mece.it.helsinki.fi';
 
     mece.contentDivId = "#mece-content-div";
     mece.iconDivId = "#mece-icon-div";
@@ -202,6 +204,7 @@ var meceNotifications = (function (mece) {
     function init() {
         debug('init');
         mece.initializer.ready = true;
+        mece.domain = $(mece.contentDivId).attr("meceDomain") || MECE_DEFAULT_DOMAIN;
         if (mece.controller){
             debug('mece.controller');
             mece.controller.init();
@@ -325,13 +328,12 @@ var meceNotifications = (function (mece) {
 
 
 var meceNotifications = (function (mece) {
-    var MARK_READ_URL = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/markRead/';                                                                                                                                                  
+    var MARK_READ_URL = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/markRead/';
     //var MARK_READ_URL = 'http://localhost:1337/mece/notifications/markRead/';
     var UNREAD_NOTIFICATIONS_COUNT = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/unreadNotificationsCount';
     //var CHANNELS_UNREAD_NOTIFICATIONS_COUNT = 'http://localhost:1337/mece/notifications/channelsUnreadNotificationsCount';
     var CHANNELS_UNREAD_NOTIFICATIONS_COUNT = 'https://ohtu-devel.it.helsinki.fi/mece/notifications/channelsUnreadNotificationsCount';
     //var UNREAD_NOTIFICATIONS_COUNT = 'http://localhost:1337/mece/notifications/unreadNotificationsCount';
-
     //ARO
     //var LD = 'https://localhost:443';
     //MARK_READ_URL = LD + '/mece/notifications/markRead/';
@@ -342,6 +344,20 @@ var meceNotifications = (function (mece) {
 
     var $;
     var language = 'fi'; //Set in init(). This is just default.
+
+    //notification property indexies
+    var NOTIF_ID_IND=0;
+    var NOTIF_MSG_IND=1;
+    var NOTIF_LINK_IND=2;
+    var NOTIF_LINK_TEXT_IND=3;
+    var NOTIF_HEADING_IND=4;
+    var NOTIF_AVATAR_IND = 5;
+    var NOTIF_RECEIVED_IND=6;
+    var NOTIF_RECIPIENTS_IND = 7;
+    var NOTIF_USE_TRANSLATION_IND = 8;
+    var NOTIF_SUBMITTED_IND=9;
+    var IMAGES_URI = "https://rawgit.com/UniversityofHelsinki/mece-client/master/images";
+
 
     var translations = {
         no_messages: {
@@ -383,12 +399,17 @@ var meceNotifications = (function (mece) {
         }
         getUnreadNotificationsCount(false);
     }
-
+    function updateNotificationTime() {
+         //NOT YET IMPLEMENTED
+        //käy läpi kaikki mece-list -ul elementin rivit.
+        //jokaisella rivillä submitted-aika on tallennettu diviin, jonka luokka on hiddenSubmittedTime
+        //sen voi passata determineTime -funktiolle.
+    }
 
     function __addWidgetIteminitWidget(offset, notification) {
         var avatar = function () {
-            var DEFAULT_AVATAR_URL = (notification[7]) ?  "https://rawgit.com/UniversityofHelsinki/mece-client/master/images/avatar.png" : "https://rawgit.com/UniversityofHelsinki/mece-client/master/images/avatar-group.png";
-            var urlFoundInTheMassage = notification[5]; //notification.avatarImageUrl
+            var DEFAULT_AVATAR_URL = IMAGES_URI + (notification[NOTIF_RECIPIENTS_IND] ?  "/avatar.png" : "/avatar-group.png");
+            var urlFoundInTheMassage = notification[NOTIF_AVATAR_IND]; //notification.avatarImageUrl
             return urlFoundInTheMassage || DEFAULT_AVATAR_URL;
         };
 
@@ -411,11 +432,11 @@ var meceNotifications = (function (mece) {
         var ulList = $(mece.contentDivId).find("ul");
         // TODO: MECE-365 "Otsikko on linkki. Otsikon teksti on joko viestin otsikko tai linkin otsikko."
 
-        var myLink = notification[8][language].link||notification[2];
-        var myLinkText = notification[8][language].linkText||notification[3];
-        var myMessage = notification[8][language].message||notification[1];
+        var myLink = notification[NOTIF_USE_TRANSLATION_IND][language].link||notification[NOTIF_LINK_IND];
+        var myLinkText = notification[NOTIF_USE_TRANSLATION_IND][language].linkText||notification[NOTIF_LINK_TEXT_IND];
+        var myMessage = notification[NOTIF_USE_TRANSLATION_IND][language].message||notification[NOTIF_MSG_IND];
         //Why isn't heading used?
-        var myHeading = notification[8][language].link||notification[4];
+        var myHeading = notification[NOTIF_USE_TRANSLATION_IND][language].link||notification[NOTIF_HEADING_IND];
 
         var linkDiv = $("<div>").html(myLinkText).contents();
         var link = $("<a>").attr("href", myLink);
@@ -425,24 +446,25 @@ var meceNotifications = (function (mece) {
         image.addClass("mece-avatar-picture");
         var titleDiv = $("<div>").append(link).addClass("mece-msg-title");
         var contentDiv = $("<div>").html(shortenMessage(myMessage)).addClass("mece-msg-content");
-        var received = $("<div>").text(determineTime(notification[6], language)).addClass("mece-msg-received");
-
+        var submitted = $("<div>").text(determineTime(notification[NOTIF_SUBMITTED_IND], language)).addClass("mece-msg-received");
+        var submittedOrig = notification[NOTIF_SUBMITTED_IND];
         var outerDiv = $("<div>").addClass("mece-notification-detail-view");
         var avatarDiv = $("<div>").addClass("mece-avatar").append(image);
         var detailsDiv = $("<div>").addClass("mece-notification-fields")
             .append(titleDiv)
             .append(contentDiv)
-            .append(received);
+            .append(submitted);
+        var hiddenSubmittedDiv = $("<div style='display: none' class='hiddenSubmittedTime'>").append(submittedOrig);
 
-        outerDiv.append(avatarDiv).append(detailsDiv);
+        outerDiv.append(avatarDiv).append(detailsDiv).append(hiddenSubmittedDiv);
 
-        var li = $("<li>").attr("id", notification[0]).addClass("mece-msg-item");
-        if(notification[7]) {
+        var li = $("<li>").attr("id", notification[NOTIF_ID_IND]).addClass("mece-msg-item");
+        if(notification[NOTIF_RECIPIENTS_IND]) {
             li.addClass("mece-private-message");
         } else {
             li.addClass("mece-public-message");
         }
-        if (notification[7] && notification[7].read) {
+        if (notification[NOTIF_RECIPIENTS_IND] && notification[NOTIF_RECIPIENTS_IND].read) {
             li.addClass("mece-read-message");
         }
         li.prepend(outerDiv);
@@ -467,7 +489,7 @@ var meceNotifications = (function (mece) {
         $(document).ready(function () {
             $('ul').on('click', 'li.mece-private-message', function () {
                 $.ajax({
-                    url: MARK_READ_URL + this.id,
+                    url: mece.domain + "/mece/notifications/markRead/" + this.id,
                     type: 'GET',
                     crossDomain: true,
                     dataType: "json",
@@ -488,8 +510,7 @@ var meceNotifications = (function (mece) {
 
     function dialog() {
         debug('dialog');
-        var BELL_ICON_URL = "https://rawgit.com/UniversityofHelsinki/mece-client/master/images/bell.png";
-        $(mece.iconDivId).append($("<img>").attr("src", BELL_ICON_URL).text("bell image"));
+        $(mece.iconDivId).append($("<img>").attr("src", IMAGES_URI + "/bell.png").text("bell image"));
         $(mece.iconDivId).click(function (e) {
             e.stopPropagation();
             if ($(this).hasClass("active")) {
@@ -539,10 +560,7 @@ var meceNotifications = (function (mece) {
     }
 
     function add(notifications) {
-        var sortedNotifications = notifications.sort(function (a, b) {
-            return a[6] > b[6];
-        });
-        $.each(sortedNotifications, function (i, n) {
+        $.each(notifications, function (i, n) {
             __addWidgetIteminitWidget(i, n);
         });
     }
@@ -553,7 +571,8 @@ var meceNotifications = (function (mece) {
             init: init,
             notifications: {
                 add: add,
-                check: checkIfNoNotifications
+                check: checkIfNoNotifications,
+                updateTime: updateNotificationTime
             }
         };
         mece.view.init();
