@@ -27,6 +27,7 @@ var meceNotifications = (function (mece) {
     var NOTIF_RECIPIENTS_IND = 7;
     var NOTIF_USE_TRANSLATION_IND = 8;
     var NOTIF_SUBMITTED_IND=9;
+    var IMAGES_URI = "https://rawgit.com/UniversityofHelsinki/mece-client/master/images";
 
 
     var translations = {
@@ -78,7 +79,7 @@ var meceNotifications = (function (mece) {
 
     function __addWidgetIteminitWidget(offset, notification) {
         var avatar = function () {
-            var DEFAULT_AVATAR_URL = (notification[NOTIF_RECIPIENTS_IND]) ?  "https://rawgit.com/UniversityofHelsinki/mece-client/master/images/avatar.png" : "https://rawgit.com/UniversityofHelsinki/mece-client/master/images/avatar-group.png";
+            var DEFAULT_AVATAR_URL = IMAGES_URI + (notification[NOTIF_RECIPIENTS_IND] ?  "/avatar.png" : "/avatar-group.png");
             var urlFoundInTheMassage = notification[NOTIF_AVATAR_IND]; //notification.avatarImageUrl
             return urlFoundInTheMassage || DEFAULT_AVATAR_URL;
         };
@@ -180,8 +181,7 @@ var meceNotifications = (function (mece) {
 
     function dialog() {
         debug('dialog');
-        var BELL_ICON_URL = "https://rawgit.com/UniversityofHelsinki/mece-client/master/images/bell.png";
-        $(mece.iconDivId).append($("<img>").attr("src", BELL_ICON_URL).text("bell image"));
+        $(mece.iconDivId).append($("<img>").attr("src", IMAGES_URI + "/bell.png").text("bell image"));
         $(mece.iconDivId).click(function (e) {
             e.stopPropagation();
             if ($(this).hasClass("active")) {
