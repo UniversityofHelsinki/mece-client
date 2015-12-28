@@ -3,6 +3,8 @@ var meceNotifications = (function (mece) {
     var MECE_DEFAULT_DOMAIN = 'https://mece.it.helsinki.fi';
     var MECE_DEFAULT_WINDOW_LEFT_OFFSET = 250;
     var MECE_DEFAULT_WINDOW_TOP_OFFSET = 35;
+    var MECE_DEFAULT_WINDOW_WIDTH = 300;
+    var MECE_DEFAULT_WINDOW_HEIGHT = 350;
 
     mece.contentDivId = "#mece-content-div";
     mece.iconDivId = "#mece-icon-div";
@@ -20,6 +22,9 @@ var meceNotifications = (function (mece) {
         mece.domain = $(mece.contentDivId).attr("meceDomain") || MECE_DEFAULT_DOMAIN;
         mece.config.windowLeftOffset = $(mece.contentDivId).attr("meceWindowLeftOffset") || MECE_DEFAULT_WINDOW_LEFT_OFFSET;
         mece.config.windowTopOffset = $(mece.contentDivId).attr("meceWindowTopOffset") || MECE_DEFAULT_WINDOW_TOP_OFFSET;
+        mece.config.windowWidth = $(mece.contentDivId).attr("meceWindowWidth") || MECE_DEFAULT_WINDOW_WIDTH;
+        mece.config.windowHeight = $(mece.contentDivId).attr("meceWindowHeight") || MECE_DEFAULT_WINDOW_HEIGHT;
+
         if (mece.controller){
             debug('mece.controller');
             mece.controller.init();

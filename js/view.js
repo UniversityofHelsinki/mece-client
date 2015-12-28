@@ -66,10 +66,6 @@ var meceNotifications = (function (mece) {
 
         $(mece.contentDivId)
             .append($("<div/>")
-            //.css("position", "absolute")
-            //.css("top", "200px")
-            //.css("left", "600px")
-            //.css("width", "300px")
             .attr("ID", "meceNoNotificationsDiv"));
 
         $(mece.contentDivId)
