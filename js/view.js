@@ -48,9 +48,30 @@ var meceNotifications = (function (mece) {
     }
 
     function __initWidgetList() {
+
         debug('__initWidgetList');
-        $(mece.contentDivId).append($("<ul/>").addClass("mece-list"));
-        $(mece.contentDivId).append($("<div/>").attr("ID", "meceNoNotificationsDiv"));
+
+        debug('position:' + [$(mece.iconDivId).position().top, $(mece.iconDivId).position().left]);
+
+        $(mece.contentDivId)
+            .css("position", "absolute")
+            .css("top", $(mece.iconDivId).position().top + mece.config.windowTopOffset)
+            .css("left", $(mece.iconDivId).position().left - mece.config.windowLeftOffset)
+            .css("width", mece.config.windowWidth)
+            .css("height", mece.config.windowHeight)
+            .append($("<ul/>")
+            .addClass("mece-list"));
+
+        debug("__initWidgetList:position: " + JSON.stringify({left:$(mece.iconDivId).position().left, top:$(mece.iconDivId).position().top}));
+
+        $(mece.contentDivId)
+            .append($("<div/>")
+            //.css("position", "absolute")
+            //.css("top", "200px")
+            //.css("left", "600px")
+            //.css("width", "300px")
+            .attr("ID", "meceNoNotificationsDiv"));
+
         $(mece.contentDivId)
             .mouseover(function() {
                 $(mece.contentDivId).css("overflow", "auto");
@@ -196,6 +217,7 @@ var meceNotifications = (function (mece) {
                 $(this).removeClass("active");
             }
             else {
+                $(".dialog").attr("position", "absolute");
                 $(".dialog").delay(25).fadeIn(200);
                 $(this).addClass("active");
             }
