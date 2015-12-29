@@ -117,17 +117,6 @@ var meceNotifications = (function (mece) {
             return urlFoundInTheMassage || DEFAULT_AVATAR_URL;
         };
 
-        var shortenMessage = function (notificationMessageText) {
-            var characterLimit = SHORTEN_MESSAGE_LEN;
-            if (!notificationMessageText) {
-                return '';
-            } else if (notificationMessageText.length > characterLimit) {
-                return notificationMessageText.slice(0, characterLimit) + '...';
-            } else {
-                return notificationMessageText;
-            }
-        };
-
         var ulList = $(mece.contentDivId).find("ul");
         // TODO: MECE-365 "Otsikko on linkki. Otsikon teksti on joko viestin otsikko tai linkin otsikko."
 
@@ -145,7 +134,7 @@ var meceNotifications = (function (mece) {
         var avatarDiv = $("<div>").addClass("mece-avatar").append(image);
 
         var titleDiv = $("<div>").append(link).addClass("mece-msg-title");
-        var contentDiv = $("<div>").html(shortenMessage(myMessage)).addClass("mece-msg-content");
+        var contentDiv = $("<div>").html(myMessage).addClass("mece-msg-content");
         var submitted = $("<div>").text(determineTime(notification[NOTIF_SUBMITTED_IND], language)).addClass("mece-msg-received");
         var detailsDiv = $("<div>").addClass("mece-notification-fields").append(titleDiv).append(contentDiv).append(submitted);
 
