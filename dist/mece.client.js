@@ -4,6 +4,8 @@ var meceNotifications = (function (mece) {
     function debug(txt){
         console.log('module: SHIBBOLOGIN -- ' + txt + ' : ' + Date().toString());
     }
+    mece.loggedIn = true;
+    return mece;
 
     function createIframe() {
         debug('createIframe');
@@ -191,11 +193,16 @@ var meceNotifications = (function (mece) {
 var meceNotifications = (function (mece) {
     var MECE_JQUERY_VERSION = '1.11.3';
     var MECE_DEFAULT_DOMAIN = 'https://mece.it.helsinki.fi';
+    var MECE_DEFAULT_WINDOW_LEFT_OFFSET = 250;
+    var MECE_DEFAULT_WINDOW_TOP_OFFSET = 35;
+    var MECE_DEFAULT_WINDOW_WIDTH = 300;
+    var MECE_DEFAULT_WINDOW_HEIGHT = 350;
 
     mece.contentDivId = "#mece-content-div";
     mece.iconDivId = "#mece-icon-div";
     mece.unreadCountSpanId = "#unread-count";
     mece.jQuery = null;
+    mece.config = {};
 
     function debug(txt){
         console.log('module: INITIALIZER -- ' + txt + ' : ' + Date().toString());
@@ -205,6 +212,11 @@ var meceNotifications = (function (mece) {
         debug('init');
         mece.initializer.ready = true;
         mece.domain = $(mece.contentDivId).attr("meceDomain") || MECE_DEFAULT_DOMAIN;
+        mece.config.windowLeftOffset = $(mece.contentDivId).attr("meceWindowLeftOffset") || MECE_DEFAULT_WINDOW_LEFT_OFFSET;
+        mece.config.windowTopOffset = $(mece.contentDivId).attr("meceWindowTopOffset") || MECE_DEFAULT_WINDOW_TOP_OFFSET;
+        mece.config.windowWidth = $(mece.contentDivId).attr("meceWindowWidth") || MECE_DEFAULT_WINDOW_WIDTH;
+        mece.config.windowHeight = $(mece.contentDivId).attr("meceWindowHeight") || MECE_DEFAULT_WINDOW_HEIGHT;
+
         if (mece.controller){
             debug('mece.controller');
             mece.controller.init();
@@ -222,6 +234,38 @@ var meceNotifications = (function (mece) {
             script_tag.setAttribute("type", "text/javascript");
             script_tag.setAttribute("src", "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.min.js");
             (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
+        }
+    }
+
+     //<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+     //<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+     //<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    function loadBootstrap() {
+        var BOOTSTRAP_LINK_HREF = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css",
+            BOOTSTRAP_SCRIPT_SRC = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js";
+        if (!window.bootstrap) {
+            debug("loading bootstrap ..");
+            var js = document.createElement('script');
+            var css = document.createElement('link');
+            css.setAttribute("rel", "stylesheet");
+            css.setAttribute("href", BOOTSTRAP_LINK_HREF);
+
+            if (js.readyState) {
+                js.onreadystatechange = function () {
+                    if (this.readyState == 'complete' || this.readyState == 'loaded') {
+                        mece.bootstrap = window.bootstrap;
+                        debug("mece.bootstrap:" + mece.bootstrap);
+                    }
+                };
+            }
+
+            (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(js);
+            (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(css);
+            debug("loading bootstrap .. OK");
+        } else {
+            mece.bootstrap = window.bootstrap;
+            debug("loading bootstrap .. OK");
         }
     }
 
@@ -258,6 +302,7 @@ var meceNotifications = (function (mece) {
         loadMomentJS();
         initLocales();
         loadJQuery();
+        loadBootstrap();
         debug('bootstrap out');
     }());
 
@@ -377,9 +422,26 @@ var meceNotifications = (function (mece) {
     }
 
     function __initWidgetList() {
+
         debug('__initWidgetList');
-        $(mece.contentDivId).append($("<ul/>").addClass("mece-list"));
-        $(mece.contentDivId).append($("<div/>").attr("ID", "meceNoNotificationsDiv"));
+
+        debug('position:' + [$(mece.iconDivId).position().top, $(mece.iconDivId).position().left]);
+
+        $(mece.contentDivId)
+            .css("position", "absolute")
+            .css("top", $(mece.iconDivId).position().top + mece.config.windowTopOffset)
+            .css("left", $(mece.iconDivId).position().left - mece.config.windowLeftOffset)
+            .css("width", mece.config.windowWidth)
+            .css("height", mece.config.windowHeight)
+            .append($("<ul/>")
+            .addClass("mece-list"));
+
+        debug("__initWidgetList:position: " + JSON.stringify({left:$(mece.iconDivId).position().left, top:$(mece.iconDivId).position().top}));
+
+        $(mece.contentDivId)
+            .append($("<div/>")
+            .attr("ID", "meceNoNotificationsDiv"));
+
         $(mece.contentDivId)
             .mouseover(function() {
                 $(mece.contentDivId).css("overflow", "auto");
@@ -429,17 +491,6 @@ var meceNotifications = (function (mece) {
             return urlFoundInTheMassage || DEFAULT_AVATAR_URL;
         };
 
-        var shortenMessage = function (notificationMessageText) {
-            var characterLimit = SHORTEN_MESSAGE_LEN;
-            if (!notificationMessageText) {
-                return '';
-            } else if (notificationMessageText.length > characterLimit) {
-                return notificationMessageText.slice(0, characterLimit) + '...';
-            } else {
-                return notificationMessageText;
-            }
-        };
-
         var ulList = $(mece.contentDivId).find("ul");
         // TODO: MECE-365 "Otsikko on linkki. Otsikon teksti on joko viestin otsikko tai linkin otsikko."
 
@@ -457,7 +508,7 @@ var meceNotifications = (function (mece) {
         var avatarDiv = $("<div>").addClass("mece-avatar").append(image);
 
         var titleDiv = $("<div>").append(link).addClass("mece-msg-title");
-        var contentDiv = $("<div>").html(shortenMessage(myMessage)).addClass("mece-msg-content");
+        var contentDiv = $("<div>").html(myMessage).addClass("mece-msg-content");
         var submitted = $("<div>").text(determineTime(notification[NOTIF_SUBMITTED_IND], language)).addClass("mece-msg-received");
         var detailsDiv = $("<div>").addClass("mece-notification-fields").append(titleDiv).append(contentDiv).append(submitted);
 
@@ -525,6 +576,7 @@ var meceNotifications = (function (mece) {
                 $(this).removeClass("active");
             }
             else {
+                $(".dialog").attr("position", "absolute");
                 $(".dialog").delay(25).fadeIn(200);
                 $(this).addClass("active");
             }
