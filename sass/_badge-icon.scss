@@ -1,8 +1,10 @@
 
 /* the notification counter element */
 .mece-badge {
-    min-width: 8px;
-    padding: 2px 4px;
+    display: inline-block;
+    width: 16px;
+    line-height: 16px;
+    padding: 3px 0px 3px 0px;
     font-size: 10px;
     font-weight: 700;
     line-height: 1;
@@ -12,8 +14,8 @@
     vertical-align: middle;
     background-color: $badge-yellow;
     border-radius: 8px;
-    left: 20px;
-    top: 10px;
-    position: absolute;
+    left: -10px;
+    top: -5px;
+    position: relative;
 }
 

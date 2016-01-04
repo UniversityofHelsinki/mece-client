@@ -194,6 +194,7 @@ var meceNotifications = (function (mece) {
     var MECE_JQUERY_VERSION = '1.11.3';
     var MECE_DEFAULT_DOMAIN = 'https://mece.it.helsinki.fi';
     var MECE_DEFAULT_WINDOW_LEFT_OFFSET = 250;
+    var MECE_DEFAULT_COLLAPSE_WIDTH = 450;
     var MECE_DEFAULT_WINDOW_TOP_OFFSET = 35;
     var MECE_DEFAULT_WINDOW_WIDTH = 300;
     var MECE_DEFAULT_WINDOW_HEIGHT = 350;
@@ -216,6 +217,7 @@ var meceNotifications = (function (mece) {
         mece.config.windowTopOffset = $(mece.contentDivId).attr("meceWindowTopOffset") || MECE_DEFAULT_WINDOW_TOP_OFFSET;
         mece.config.windowWidth = $(mece.contentDivId).attr("meceWindowWidth") || MECE_DEFAULT_WINDOW_WIDTH;
         mece.config.windowHeight = $(mece.contentDivId).attr("meceWindowHeight") || MECE_DEFAULT_WINDOW_HEIGHT;
+        mece.config.collapseWidth = $(mece.contentDivId).attr("meceCollapseWidth") || MECE_DEFAULT_COLLAPSE_WIDTH;
 
         if (mece.controller){
             debug('mece.controller');
@@ -425,16 +427,25 @@ var meceNotifications = (function (mece) {
 
         debug('__initWidgetList');
 
+        debug('__initWidgetList: mece.config.windowTopOffset: ' + mece.config.windowTopOffset);
+
         debug('position:' + [$(mece.iconDivId).position().top, $(mece.iconDivId).position().left]);
 
+        var width = $(window).innerWidth() > mece.collapseWidth ? mece.config.windowWidth : $(window).innerWidth();
+
+        debug('__initWidgetList: mece.config.windowWidth: ' + mece.config.windowWidth);
+
+        debug('__initWidgetList: innerWidth: ' + $(window).innerWidth());
+
+        debug('__initWidgetList: width: ' + width);
+
         $(mece.contentDivId)
-            .css("position", "absolute")
-            .css("top", $(mece.iconDivId).position().top + mece.config.windowTopOffset)
-            .css("left", $(mece.iconDivId).position().left - mece.config.windowLeftOffset)
-            .css("width", mece.config.windowWidth)
-            .css("height", mece.config.windowHeight)
-            .append($("<ul/>")
-            .addClass("mece-list"));
+            .css("position", "relative")
+            .css("top", mece.config.windowTopOffset + "px")
+            .css("left", mece.config.windowLeftOffset + "px")
+            .css("height", mece.config.windowHeight + "px")
+            .css("width", width + "px")
+            .append($("<ul/>").addClass("mece-list"));
 
         debug("__initWidgetList:position: " + JSON.stringify({left:$(mece.iconDivId).position().left, top:$(mece.iconDivId).position().top}));
 
@@ -444,10 +455,10 @@ var meceNotifications = (function (mece) {
 
         $(mece.contentDivId)
             .mouseover(function() {
-                $(mece.contentDivId).css("overflow", "auto");
+                $(mece.contentDivId).css("overflow", "visible");
             })
             .mouseout(function() {
-                $(mece.contentDivId).css("overflow", "hidden");
+                $(mece.contentDivId).css("overflow", "visible");
             });
         debug('__initWidgetList out');
     }
@@ -531,15 +542,15 @@ var meceNotifications = (function (mece) {
 
     function getUnreadNotificationsCount(append) {
         var unreadMessagesLength = $(mece.contentDivId).find("ul li.mece-private-message").filter("li:not(.mece-read-message)").length;
-            if ($(mece.unreadCountSpanId).length === 0) {
-                $(mece.iconDivId).append($("<span>").attr("id", "unread-count").text(unreadMessagesLength).addClass('mece-badge'));
-            }
-            else {
-                $(mece.unreadCountSpanId).html($("<span>").text(unreadMessagesLength));
-            }
-            if (unreadMessagesLength === 0){
-                $(mece.unreadCountSpanId).remove();
-            }
+        if ($(mece.unreadCountSpanId).length === 0) {
+            $(mece.iconDivId).append($("<span>").attr("id", "unread-count").text(unreadMessagesLength).addClass('mece-badge'));
+        }
+        else {
+            $(mece.unreadCountSpanId).text(unreadMessagesLength);
+        }
+        if (unreadMessagesLength === 0){
+            $(mece.unreadCountSpanId).remove();
+        }
 
     }
 
@@ -576,7 +587,7 @@ var meceNotifications = (function (mece) {
                 $(this).removeClass("active");
             }
             else {
-                $(".dialog").attr("position", "absolute");
+                $(".dialog").attr("position", "relative");
                 $(".dialog").delay(25).fadeIn(200);
                 $(this).addClass("active");
             }

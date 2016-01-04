@@ -5,127 +5,212 @@
 <head>
 
 <meta charset="utf-8">
-
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-
 <meta name="description" content="">
-
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title></title>
 
 <link rel="stylesheet" href="dist/css/widget.css"> <!-- Mece:n css -->
-
 <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
-
-<link href="index.css" rel="stylesheet"> <!-- Opintonisivun css: integraatio-testausta varten -->
-
 <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-
 <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<!--script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script-->
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
 
-<!--
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
--->
+<style>
+@media screen and (min-width:300px) {
+    .navbar {
+        display: block;
+        padding:10px;
+        width:  100%;
+        height: 200px;
+    }
+    .navbar.main_menu {
+        display:table;
+        height:100%;
+    }
+    .user_menu {
+        float:   right;
+        display: inline-block;
+        width:   100%
+        height:  100px;
+    }
+    .user_menu__item{
+        float:           left;
+        display:         inline;
+        vertical-align:  middle;
+        padding:         0 20px
+    }
+    .main_menu {
+        display: inline-block;
+        float:   left;
+        height:  100px;
+    }
+    .main_menu a{
+        font-weight:700;
+        font-style:normal
+    }
+
+    ul.list-of-links--dark li>a:hover{
+        background-color:#005479;
+        color:#FFF
+    }
+    ul.main_menu li{
+        display:block;
+        float:left
+    }
+    ul.main_menu a{
+        font-size:15px;
+        font-size:.9375rem;
+        line-height:1.25em;
+        display:block;
+        padding:1.6em 1.5em
+    }
+    ul.main_menu a.active{
+        color:#005479
+    }
+}
+
+</style>
 
 </head>
 
 <body bgcolor="#E6E6FA">
 
+<!-- #ifdef WITH_PAGE_HEADER
+<div class="page-header">
+
+    <div class="show_mobile_only mobile-toolbar">
+
+    <div class="table-list">
+        <li>
+            <menu-language>
+                <div>
+                    <ul class="inline-list menu-language">
+                        <li>
+                            <a tabindex="0" role="button" aria-label="English" class="menu-language__item link-label clickable">
+                                <span class="no__hide_mobile_only" style = "color:red">English</span>
+                                <span class="show_mobile_only">En</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a tabindex="0" role="button" aria-label="English" class="menu-language__item link-label clickable">
+                                <span class="no__hide_mobile_only">Svenska</span>
+                                <span class="show_mobile_only">Sv</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </menu-language>
+        </li>
+    </div>
+
+</div>
+</div>
+#endif WITH_PAGE_HEADER -->
+
 <div class="ng-scope" ng-include="'app/partials/_page_navigation.html'" style = "background:#dddddd">
 
-    <div class="page-navigation hide_mobile_only ng-scope">
+    <div class="navbar no__hide_mobile_only">
 
-        <div class="wrapper">
 
-            <nav role="navigation">
-                <ul class="main-menu">
-                    <li class="main-menu_home">
-                        <a href="#/" class="active">HOME</a>
-                    </li>
-                    <li class="ng-scope" ng-repeat="link in primaryLinks">
-                        <a href="#/" class="active">WEBOODI</a>
-                    </li>
+            <div class="main_menu">
+                <ul>
+                    <li> <a href="#/" class="active">HOME</a> </li>
+                    <li> <a href="#/" class="active">WEBOODI</a> </li>
                 </ul>
-            </nav>
+            </div>
 
-            <div class="user-menu">
-                <div class="user_menu__item search-icon ng-isolate-scope">
+            <div class="user_menu">
+
+                <!-- #ifdef WITH_SEARCH_LABEL
+                <div class="user_menu__item no__hide_mobile_only search-icon">
                     <div tabindex="0" role="button" aria-label="Öppna sök" class="dropdown-toggle" ng-click="toggle()" ng-class="{'active' : active === true}">
                         <div class="icon tour-element__search">
-                        <a class="user_menu__actions__action"> <span>SEARCH</span> </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="user_menu__item hide_mobile_only search-bar ng-isolate-scope">
-                <div aria-hidden="true" ng-show="active" class="search-bar ng-hide">
-                    <label tabindex="0" role="button" aria-label="" for="search-input" ng-click="search()">
-                        <i class="hy">Hello world</i>
-                    </label>
-                    <div class="input-container">
-                        <form class="ng-pristine">
-                            <input type="text">
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <div class="hide_mobile_only user_menu__item start-tour ng-isolate-scope">
-                <a tabindex="0" href="" role="button" aria-label="börja turen" ng-click="startTour()">
-                    <span class="hy hy-info-stroke" title="Introduktionstur"></span>
-                </a>
-            </div>
-
-            <div dropdown="" class="user_menu__item user_notifications ng-isolate-scope" open-callback="isOpen = true" close-callback="isOpen = false">
-                <!-- #ifdef WITH_MECE -->
-                <div id="mece-icon-div" > </div>
-                <!--
-                     meceDomain                 = "https://ohtu-devel.it.helsinki.fi"
-                 -->
-                <div id                         = "mece-content-div"
-                     class                      = "dialog"
-                     pollingInterval            = "5000"
-                     meceWindowTopOffset        = "100"
-                     meceWindowLeftOffset       = "250"
-                     meceWindowWidth            = "300"
-                     meceWindowHeight           = "350"
-                     meceDomain                 = "https://localhost"
-                     meceChannels               = "oodi.kurssisivu.tilastotieteenjatko.kurssi1,
-                                                   oodi.kurssisivu.tilastotieteenperusteet.kurssi1"
-                     language                   = "fi" >
-                </div>
-                <!-- #endif WITH_MECE -->
-            </div>
-
-            <!-- #ifdef WITH_OPINTONI_LOGOUT -->
-            <div class="hide_mobile_only user_menu__item">
-                <a aria-label="Logga ut" role="button" href="/saml/logout?local=true">
-                    <span class="hy hy-logout" title="Logga ut">
-                    </span> <span class="show_mobile_only ng-binding">Logga ut</span>
-                </a>
-            </div>
-            <!-- #endif WITH_OPINTONI_LOGOUT -->
-
-            <!-- #ifdef WITH_OPINTONI_ASETUKSET -->
-            <div dropdown="" class="user_menu__item user_settings" close-callback="resetMenu()">
-                <div class="dropdown-toggle">
-                    <a href="" class="user_menu__actions__action" ng-class="{active : showMenu}" aria-label="Inställningar" role="button">
-                        <div class="user-avatar__small ng-isolate-scope" img-src="session.avatarUrl" img-alt="session.name">
-                            <div class="user-avatar" ng-class="{teacher : isTeacher, default: isDefault()}">
-                                <img src = "https://qa.student.helsinki.fi/api/public/v1/images/avatar/80"
-                                     ng-src = "https://qa.student.helsinki.fi/api/public/v1/images/avatar/80"
-                                     class = "user-avatar__icon" alt = "Maggie Simpson">
-                            </div>
+                            <a class="user_menu__actions__action"> <span>SEARCH</span> </a>
                         </div>
-                    </a>
+                    </div>
                 </div>
-            </div>
-            <!-- #endif WITH_OPINTONI_ASETUKSET -->
+                #endif WITH_SEARCH_LABEL -->
+
+                <div class="user_menu__item no__hide_mobile_only search-bar">
+                    <div tabindex="0" role="button" aria-label="Avaa haku">
+                        <span style = "color:#178feb" class = "glyphicon glyphicon-search" title = "Search"/> 
+                    </div>
+                </div>
+
+                <div class="user_menu__item no__hide_mobile_only start-tour">
+                    <div tabindex="0" role="button" aria-label="Introduktionstur">
+                        <span style = "color:#178feb" class = "glyphicon glyphicon-info-sign" title = "Introduktionstur"/> 
+                    </div>
+                </div>
+
+                <!--
+                <div dropdown="" class="user_menu__item user_notifications" open-callback="isOpen = true" close-callback="isOpen = false">
+                 -->
+                <div class="user_menu__item no__hide_mobile_only start-tour">
+
+                    <!-- #ifdef WITH_MECE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
+                    <div style="width:50px;">
+                    <div id="mece-icon-div" > </div>
+                    <!--
+                         meceDomain                 = "https://ohtu-devel.it.helsinki.fi"
+                     -->
+                    <div id                         = "mece-content-div"
+                         class                      = "dialog"
+                         pollingInterval            = "5000"
+                         meceWindowTopOffset        = "10"
+                         meceWindowLeftOffset       = "-150"
+                         meceWindowWidth            = "300"
+                         meceWindowHeight           = "350"
+                         meceCollapseWidth          = "400"
+                         meceDomain                 = "https://localhost"
+                         meceChannels               = "oodi.kurssisivu.tilastotieteenjatko.kurssi1,
+                                                       oodi.kurssisivu.tilastotieteenperusteet.kurssi1"
+                         language                   = "fi" >
+                    </div>
+                    </div>
+                    <!-- #endif WITH_MECE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
+
+                </div>
+
+                <!-- #ifdef WITH_OPINTONI_LOGOUT -->
+                <div class="user_menu__item no__hide_mobile_only search-bar">
+                    <div tabindex="0" role="button" aria-label="Avaa haku">
+                        <span style = "color:#178feb" class = "glyphicon glyphicon-search" title = "Search"/> 
+                    </div>
+                </div>
+
+                <div class="user_menu__item no__hide_mobile_only">
+                    <div tabindex="0" role="button" aria-label="Log out">
+                        <span style = "color:#178feb" class = "glyphicon glyphicon-log-out" title = "Log out"/> 
+                    </div>
+                </div>
+                <!-- #endif WITH_OPINTONI_LOGOUT -->
+
+                <!-- #ifdef WITH_OPINTONI_ASETUKSET
+                <div dropdown="" class="user_menu__item no__hide_mobile_only user_settings" close-callback="resetMenu()">
+                    <div class="dropdown-toggle">
+                        <a href="" class="user_menu__actions__action" ng-class="{active : showMenu}" aria-label="Inställningar" role="button">
+                            <div class="user-avatar__small" img-src="session.avatarUrl" img-alt="session.name">
+                                <div class="user-avatar" ng-class="{teacher : isTeacher, default: isDefault()}">
+                                    <img src = "https://qa.student.helsinki.fi/api/public/v1/images/avatar/80"
+                                         ng-src = "https://qa.student.helsinki.fi/api/public/v1/images/avatar/80"
+                                         class = "user-avatar__icon" alt = "Maggie Simpson">
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                #endif WITH_OPINTONI_ASETUKSET -->
+
+            </div> <!--class="user_menu"-->
 
         </div> <!--class="wrapper"-->
 
-    </div> <!--class="page-navigation hide_mobile_only ng-scope"-->
+    </div> <!--class="navbar no__hide_mobile_only ng-scope"-->
 
     <!-- #ifdef WITH_DUMMY_OPINTONI_CONTENT http://thenewcode.com/852/A-Fresh-Approach-to-Responsive-HTML5-Tables -->
     <div class="opintoni-page-content">
