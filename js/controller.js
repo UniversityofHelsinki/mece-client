@@ -87,7 +87,7 @@ var meceNotifications = (function (mece) {
                     }
                     // sort notifications based on submitted field
                     temps.sort(function (a, b) {
-                        return new Date(b.submitted) - new Date(a.submitted);
+                        return new Date(a.submitted) - new Date(b.submitted);
                     });
 
                     if (temps.length > 0) {
