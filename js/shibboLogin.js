@@ -4,8 +4,6 @@ var meceNotifications = (function (mece) {
     function debug(txt){
         console.log('module: SHIBBOLOGIN -- ' + txt + ' : ' + Date().toString());
     }
-    mece.loggedIn = true;
-    return mece;
 
     function createIframe() {
         debug('createIframe');
