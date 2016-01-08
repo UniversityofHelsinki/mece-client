@@ -32,12 +32,14 @@ var meceNotifications = (function (mece) {
 
     function init() {
         debug('init');
-        if (!mece.controller.ready && dependenciesLoaded()) {
-            debug('init !mece.controller.ready && dependenciesLoaded()');
-            $ = $ || mece.jQuery;
-            readAndInitializeAttributeValues();
-            start();
-            mece.controller.ready = true;
+        if(mece.initializer && mece.initializer.ready && mece.view && mece.view.ready) {
+            if (!mece.controller.ready && dependenciesLoaded()) {
+                debug('init !mece.controller.ready && dependenciesLoaded()');
+                $ = mece.jQuery;
+                readAndInitializeAttributeValues();
+                start();
+                mece.controller.ready = true;
+            }
         }
         debug('init out');
     }
@@ -71,66 +73,75 @@ var meceNotifications = (function (mece) {
         });
     }
 
+    function onGetNotificationsByChannelsDone (response) {
+
+        var temps = response;
+
+        // take the startingTime before sorting
+        if(temps && temps.length > 0) {
+            startingTime = temps[0].received;
+        }
+        // sort notifications based on submitted field
+        temps.sort(function (a, b) {
+            return new Date(a.submitted) - new Date(b.submitted);
+        });
+
+        if (temps.length > 0) {
+            meceNotifications.view.notifications.add(temps.map(function (notification) {
+                var translations = {
+                    en: {
+                        heading: notification.headingEN,
+                        message: notification.messageEN,
+                        link: notification.linkEN,
+                        linkText: notification.linkTextEN
+                    },
+                    fi: {
+                        heading: notification.headingFI,
+                        message: notification.messageFI,
+                        link: notification.linkFI,
+                        linkText: notification.linkTextFI
+                    },
+                    sv: {
+                        heading: notification.headingSV,
+                        message: notification.messageSV,
+                        link: notification.linkSV,
+                        linkText: notification.linkTextSV
+                    }
+                };
+
+                return ([notification._id,
+                         notification.message,
+                         notification.link,
+                         notification.linkText,
+                         notification.heading,
+                         notification.avatarImageUrl,
+                         notification.received,
+                         notification._recipients?notification._recipients[0]:null,
+                         USE_TRANSLATIONS?translations:{en:{}, fi:{}, sv:{}},
+                         notification.submitted
+                ]);
+
+            }));
+        }
+    };
+
+    function fetchNotifications() {
+        getNotificationsByChannels().done(function (response) {
+                onGetNotificationsByChannelsDone(response);
+        }, function (error) {
+                ; // TODO: interval cancellation in error cases
+        });
+    }
+
     function start() {
-        debug('start');
         if (!mece.controller.running) {
-            // TODO: interval cancellation in error cases
+            meceNotifications.view.notifications.updateTime();
+            fetchNotifications();
+            meceNotifications.view.notifications.check();
             setInterval(function () {
-                //updateTimes
                 meceNotifications.view.notifications.updateTime();
-                getNotificationsByChannels().done(function (response) {
-                    var temps = response;
-
-                    // take the startingTime before sorting
-                    if(temps && temps.length > 0) {
-                        startingTime = temps[0].received;
-                    }
-                    // sort notifications based on submitted field
-                    temps.sort(function (a, b) {
-                        return new Date(a.submitted) - new Date(b.submitted);
-                    });
-
-                    if (temps.length > 0) {
-                        meceNotifications.view.notifications.add(temps.map(function (notification) {
-                            var translations = {
-                                en: {
-                                    heading: notification.headingEN,
-                                    message: notification.messageEN,
-                                    link: notification.linkEN,
-                                    linkText: notification.linkTextEN
-                                },
-                                fi: {
-                                    heading: notification.headingFI,
-                                    message: notification.messageFI,
-                                    link: notification.linkFI,
-                                    linkText: notification.linkTextFI
-                                },
-                                sv: {
-                                    heading: notification.headingSV,
-                                    message: notification.messageSV,
-                                    link: notification.linkSV,
-                                    linkText: notification.linkTextSV
-                                }
-                            };
-
-                            return ([notification._id,
-                                     notification.message,
-                                     notification.link,
-                                     notification.linkText,
-                                     notification.heading,
-                                     notification.avatarImageUrl,
-                                     notification.received,
-                                     notification._recipients?notification._recipients[0]:null,
-                                     USE_TRANSLATIONS?translations:{en:{}, fi:{}, sv:{}},
-                                     notification.submitted
-                            ]);
-
-                        }));
-                    }
-                }, function (error) {
-                });
+                fetchNotifications();
                 meceNotifications.view.notifications.check();
-
             }, pollingInterval);
             mece.controller.running = true;
         }
