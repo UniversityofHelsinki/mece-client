@@ -21,11 +21,12 @@ var meceNotifications = (function (mece) {
         debug('init');
         mece.initializer.ready = true;
         mece.domain = $(mece.contentDivId).attr("meceDomain") || MECE_DEFAULT_DOMAIN;
-        mece.config.windowLeftOffset = $(mece.contentDivId).attr("meceWindowLeftOffset") || MECE_DEFAULT_WINDOW_LEFT_OFFSET;
-        mece.config.windowTopOffset = $(mece.contentDivId).attr("meceWindowTopOffset") || MECE_DEFAULT_WINDOW_TOP_OFFSET;
-        mece.config.windowWidth = $(mece.contentDivId).attr("meceWindowWidth") || MECE_DEFAULT_WINDOW_WIDTH;
-        mece.config.windowHeight = $(mece.contentDivId).attr("meceWindowHeight") || MECE_DEFAULT_WINDOW_HEIGHT;
-        mece.config.collapseWidth = $(mece.contentDivId).attr("meceCollapseWidth") || MECE_DEFAULT_COLLAPSE_WIDTH;
+        mece.config.windowLeftOffset = parseInt($(mece.contentDivId).attr("meceWindowLeftOffset")) || MECE_DEFAULT_WINDOW_LEFT_OFFSET;
+        mece.config.windowTopOffset = parseInt($(mece.contentDivId).attr("meceWindowTopOffset")) || MECE_DEFAULT_WINDOW_TOP_OFFSET;
+        mece.config.windowTopOffsetCollapsed = parseInt($(mece.contentDivId).attr("meceWindowTopOffsetCollapsed")) || MECE_DEFAULT_WINDOW_TOP_OFFSET_COLLAPSED;
+        mece.config.windowWidth = parseInt($(mece.contentDivId).attr("meceWindowWidth")) || MECE_DEFAULT_WINDOW_WIDTH;
+        mece.config.windowHeight = parseInt($(mece.contentDivId).attr("meceWindowHeight")) || MECE_DEFAULT_WINDOW_HEIGHT;
+        mece.config.collapseWidth = parseInt($(mece.contentDivId).attr("meceCollapseWidth")) || MECE_DEFAULT_COLLAPSE_WIDTH;
 
         if (mece.controller){
             debug('mece.controller');

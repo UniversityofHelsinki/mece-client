@@ -4,8 +4,6 @@ var meceNotifications = (function (mece) {
     function debug(txt){
         console.log('module: SHIBBOLOGIN -- ' + txt + ' : ' + Date().toString());
     }
-    mece.loggedIn = true;
-    return mece;
 
     function createIframe() {
         debug('createIframe');
@@ -213,11 +211,12 @@ var meceNotifications = (function (mece) {
         debug('init');
         mece.initializer.ready = true;
         mece.domain = $(mece.contentDivId).attr("meceDomain") || MECE_DEFAULT_DOMAIN;
-        mece.config.windowLeftOffset = $(mece.contentDivId).attr("meceWindowLeftOffset") || MECE_DEFAULT_WINDOW_LEFT_OFFSET;
-        mece.config.windowTopOffset = $(mece.contentDivId).attr("meceWindowTopOffset") || MECE_DEFAULT_WINDOW_TOP_OFFSET;
-        mece.config.windowWidth = $(mece.contentDivId).attr("meceWindowWidth") || MECE_DEFAULT_WINDOW_WIDTH;
-        mece.config.windowHeight = $(mece.contentDivId).attr("meceWindowHeight") || MECE_DEFAULT_WINDOW_HEIGHT;
-        mece.config.collapseWidth = $(mece.contentDivId).attr("meceCollapseWidth") || MECE_DEFAULT_COLLAPSE_WIDTH;
+        mece.config.windowLeftOffset = parseInt($(mece.contentDivId).attr("meceWindowLeftOffset")) || MECE_DEFAULT_WINDOW_LEFT_OFFSET;
+        mece.config.windowTopOffset = parseInt($(mece.contentDivId).attr("meceWindowTopOffset")) || MECE_DEFAULT_WINDOW_TOP_OFFSET;
+        mece.config.windowTopOffsetCollapsed = parseInt($(mece.contentDivId).attr("meceWindowTopOffsetCollapsed")) || MECE_DEFAULT_WINDOW_TOP_OFFSET_COLLAPSED;
+        mece.config.windowWidth = parseInt($(mece.contentDivId).attr("meceWindowWidth")) || MECE_DEFAULT_WINDOW_WIDTH;
+        mece.config.windowHeight = parseInt($(mece.contentDivId).attr("meceWindowHeight")) || MECE_DEFAULT_WINDOW_HEIGHT;
+        mece.config.collapseWidth = parseInt($(mece.contentDivId).attr("meceCollapseWidth")) || MECE_DEFAULT_COLLAPSE_WIDTH;
 
         if (mece.controller){
             debug('mece.controller');
@@ -423,44 +422,62 @@ var meceNotifications = (function (mece) {
         return translations[key][myLanguage||language];
     }
 
+    function __resizeWidget() {
+
+        var widgetWidth = mece.config.windowWidth;
+        var widgetHeight = mece.config.windowHeight;
+        var meceRootDivLeft = $("#mece").position().left;
+        var windowWidth = $(window).width();
+        var position = "relative";
+        var widgetLeft = 0;
+        var meceRootDivWidth = "50px";
+        var widgetTop = $("#mece").position().top +  mece.config.windowTopOffset;
+
+        if(windowWidth < mece.config.collapseWidth) {
+            meceRootDivWidth = "100%";
+            position = "absolute";
+            widgetWidth = "100%";
+            widgetLeft = 0;
+            widgetTop = $("#mece").position().top +  mece.config.windowTopOffsetCollapsed;
+        }
+        else if(windowWidth < widgetWidth) {
+            position = "absolute";
+            widgetWidth = windowWidth + "px";
+            widgetLeft = - meceRootDivLeft;
+        }
+        else if(meceRootDivLeft + widgetWidth/2 > windowWidth) {
+            position = "absolute";
+            widgetLeft = windowWidth - meceRootDivLeft - widgetWidth;
+        } else if(meceRootDivLeft < widgetWidth/2) {
+            position = "absolute";
+            widgetLeft = - meceRootDivLeft;
+        } else {
+            position = "absolute";
+            widgetLeft = - widgetWidth / 2;
+        }
+
+        $("#mece").css("position", "relative").css("width", meceRootDivWidth);
+
+        $(mece.contentDivId)
+            .css("position", position)
+            .css("left", widgetLeft + "px")
+            .css("overflow-x", "visible")
+            .css("top", widgetTop + "px")
+            .css("width", widgetWidth)
+            .css("height", widgetHeight)
+        ;
+
+    }
+
     function __initWidgetList() {
-
-        debug('__initWidgetList');
-
-        debug('__initWidgetList: mece.config.windowTopOffset: ' + mece.config.windowTopOffset);
-
-        debug('position:' + [$(mece.iconDivId).position().top, $(mece.iconDivId).position().left]);
-
-        var width = $(window).innerWidth() > mece.collapseWidth ? mece.config.windowWidth : $(window).innerWidth();
-
-        debug('__initWidgetList: mece.config.windowWidth: ' + mece.config.windowWidth);
-
-        debug('__initWidgetList: innerWidth: ' + $(window).innerWidth());
-
-        debug('__initWidgetList: width: ' + width);
-
         $(mece.contentDivId)
-            .css("position", "relative")
-            .css("top", mece.config.windowTopOffset + "px")
-            .css("left", mece.config.windowLeftOffset + "px")
-            .css("height", mece.config.windowHeight + "px")
-            .css("width", width + "px")
-            .append($("<ul/>").addClass("mece-list"));
-
-        debug("__initWidgetList:position: " + JSON.stringify({left:$(mece.iconDivId).position().left, top:$(mece.iconDivId).position().top}));
-
-        $(mece.contentDivId)
-            .append($("<div/>")
-            .attr("ID", "meceNoNotificationsDiv"));
-
-        $(mece.contentDivId)
-            .mouseover(function() {
-                $(mece.contentDivId).css("overflow", "visible");
-            })
-            .mouseout(function() {
-                $(mece.contentDivId).css("overflow", "visible");
-            });
-        debug('__initWidgetList out');
+            .append($("<ul/>")
+                .css("height", mece.config.windowHeight + "px")
+                .css("overflow", "auto")
+                .css("position", "absolute")
+                .addClass("mece-list"));
+        $(mece.contentDivId).append($("<div/>").attr("ID", "meceNoNotificationsDiv"));
+        __resizeWidget();
     }
 
     function checkIfNoNotifications() {
@@ -587,7 +604,7 @@ var meceNotifications = (function (mece) {
                 $(this).removeClass("active");
             }
             else {
-                $(".dialog").attr("position", "relative");
+                //$(".dialog").attr("position", "relative");
                 $(".dialog").delay(25).fadeIn(200);
                 $(this).addClass("active");
             }
@@ -619,8 +636,8 @@ var meceNotifications = (function (mece) {
             markNotificationAsRead();
             if (mece.controller && mece.controller.initialized) mece.controller.start();
             mece.view.ready = true;
-
             language = $(mece.contentDivId).attr("language") || language;
+            $(document).load($(window).bind("resize", __resizeWidget));
         }
         debug('init out');
     }

@@ -20,7 +20,7 @@
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
 
 <style>
-@media screen and (min-width:300px) {
+@media screen and (min-width:450px) {
     .navbar {
         display: block;
         padding:10px;
@@ -71,6 +71,14 @@
     ul.main_menu a.active{
         color:#005479
     }
+    div#mece-icon-div {
+        width:  300px;
+        left:   0px;
+    }
+}
+
+div#mece-icon-div {
+    width:  100%;
 }
 
 </style>
@@ -116,12 +124,14 @@
     <div class="navbar no__hide_mobile_only">
 
 
+            <!-- #ifdef WITH_MAIN_MENU
             <div class="main_menu">
                 <ul>
                     <li> <a href="#/" class="active">HOME</a> </li>
                     <li> <a href="#/" class="active">WEBOODI</a> </li>
                 </ul>
             </div>
+            #endif WITH_MAIN_MENU -->
 
             <div class="user_menu">
 
@@ -153,21 +163,24 @@
                 <div class="user_menu__item no__hide_mobile_only start-tour">
 
                     <!-- #ifdef WITH_MECE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
-                    <div style="width:50px;">
+                    <div id="mece" style="width:50px;">
                     <div id="mece-icon-div" > </div>
                     <!--
-                         meceDomain                 = "https://ohtu-devel.it.helsinki.fi"
+                         meceDomain                 = "https://localhost"
                      -->
                     <div id                         = "mece-content-div"
                          class                      = "dialog"
                          pollingInterval            = "5000"
-                         meceWindowTopOffset        = "10"
+                         meceWindowTopOffset        = "50"
+                         meceWindowTopOffsetCollapsed = "70"
                          meceWindowLeftOffset       = "-150"
                          meceWindowWidth            = "300"
                          meceWindowHeight           = "350"
-                         meceCollapseWidth          = "400"
-                         meceDomain                 = "https://localhost"
+                         position                   = "relative"
+                         meceCollapseWidth          = "450"
+                         meceDomain                 = "https://ohtu-devel.it.helsinki.fi"
                          meceChannels               = "oodi.kurssisivu.tilastotieteenjatko.kurssi1,
+                                                       course.123,
                                                        oodi.kurssisivu.tilastotieteenperusteet.kurssi1"
                          language                   = "fi" >
                     </div>
