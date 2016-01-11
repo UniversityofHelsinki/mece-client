@@ -9,6 +9,8 @@ var reporters = require('jasmine-reporters');
 var jasmineBrowser = require('gulp-jasmine-browser');
 var SpecReporter = require('jasmine-spec-reporter');
 var sass = require('gulp-sass');
+var notify = require('gulp-notify');
+var preprocess = require('gulp-preprocess');
 
 // check javascript syntax
 gulp.task('lint', function(){
@@ -23,6 +25,37 @@ gulp.task('packageScripts', function(){
         .pipe(rename('mece.client.min.js'))
         .pipe(uglify())
         .pipe(gulp.dest('dist'));
+});
+
+gulp.task('nunjucks', function() {
+    nunjucksRender.nunjucks.configure(['./templates'], {watch: false});
+    return gulp
+        .src('./templates/*.+html')
+        .pipe(nunjucksRender())
+        .pipe(gulp.dest('./app'));
+});
+
+gulp.task("html", function() {
+
+    gulp.src("./templates/index-staging.html")
+        .pipe(preprocess({context: {env: "staging"}}))
+        .pipe(gulp.dest("./"))
+        .pipe(notify({ message: 'Task html::staging OK' })) ;
+
+    gulp.src("./templates/index-testing.html")
+        .pipe(preprocess({context: {env: "testing"}}))
+        .pipe(gulp.dest("./"))
+        .pipe(notify({ message: 'Task html::testing OK' })) ;
+
+    gulp.src("./templates/index-production.html")
+        .pipe(preprocess({context: {env: "production"}}))
+        .pipe(gulp.dest("./"))
+        .pipe(notify({ message: 'Task html::production OK' })) ;
+
+    gulp.src("./templates/index-localhost.html")
+        .pipe(preprocess({context: {env: "localhost"}}))
+        .pipe(gulp.dest("./"))
+        .pipe(notify({ message: 'Task html::localhost OK' })) ;
 });
 
 // watch files for changes

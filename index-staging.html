@@ -4,96 +4,9 @@
 
     <head>
 
-        
-        <meta charset="utf-8">
-        
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        
-        <meta name="description" content="">
-        
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        
-        <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
-        
-        <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-        
-        <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-        
-        <link rel="stylesheet" href="https://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
-        
-        <html class="no-js" lang="">
-        
-        <style>
-        
-            @media screen and (min-width:450px) {
-                .navbar {
-                    display: block;
-                    padding:10px;
-                    width:  100%;
-                    height: 200px;
-                }
-                .navbar.main_menu {
-                    display:table;
-                    height:100%;
-                }
-                .user_menu {
-                    float:   right;
-                    display: inline-block;
-                    width:   100%
-                    height:  100px;
-                }
-                .user_menu__item{
-                    float:           left;
-                    display:         inline;
-                    vertical-align:  middle;
-                    padding:         0 20px
-                }
-                .main_menu {
-                    display: inline-block;
-                    float:   left;
-                    height:  100px;
-                }
-                .main_menu a{
-                    font-weight:700;
-                    font-style:normal
-                }
-        
-                ul.list-of-links--dark li>a:hover{
-                    background-color:#005479;
-                    color:#FFF
-                }
-                ul.main_menu li{
-                    display:block;
-                    float:left
-                }
-                ul.main_menu a{
-                    font-size:15px;
-                    font-size:.9375rem;
-                    line-height:1.25em;
-                    display:block;
-                    padding:1.6em 1.5em
-                }
-                ul.main_menu a.active{
-                    color:#005479
-                }
-                div#mece-icon-div {
-                    width:  300px;
-                    left:   0px;
-                }
-            }
-        
-            div#mece-icon-div {
-                width:  100%;
-            }
-        
-        </style>
-        
-        
-        
+        <title> MECE staging: index-mece.it.helsinki.fi.html </title>
 
-        <title> index-localhost.html</title>
-
-        <link rel="stylesheet" href="dist/css/widget.css">
+        <link rel="stylesheet" href="https://rawgit.com/UniversityofHelsinki/mece-client/master/dist/css/widget.css">
 
     </head>
 
@@ -189,7 +102,7 @@
                                      meceWindowHeight           = "350"
                                      position                   = "relative"
                                      meceCollapseWidth          = "450"
-                                     meceDomain                 = "https://mece.it.helsinki.fi"
+                                     meceDomain                 = "https://ohtu-testi.it.helsinki.fi"
                                      meceChannels               = "oodi.kurssisivu.tilastotieteenjatko.kurssi1,
                                                                    course.123,
                                                                    oodi.kurssisivu.tilastotieteenperusteet.kurssi1"
@@ -312,10 +225,67 @@
         
         
 
-        <script src="dist/mece.client.js"></script>
+        <script src="https://rawgit.com/UniversityofHelsinki/mece-client/master/dist/mece.client.js"></script>
 
     </body>
 
+</html>
+
+
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title> index-mece.it.helsinki.fi.html </title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+    <script>
+        $(document).ready(function () {
+            $('.language-demo-links a').click(function () {
+
+                var lang = $(this).text();
+                //console.log('click:' + lang);
+                $('#mece-content-div').attr('language', lang);
+            });
+        })
+    </script>
+</head>
+
+<body bgcolor="#E6E6FA">
+
+
+<div id="mece-icon-div">
+</div>
+
+<div id="mece-box-div">
+    <div id="mece-content-div"
+         class="dialog"
+         pollingInterval="5000"
+         language="en"
+         meceDomain="https://ohtu-testi.it.helsinki.fi"
+         meceChannels="oodi.kurssisivu.tilastotieteenperusteet.kurssi1,course.123">
+    </div>
+</div>
+<!--<div class="language-demo-links">-->
+<!--<a href="#">en</a>-->
+<!--<a href="#">fi</a>-->
+<!--<a href="#">sv</a>-->
+<!--</div>-->
+
+
+<!--<script src="https://rawgit.com/UniversityofHelsinki/mece-client/master/js/shibboLogin.js"></script>-->
+<!--<script src="https://rawgit.com/UniversityofHelsinki/mece-client/master/js/controller.js"></script>-->
+<!--<script src="https://rawgit.com/UniversityofHelsinki/mece-client/master/js/initializer.js"></script>-->
+<!--<script src="https://rawgit.com/UniversityofHelsinki/mece-client/master/js/view.js"></script>-->
+
+<script src="https://rawgit.com/UniversityofHelsinki/mece-client/master/dist/mece.client.js"></script>
+
+
+</body>
 </html>
 
 
