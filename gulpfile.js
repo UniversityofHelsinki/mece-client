@@ -84,5 +84,5 @@ gulp.task('styles', function() {
         .pipe(gulp.dest('./dist/css/'));
 });
 
-gulp.task('default', ['lint', 'jasmine-phantom', 'packageScripts', 'styles', 'watch']);
+gulp.task('default', ['lint', 'jasmine-phantom', 'packageScripts', 'styles', 'html', 'watch']);
 
