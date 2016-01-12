@@ -88,18 +88,23 @@
                              meceWindowHeight           = "350"
                              position                   = "relative"
                              meceCollapseWidth          = "450"
+
                             <!-- @if   env="production" -->
                              meceDomain                 = "https://mece.it.helsinki.fi"
                             <!-- @endif -->
+
                             <!-- @if env="staging" -->
                              meceDomain                 = "https://ohtu-testi.it.helsinki.fi"
                             <!-- @endif -->
+
                             <!-- @if env="testing" -->
                              meceDomain                 = "https://ohtu-devel.it.helsinki.fi"
                             <!-- @endif -->
+
                             <!-- @if env="localhost" -->
                              meceDomain                 = "https://localhost"
                             <!-- @endif -->
+
                              meceChannels               = "oodi.kurssisivu.tilastotieteenjatko.kurssi1,
                                                            course.123,
                                                            oodi.kurssisivu.tilastotieteenperusteet.kurssi1"

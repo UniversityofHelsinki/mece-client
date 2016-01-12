@@ -290,20 +290,21 @@ var meceNotifications = (function (mece) {
                 script_tag.onreadystatechange = function () { // For old versions of IE
                     if (this.readyState == 'complete' || this.readyState == 'loaded') {
                         mece.jQuery = window.jQuery.noConflict(true);
-                        console.log(mece.jQuery);
+                        debug("jQuery loaded");
                         init();
                     }
                 };
-            } else { // Other browsers
+            } else {
                 script_tag.onload = function () {
                     mece.jQuery = window.jQuery.noConflict(true);
+                    debug("browsers");
                     init();
                 };
             }
             (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
         } else {
-            // The jQuery version on the window is the one we want to use
             mece.jQuery = window.jQuery;
+            debug("The jQuery version on the window is the one we want to use");
             init();
         }
     }
@@ -314,7 +315,7 @@ var meceNotifications = (function (mece) {
         loadMomentJS();
         initLocales();
         loadJQuery();
-        loadBootstrap();
+        //loadBootstrap();
         debug('bootstrap out');
     }());
 
