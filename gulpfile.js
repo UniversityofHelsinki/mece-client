@@ -27,35 +27,17 @@ gulp.task('packageScripts', function(){
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('nunjucks', function() {
-    nunjucksRender.nunjucks.configure(['./templates'], {watch: false});
-    return gulp
-        .src('./templates/*.+html')
-        .pipe(nunjucksRender())
-        .pipe(gulp.dest('./app'));
-});
-
 gulp.task("html", function() {
-
-    gulp.src("./templates/index-staging.html")
-        .pipe(preprocess({context: {env: "staging"}}))
-        .pipe(gulp.dest("./"))
-        .pipe(notify({ message: 'Task html::staging OK' })) ;
-
-    gulp.src("./templates/index-testing.html")
-        .pipe(preprocess({context: {env: "testing"}}))
-        .pipe(gulp.dest("./"))
-        .pipe(notify({ message: 'Task html::testing OK' })) ;
-
-    gulp.src("./templates/index-production.html")
-        .pipe(preprocess({context: {env: "production"}}))
-        .pipe(gulp.dest("./"))
-        .pipe(notify({ message: 'Task html::production OK' })) ;
-
-    gulp.src("./templates/index-localhost.html")
-        .pipe(preprocess({context: {env: "localhost"}}))
-        .pipe(gulp.dest("./"))
-        .pipe(notify({ message: 'Task html::localhost OK' })) ;
+    var envs = [ "staging", "testing", "production", "localhost" ];
+    envs.forEach(function(e) {
+        var t = "./templates/index-" + e + ".html";
+        gulp.src(t)
+            .pipe(preprocess({context: {env: e}}))
+            .pipe(gulp.dest("./"))
+            .on("end", function() {
+                console.log(t + " .. OK");
+            });
+    });
 });
 
 // watch files for changes
