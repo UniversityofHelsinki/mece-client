@@ -10,7 +10,7 @@ div#mece-content-div {
   font-family: $font-stack;
   display: none;
   width: 346px;
-  height: 330px;
+  max-height: 350px;
   overflow: auto;
   background-color: $white;
   border: 0px;
@@ -20,6 +20,7 @@ div#mece-content-div {
     background-color: $white;
     color: black;
     padding: 0px;
+    margin: 0px;
     list-style: none;
 
     /* the li-element containing one notification */
@@ -27,7 +28,7 @@ div#mece-content-div {
       height: 100px;
       border-bottom: 2px solid $whitesmoke;
       background-color: $white;
-      padding-top: 10px;
+      padding-top: 0px;
       margin-right: 12.8px;
 
       /* notification container, holds avatar and notification data */
@@ -41,14 +42,21 @@ div#mece-content-div {
           width: 70px;
           height: 100%;
         }
-
+        .mece-avatar-picture {
+          width: 70px;
+          height: 70px;
+          margin-top: 15px;
+          margin-left: 10px;
+        }
         .mece-notification-fields {
           float: left;
           display: inline-block;
-          width: -moz-calc(100% - 70px);
-          width: -webkit-calc(100% - 70px);
-          width: calc(100% - 70px);
-          height: 100%;
+          width: -moz-calc(100% - 100px);
+          width: -webkit-calc(100% - 100px);
+          width: calc(100% - 100px);
+          /*height: 100%;*/
+          margin-left: 20px;
+          margin-top: 10px;
 
           .mece-msg-title {
             a {
@@ -60,6 +68,11 @@ div#mece-content-div {
           }
           .mece-msg-content {
             color: rgb(66, 66, 66);
+
+            /* truncate text */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 50px;
 
             a {
               color: $strongblue;
@@ -88,6 +101,7 @@ div#mece-content-div {
 /* initial color for the so called private message. */
 .mece-private-message{
   background-color: #E5F3F9 !important;
+  width: 100%;
 }
 
 /* color for the so called private message after it is clicked */

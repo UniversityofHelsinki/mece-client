@@ -1,6 +1,4 @@
 var meceNotifications = (function (mece) {
-    var MECE_URL = 'https://ohtu-devel.it.helsinki.fi/mece'; // for ohtu-testi.it.helsinki.fi/meceapp
-    //MECE_URL = 'https://localhost/mece'; //for local development ARO
     var MECE_DEFAULT_POLLING_INTERVAL = 4000;
     var pollingInterval;
     var MECE_DEFAULT_CHANNELS = "";
@@ -31,15 +29,17 @@ var meceNotifications = (function (mece) {
         pollingInterval = readPollingIntervalAttribute();
         mece.channels = readChannelsAttribute();
     }
-    
+
     function init() {
         debug('init');
-        if (!mece.controller.ready && dependenciesLoaded()) {
-            debug('init !mece.controller.ready && dependenciesLoaded()');
-            $ = $ || mece.jQuery;
-            readAndInitializeAttributeValues();
-            start();
-            mece.controller.ready = true;
+        if(mece.initializer && mece.initializer.ready && mece.view && mece.view.ready) {
+            if (!mece.controller.ready && dependenciesLoaded()) {
+                debug('init !mece.controller.ready && dependenciesLoaded()');
+                $ = mece.jQuery;
+                readAndInitializeAttributeValues();
+                start();
+                mece.controller.ready = true;
+            }
         }
         debug('init out');
     }
@@ -54,7 +54,7 @@ var meceNotifications = (function (mece) {
         if (startingTime !== '0') {
             query.startingTime = startingTime;
         }
-        var channelUrl = MECE_URL + "/notifications?" + $.param(query);
+        var channelUrl = mece.domain + "/mece/notifications?" + $.param(query);
 
         return $.ajax({
             url: channelUrl,
@@ -73,58 +73,74 @@ var meceNotifications = (function (mece) {
         });
     }
 
-    function start() {
-        debug('start');
-        if (!mece.controller.running) {
-            // TODO: interval cancellation in error cases
-            setInterval(function () {
+    function onGetNotificationsByChannelsDone (response) {
 
-                getNotificationsByChannels().done(function (response) {
-                    var temps = response;
+        var temps = response;
 
-                    temps.sort(function (a, b) {
-                        return a.submitted > b.submitted;
-                    });
+        // take the startingTime before sorting
+        if(temps && temps.length > 0) {
+            startingTime = temps[0].received;
+        }
+        // sort notifications based on submitted field
+        temps.sort(function (a, b) {
+            return new Date(a.submitted) - new Date(b.submitted);
+        });
 
-                    if (temps.length > 0) {
-                        startingTime = temps[temps.length - 1].received;
-                        meceNotifications.view.notifications.add(temps.map(function (notification) {
-                            var translations = {
-                                en: {
-                                    heading: notification.headingEN,
-                                    message: notification.messageEN,
-                                    link: notification.linkEN,
-                                    linkText: notification.linkTextEN
-                                },
-                                fi: {
-                                    heading: notification.headingFI,
-                                    message: notification.messageFI,
-                                    link: notification.linkFI,
-                                    linkText: notification.linkTextFI
-                                },
-                                sv: {
-                                    heading: notification.headingSV,
-                                    message: notification.messageSV,
-                                    link: notification.linkSV,
-                                    linkText: notification.linkTextSV
-                                }
-                            };
-
-                            return ([notification._id,
-                                     notification.message,
-                                     notification.link,
-                                     notification.linkText,
-                                     notification.heading,
-                                     notification.avatar, //MECE-368: avatar kentää ei ole vielä olemassä mece kannassa
-                                     notification.received,
-                                     notification._recipients?notification._recipients[0]:null,
-                                     USE_TRANSLATIONS?translations:{en:{}, fi:{}, sv:{}}
-                            ]);
-
-                        }));
+        if (temps.length > 0) {
+            meceNotifications.view.notifications.add(temps.map(function (notification) {
+                var translations = {
+                    en: {
+                        heading: notification.headingEN,
+                        message: notification.messageEN,
+                        link: notification.linkEN,
+                        linkText: notification.linkTextEN
+                    },
+                    fi: {
+                        heading: notification.headingFI,
+                        message: notification.messageFI,
+                        link: notification.linkFI,
+                        linkText: notification.linkTextFI
+                    },
+                    sv: {
+                        heading: notification.headingSV,
+                        message: notification.messageSV,
+                        link: notification.linkSV,
+                        linkText: notification.linkTextSV
                     }
-                }, function (error) {
-                });
+                };
+
+                return ([notification._id,
+                         notification.message,
+                         notification.link,
+                         notification.linkText,
+                         notification.heading,
+                         notification.avatarImageUrl,
+                         notification.received,
+                         notification._recipients?notification._recipients[0]:null,
+                         USE_TRANSLATIONS?translations:{en:{}, fi:{}, sv:{}},
+                         notification.submitted
+                ]);
+
+            }));
+        }
+    };
+
+    function fetchNotifications() {
+        getNotificationsByChannels().done(function (response) {
+                onGetNotificationsByChannelsDone(response);
+        }, function (error) {
+                ; // TODO: interval cancellation in error cases
+        });
+    }
+
+    function start() {
+        if (!mece.controller.running) {
+            meceNotifications.view.notifications.updateTime();
+            fetchNotifications();
+            meceNotifications.view.notifications.check();
+            setInterval(function () {
+                meceNotifications.view.notifications.updateTime();
+                fetchNotifications();
                 meceNotifications.view.notifications.check();
             }, pollingInterval);
             mece.controller.running = true;
