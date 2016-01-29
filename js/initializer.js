@@ -1,10 +1,17 @@
 var meceNotifications = (function (mece) {
     var MECE_JQUERY_VERSION = '1.11.3';
+    var MECE_DEFAULT_DOMAIN = 'https://mece.it.helsinki.fi';
+    var MECE_DEFAULT_WINDOW_LEFT_OFFSET = 250;
+    var MECE_DEFAULT_COLLAPSE_WIDTH = 450;
+    var MECE_DEFAULT_WINDOW_TOP_OFFSET = 35;
+    var MECE_DEFAULT_WINDOW_WIDTH = 300;
+    var MECE_DEFAULT_WINDOW_HEIGHT = 350;
 
     mece.contentDivId = "#mece-content-div";
     mece.iconDivId = "#mece-icon-div";
     mece.unreadCountSpanId = "#unread-count";
     mece.jQuery = null;
+    mece.config = {};
 
     function debug(txt){
         console.log('module: INITIALIZER -- ' + txt + ' : ' + Date().toString());
@@ -13,6 +20,14 @@ var meceNotifications = (function (mece) {
     function init() {
         debug('init');
         mece.initializer.ready = true;
+        mece.domain = mece.jQuery(mece.contentDivId).attr("meceDomain") || MECE_DEFAULT_DOMAIN;
+        mece.config.windowLeftOffset = parseInt(mece.jQuery(mece.contentDivId).attr("meceWindowLeftOffset")) || MECE_DEFAULT_WINDOW_LEFT_OFFSET;
+        mece.config.windowTopOffset = parseInt(mece.jQuery(mece.contentDivId).attr("meceWindowTopOffset")) || MECE_DEFAULT_WINDOW_TOP_OFFSET;
+        mece.config.windowTopOffsetCollapsed = parseInt(mece.jQuery(mece.contentDivId).attr("meceWindowTopOffsetCollapsed")) || MECE_DEFAULT_WINDOW_TOP_OFFSET_COLLAPSED;
+        mece.config.windowWidth = parseInt(mece.jQuery(mece.contentDivId).attr("meceWindowWidth")) || MECE_DEFAULT_WINDOW_WIDTH;
+        mece.config.windowHeight = parseInt(mece.jQuery(mece.contentDivId).attr("meceWindowHeight")) || MECE_DEFAULT_WINDOW_HEIGHT;
+        mece.config.collapseWidth = parseInt(mece.jQuery(mece.contentDivId).attr("meceCollapseWidth")) || MECE_DEFAULT_COLLAPSE_WIDTH;
+
         if (mece.controller){
             debug('mece.controller');
             mece.controller.init();
@@ -33,6 +48,38 @@ var meceNotifications = (function (mece) {
         }
     }
 
+     //<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+     //<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+     //<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    function loadBootstrap() {
+        var BOOTSTRAP_LINK_HREF = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css",
+            BOOTSTRAP_SCRIPT_SRC = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js";
+        if (!window.bootstrap) {
+            debug("loading bootstrap ..");
+            var js = document.createElement('script');
+            var css = document.createElement('link');
+            css.setAttribute("rel", "stylesheet");
+            css.setAttribute("href", BOOTSTRAP_LINK_HREF);
+
+            if (js.readyState) {
+                js.onreadystatechange = function () {
+                    if (this.readyState == 'complete' || this.readyState == 'loaded') {
+                        mece.bootstrap = window.bootstrap;
+                        debug("mece.bootstrap:" + mece.bootstrap);
+                    }
+                };
+            }
+
+            (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(js);
+            (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(css);
+            debug("loading bootstrap .. OK");
+        } else {
+            mece.bootstrap = window.bootstrap;
+            debug("loading bootstrap .. OK");
+        }
+    }
+
     function loadJQuery() {
         if (window.jQuery === undefined || window.jQuery.fn.jquery !== MECE_JQUERY_VERSION) {
             var script_tag = document.createElement('script');
@@ -42,20 +89,21 @@ var meceNotifications = (function (mece) {
                 script_tag.onreadystatechange = function () { // For old versions of IE
                     if (this.readyState == 'complete' || this.readyState == 'loaded') {
                         mece.jQuery = window.jQuery.noConflict(true);
-                        console.log(mece.jQuery);
+                        debug("jQuery loaded");
                         init();
                     }
                 };
-            } else { // Other browsers
+            } else {
                 script_tag.onload = function () {
                     mece.jQuery = window.jQuery.noConflict(true);
+                    debug("browsers");
                     init();
                 };
             }
             (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
         } else {
-            // The jQuery version on the window is the one we want to use
             mece.jQuery = window.jQuery;
+            debug("The jQuery version on the window is the one we want to use");
             init();
         }
     }
@@ -66,6 +114,7 @@ var meceNotifications = (function (mece) {
         loadMomentJS();
         initLocales();
         loadJQuery();
+        //loadBootstrap();
         debug('bootstrap out');
     }());
 

@@ -1,0 +1,227 @@
+<!-- #ifdef WITH_PAGE_HEADER
+<div class="page-header">
+
+    <div class="show_mobile_only mobile-toolbar">
+
+    <div class="table-list">
+        <li>
+            <menu-language>
+                <div>
+                    <ul class="inline-list menu-language">
+                        <li>
+                            <a tabindex="0" role="button" aria-label="English" class="menu-language__item link-label clickable">
+                                <span class="no__hide_mobile_only" style = "color:red">English</span>
+                                <span class="show_mobile_only">En</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a tabindex="0" role="button" aria-label="English" class="menu-language__item link-label clickable">
+                                <span class="no__hide_mobile_only">Svenska</span>
+                                <span class="show_mobile_only">Sv</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </menu-language>
+        </li>
+    </div>
+
+</div>
+</div>
+#endif WITH_PAGE_HEADER -->
+
+<div class="ng-scope" ng-include="'app/partials/_page_navigation.html'" style = "background:#dddddd">
+
+    <div class="navbar no__hide_mobile_only">
+
+
+            <!-- #ifdef WITH_MAIN_MENU
+            <div class="main_menu">
+                <ul>
+                    <li> <a href="#/" class="active">HOME</a> </li>
+                    <li> <a href="#/" class="active">WEBOODI</a> </li>
+                </ul>
+            </div>
+            #endif WITH_MAIN_MENU -->
+
+            <div class="user_menu">
+
+                <!-- #ifdef WITH_SEARCH_LABEL
+                <div class="user_menu__item no__hide_mobile_only search-icon">
+                    <div tabindex="0" role="button" aria-label="Öppna sök" class="dropdown-toggle" ng-click="toggle()" ng-class="{'active' : active === true}">
+                        <div class="icon tour-element__search">
+                            <a class="user_menu__actions__action"> <span>SEARCH</span> </a>
+                        </div>
+                    </div>
+                </div>
+                #endif WITH_SEARCH_LABEL -->
+
+                <div class="user_menu__item no__hide_mobile_only search-bar">
+                    <div tabindex="0" role="button" aria-label="Avaa haku">
+                        <span style = "color:#178feb" class = "glyphicon glyphicon-search" title = "Search"/> 
+                    </div>
+                </div>
+
+                <div class="user_menu__item no__hide_mobile_only start-tour">
+                    <div tabindex="0" role="button" aria-label="Introduktionstur">
+                        <span style = "color:#178feb" class = "glyphicon glyphicon-info-sign" title = "Introduktionstur"/> 
+                    </div>
+                </div>
+
+                <!--
+                <div dropdown="" class="user_menu__item user_notifications" open-callback="isOpen = true" close-callback="isOpen = false">
+                 -->
+                <div class="user_menu__item no__hide_mobile_only start-tour">
+
+                    <!-- #ifdef WITH_MECE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
+                    <div id="mece" style="width:50px;">
+                        <!--
+                        -->
+                        <div id="mece-icon-div" > </div>
+                        <div id                         = "mece-content-div"
+                             class                      = "dialog"
+                             pollingInterval            = "5000"
+                             meceWindowTopOffset        = "50"
+                             meceWindowTopOffsetCollapsed = "70"
+                             meceWindowLeftOffset       = "-150"
+                             meceWindowWidth            = "300"
+                             meceWindowHeight           = "350"
+                             position                   = "relative"
+                             meceCollapseWidth          = "450"
+
+                            <!-- @if   env="production" -->
+                             meceDomain                 = "https://mece.it.helsinki.fi"
+                            <!-- @endif -->
+
+                            <!-- @if env="staging" -->
+                             meceDomain                 = "https://ohtu-devel.it.helsinki.fi"
+                            <!-- @endif -->
+
+                            <!-- @if env="testing" -->
+                             meceDomain                 = "https://ohtu-devel.it.helsinki.fi"
+                            <!-- @endif -->
+
+                            <!-- @if env="localhost" -->
+                             meceDomain                 = "https://localhost"
+                            <!-- @endif -->
+
+                             meceChannels               = "oodi.kurssisivu.tilastotieteenjatko.kurssi1,
+                                                           course.123,
+                                                           oodi.kurssisivu.tilastotieteenperusteet.kurssi1"
+                             language                   = "fi" >
+                        </div>
+                    </div>
+                    <!-- #endif WITH_MECE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
+
+                </div>
+
+                <!-- #ifdef WITH_OPINTONI_LOGOUT -->
+                <div class="user_menu__item no__hide_mobile_only search-bar">
+                    <div tabindex="0" role="button" aria-label="Avaa haku">
+                        <span style = "color:#178feb" class = "glyphicon glyphicon-search" title = "Search"/> 
+                    </div>
+                </div>
+
+                <div class="user_menu__item no__hide_mobile_only">
+                    <div tabindex="0" role="button" aria-label="Log out">
+                        <span style = "color:#178feb" class = "glyphicon glyphicon-log-out" title = "Log out"/> 
+                    </div>
+                </div>
+                <!-- #endif WITH_OPINTONI_LOGOUT -->
+
+                <!-- #ifdef WITH_OPINTONI_ASETUKSET
+                <div dropdown="" class="user_menu__item no__hide_mobile_only user_settings" close-callback="resetMenu()">
+                    <div class="dropdown-toggle">
+                        <a href="" class="user_menu__actions__action" ng-class="{active : showMenu}" aria-label="Inställningar" role="button">
+                            <div class="user-avatar__small" img-src="session.avatarUrl" img-alt="session.name">
+                                <div class="user-avatar" ng-class="{teacher : isTeacher, default: isDefault()}">
+                                    <img src = "https://qa.student.helsinki.fi/api/public/v1/images/avatar/80"
+                                         ng-src = "https://qa.student.helsinki.fi/api/public/v1/images/avatar/80"
+                                         class = "user-avatar__icon" alt = "Maggie Simpson">
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                #endif WITH_OPINTONI_ASETUKSET -->
+
+            </div> <!--class="user_menu"-->
+
+        </div> <!--class="wrapper"-->
+
+    </div> <!--class="navbar no__hide_mobile_only ng-scope"-->
+
+    <!-- #ifdef WITH_DUMMY_OPINTONI_CONTENT http://thenewcode.com/852/A-Fresh-Approach-to-Responsive-HTML5-Tables -->
+    <div class="opintoni-page-content">
+        <table id="miyazaki">
+            <caption>The Films of Miyazaki</caption>
+            <thead>
+                    <tr><th>Film</th><th>Year</th><th>Honor</th></tr>
+            </thead>
+            <tbody>
+                    <tr>
+                        <td data-th="Film">My Neighbor Totoro</td>
+                        <td data-th="Year">1988</td>
+                        <td data-th="Honor">Blue Ribbon Award (Special)</td>
+                    </tr>
+                    <tr>
+                        <td data-th="Film">Princess Mononoke</td>
+                        <td data-th="Year">1997</td>
+                        <td data-th="Honor">Nebula Award (Best Script)</td>
+                    </tr>
+                    <tr>
+                        <td data-th="Film">Spirited Away</td>
+                        <td data-th="Year">2001</td>
+                        <td data-th="Honor">Academy Award (Best Animated Feature)</td>
+                    </tr>
+                    <tr>
+                        <td data-th="Film">Howl’s Moving Castle</td>
+                        <td data-th="Year">2004</td>
+                        <td data-th="Honor">Hollywood Film Festival (Animation OTY)</td>
+                    </tr>
+            </tbody>
+        </table>
+        <style>
+        table#miyazaki caption {
+                font-size: 2rem;
+                color: #444;
+                margin: 1rem;
+                background-image: url(miyazaki.png), url(miyazaki2.png);
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center left, center right;
+        }
+        table#miyazaki {
+                border-collapse: collapse;
+                font-family: Agenda-Light;
+                font-weight: 100;
+                background: #333;
+                color: #fff;
+                text-rendering: optimizeLegibility;
+                border-radius: 5px;
+        }
+        table#miyazaki thead th { 
+                font-weight: 600; 
+        }
+        table#miyazaki thead th, 
+                table#miyazaki tbody td {
+                padding: .8rem;
+                font-size: 1.4rem; 
+        }
+        table#miyazaki tbody td {
+                padding: .8rem;
+                font-size: 1.4rem;
+                color: #444;
+                background: #eee;
+        }
+        table#miyazaki tbody tr:not(:last-child) {
+                border-top: 1px solid #ddd;
+                border-bottom: 1px solid #ddd; 
+        }
+        </style>
+    </div>
+    <!-- #endif WITH_DUMMY_OPINTONI_CONTENT -->
+
+</div> <!--class="ng-scope"-->
+
+

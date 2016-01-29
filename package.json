@@ -24,9 +24,11 @@
     "jasmine-spec-reporter": "^2.4.0",
     "modernizr": "^3.2.0",
     "phantomjs": "^1.9.19",
-    "moment" : "^2.6.0"
+    "moment": "^2.6.0"
   },
   "dependencies": {
-    "es6-promise": "^3.0.2"
+    "es6-promise": "^3.0.2",
+    "gulp-notify": "~2.2.0",
+    "gulp-file-include": "~0.13.7"
   }
 }

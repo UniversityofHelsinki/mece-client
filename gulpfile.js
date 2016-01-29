@@ -9,6 +9,8 @@ var reporters = require('jasmine-reporters');
 var jasmineBrowser = require('gulp-jasmine-browser');
 var SpecReporter = require('jasmine-spec-reporter');
 var sass = require('gulp-sass');
+var notify = require('gulp-notify');
+var preprocess = require('gulp-preprocess');
 
 // check javascript syntax
 gulp.task('lint', function(){
@@ -23,6 +25,19 @@ gulp.task('packageScripts', function(){
         .pipe(rename('mece.client.min.js'))
         .pipe(uglify())
         .pipe(gulp.dest('dist'));
+});
+
+gulp.task("html", function() {
+    var envs = [ "staging", "testing", "production", "localhost" ];
+    envs.forEach(function(e) {
+        var t = "./templates/index-" + e + ".html";
+        gulp.src(t)
+            .pipe(preprocess({context: {env: e}}))
+            .pipe(gulp.dest("./"))
+            .on("end", function() {
+                console.log(t + " .. OK");
+            });
+    });
 });
 
 // watch files for changes
@@ -51,5 +66,5 @@ gulp.task('styles', function() {
         .pipe(gulp.dest('./dist/css/'));
 });
 
-gulp.task('default', ['lint', 'jasmine-phantom', 'packageScripts', 'styles', 'watch']);
+gulp.task('default', ['lint', 'jasmine-phantom', 'packageScripts', 'styles', 'html', 'watch']);
 

@@ -1,7 +1,9 @@
 /* the notification counter element */
 .mece-badge {
-  min-width: 8px;
-  padding: 2px 4px;
+  display: inline-block;
+  width: 16px;
+  line-height: 16px;
+  padding: 3px 0px 3px 0px;
   font-size: 10px;
   font-weight: 700;
   line-height: 1;
@@ -9,11 +11,11 @@
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
-  background-color: #FFD204;
+  background-color: #fca311;
   border-radius: 8px;
-  left: 20px;
-  top: 10px;
-  position: absolute; }
+  left: -10px;
+  top: -5px;
+  position: relative; }
 
 /* div-element containing the mece client */
 div#mece-content-div {
@@ -21,7 +23,7 @@ div#mece-content-div {
   font-family: Open Sans, Helvetica, Arial, sans-serif, Nimbus Sans L;
   display: none;
   width: 346px;
-  height: 330px;
+  max-height: 350px;
   overflow: auto;
   background-color: #FFF;
   border: 0px;
@@ -30,13 +32,14 @@ div#mece-content-div {
     background-color: #FFF;
     color: black;
     padding: 0px;
+    margin: 0px;
     list-style: none;
     /* the li-element containing one notification */ }
     div#mece-content-div ul.mece-list li.mece-msg-item {
       height: 100px;
       border-bottom: 2px solid #F5F5F5;
       background-color: #FFF;
-      padding-top: 10px;
+      padding-top: 0px;
       margin-right: 12.8px;
       /* notification container, holds avatar and notification data */ }
       div#mece-content-div ul.mece-list li.mece-msg-item .mece-notification-detail-view {
@@ -47,20 +50,31 @@ div#mece-content-div {
           display: inline-block;
           width: 70px;
           height: 100%; }
+        div#mece-content-div ul.mece-list li.mece-msg-item .mece-notification-detail-view .mece-avatar-picture {
+          width: 70px;
+          height: 70px;
+          margin-top: 15px;
+          margin-left: 10px; }
         div#mece-content-div ul.mece-list li.mece-msg-item .mece-notification-detail-view .mece-notification-fields {
           float: left;
           display: inline-block;
-          width: -moz-calc(100% - 70px);
-          width: -webkit-calc(100% - 70px);
-          width: calc(100% - 70px);
-          height: 100%; }
+          width: -moz-calc(100% - 100px);
+          width: -webkit-calc(100% - 100px);
+          width: calc(100% - 100px);
+          /*height: 100%;*/
+          margin-left: 20px;
+          margin-top: 10px; }
           div#mece-content-div ul.mece-list li.mece-msg-item .mece-notification-detail-view .mece-notification-fields .mece-msg-title a {
             color: #0098d0;
             text-decoration: none;
             font-weight: bold;
             height: 18px; }
           div#mece-content-div ul.mece-list li.mece-msg-item .mece-notification-detail-view .mece-notification-fields .mece-msg-content {
-            color: #424242; }
+            color: #424242;
+            /* truncate text */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 50px; }
             div#mece-content-div ul.mece-list li.mece-msg-item .mece-notification-detail-view .mece-notification-fields .mece-msg-content a {
               color: #0098d0;
               height: 36px; }
@@ -73,7 +87,8 @@ div#mece-content-div {
 
 /* initial color for the so called private message. */
 .mece-private-message {
-  background-color: #E5F3F9 !important; }
+  background-color: #E5F3F9 !important;
+  width: 100%; }
 
 /* color for the so called private message after it is clicked */
 .mece-read-message {
