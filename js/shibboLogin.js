@@ -1,6 +1,6 @@
 var meceNotifications = (function (mece) {
     var MECE_DEFAULT_LOGIN_URL = 'https://mece.it.helsinki.fi/Shibboleth.sso/HYLogin';
-    mece.login_url = mece.jQuery(mece.contentDivId).attr("meceLoginUrl") || MECE_DEFAULT_LOGIN_URL;
+    mece.login_url = document.getElementById("mece-content-div").getAttribute("meceLoginUrl") || MECE_DEFAULT_LOGIN_URL;
 
     function debug(txt){
         console.log('module: SHIBBOLOGIN -- ' + txt + ' : ' + Date().toString());
