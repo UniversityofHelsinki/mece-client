@@ -28,7 +28,8 @@
   },
   "dependencies": {
     "es6-promise": "^3.0.2",
+    "gulp-file-include": "~0.13.7",
     "gulp-notify": "~2.2.0",
-    "gulp-file-include": "~0.13.7"
+    "gulp-preprocess": "^2.0.0"
   }
 }

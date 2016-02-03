@@ -1,5 +1,6 @@
 var meceNotifications = (function (mece) {
-    var MECE_LOGIN_URL = 'https://ohtu-devel.it.helsinki.fi/Shibboleth.sso/HYLogin';
+    var MECE_DEFAULT_LOGIN_URL = 'https://mece.it.helsinki.fi/Shibboleth.sso/HYLogin';
+    mece.login_url = mece.jQuery(mece.contentDivId).attr("meceLoginUrl") || MECE_DEFAULT_LOGIN_URL;
 
     function debug(txt){
         console.log('module: SHIBBOLOGIN -- ' + txt + ' : ' + Date().toString());
@@ -9,7 +10,7 @@ var meceNotifications = (function (mece) {
         debug('createIframe');
         var iframe = document.createElement('iframe');
         iframe.style.display = "none";
-        iframe.src = MECE_LOGIN_URL;
+        iframe.src = mece.login_url;
         iframe.addEventListener('load', function () {
             setTimeout(function () {
                 debug('loggedIn');
