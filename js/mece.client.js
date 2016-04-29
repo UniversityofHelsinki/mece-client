@@ -32,6 +32,7 @@ var meceNotifications = (function (mece) {
         NOTIF_SUBMITTED_IND = 9,
         IMAGES_URI = "https://rawgit.com/UniversityofHelsinki/mece-client/master/images",
 
+
         MECE_MSG_RECEIVED = "mece-msg-received",
 
         translations = {
@@ -108,7 +109,7 @@ var meceNotifications = (function (mece) {
         if (startingTime !== '0') {
             query.startingTime = startingTime;
         }
-        channelUrl = mece.domain + "/mece/notifications?" + $.param(query);
+        channelUrl = mece.domain + "/mece/api/notifications?" + $.param(query);
 
         return $.ajax({
             url: channelUrl,
