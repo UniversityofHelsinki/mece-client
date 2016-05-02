@@ -20,7 +20,7 @@ var meceNotifications = (function (mece) {
         MECE_DEFAULT_WINDOW_HEIGHT = 350,
 
         language = 'fi', //Set in init(). This is just default.
-        //notification property indexies
+    //notification property indexies
         NOTIF_ID_IND = 0,
         NOTIF_MSG_IND = 1,
         NOTIF_LINK_IND = 2,
@@ -62,7 +62,6 @@ var meceNotifications = (function (mece) {
         getUnreadNotificationsCount(true);
         dialog();
         markNotificationAsRead();
-
         start();
     }
 
@@ -75,6 +74,7 @@ var meceNotifications = (function (mece) {
         mece.config.windowWidth = parseInt(mece.jQuery(mece.contentDivId).attr("meceWindowWidth")) || MECE_DEFAULT_WINDOW_WIDTH;
         mece.config.windowHeight = parseInt(mece.jQuery(mece.contentDivId).attr("meceWindowHeight")) || MECE_DEFAULT_WINDOW_HEIGHT;
         mece.config.collapseWidth = parseInt(mece.jQuery(mece.contentDivId).attr("meceCollapseWidth")) || MECE_DEFAULT_COLLAPSE_WIDTH;
+        mece.token = mece.jQuery(mece.contentDivId).attr("token");
         initLocales();
     }
 
@@ -109,6 +109,8 @@ var meceNotifications = (function (mece) {
         if (startingTime !== '0') {
             query.startingTime = startingTime;
         }
+
+        query.token = mece.token;
         channelUrl = mece.domain + "/mece/api/notifications?" + $.param(query);
 
         return $.ajax({
