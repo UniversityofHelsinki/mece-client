@@ -89,32 +89,26 @@ var meceNotifications = (function (mece) {
         }, pollingInterval);
     }
 
+
     function fetchNotifications() {
-        getNotificationsByChannels().done(function (response) {
-            onGetNotificationsByChannelsDone(response);
+        getUserNotifications().done(function (response) {
+            onGetNotificationsDone(response);
         }, function (error) {
             // TODO: interval cancellation in error cases
         });
     }
 
-    // this is the thing. in the future the jwt token is passed in the request to the mece server, token contains userId
-    function getNotificationsByChannels() {
-        var channelUrl,
-            query = {
-                channelNames: mece.channels.split(MECE_CHANNEL_SEPARATOR).map(function (s) {
-                    return (s.trim());
-                })
-            };
 
+    function getUserNotifications() {
+        var query = {};
         if (startingTime !== '0') {
             query.startingTime = startingTime;
         }
-
         query.token = mece.token;
-        channelUrl = mece.domain + "/mece/api/notifications?" + $.param(query);
+        var notificationsUrl = mece.domain + "/mece/api/notifications?" + $.param(query);
 
         return $.ajax({
-            url: channelUrl,
+            url: notificationsUrl,
             type: 'GET',
             crossDomain: true,
             dataType: "json",
@@ -130,7 +124,8 @@ var meceNotifications = (function (mece) {
         });
     }
 
-    function onGetNotificationsByChannelsDone(response) {
+
+    function onGetNotificationsDone(response) {
         var temps = response,
             translations;
 
