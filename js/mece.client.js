@@ -38,7 +38,7 @@ var meceNotifications = (function (mece) {
         translations = {
             no_messages: {
                 en: "No messages",
-                fi: "Ei viestejä",
+                fi: "Ei viestejÃ¤",
                 sv: "Inga meddelanden"
             }
         };
@@ -402,12 +402,8 @@ var meceNotifications = (function (mece) {
             outerDiv = $("<div>").addClass("mece-notification-detail-view").append(avatarDiv).append(detailsDiv).append(hiddenSubmittedDiv),
             li = $("<li>").attr("id", notification[NOTIF_ID_IND]).addClass("mece-msg-item");
 
+        li.addClass("mece-private-message");
 
-        if (notification[NOTIF_RECIPIENTS_IND]) {
-            li.addClass("mece-private-message");
-        } else {
-            li.addClass("mece-public-message");
-        }
         if (notification[NOTIF_RECIPIENTS_IND] && notification[NOTIF_RECIPIENTS_IND].read) {
             li.addClass("mece-read-message");
         }
