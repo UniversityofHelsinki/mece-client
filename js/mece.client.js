@@ -4,8 +4,6 @@ var meceNotifications = (function (mece) {
     // some default values if not provided
     var MECE_DEFAULT_POLLING_INTERVAL = 4000,
         pollingInterval,
-        MECE_DEFAULT_CHANNELS = "",
-        MECE_CHANNEL_SEPARATOR = ",",
         startingTime = '0',
         notifications = [],
         $,
@@ -18,6 +16,7 @@ var meceNotifications = (function (mece) {
         MECE_DEFAULT_WINDOW_TOP_OFFSET = 35,
         MECE_DEFAULT_WINDOW_WIDTH = 300,
         MECE_DEFAULT_WINDOW_HEIGHT = 350,
+        MECE_DEFAULT_WINDOW_TOP_OFFSET_COLLAPSED = 70,
 
         language = 'fi', //Set in init(). This is just default.
     //notification property indexies
@@ -38,7 +37,7 @@ var meceNotifications = (function (mece) {
         translations = {
             no_messages: {
                 en: "No messages",
-                fi: "Ei viestejä",
+                fi: "Ei viestejÃ¤",
                 sv: "Inga meddelanden"
             }
         };
@@ -68,6 +67,7 @@ var meceNotifications = (function (mece) {
     function initializerStuff() {
         loadMomentJS();
         mece.domain = mece.jQuery(mece.contentDivId).attr("meceDomain") || MECE_DEFAULT_DOMAIN;
+        mece.username =  mece.jQuery(mece.contentDivId).attr("username");
         mece.config.windowLeftOffset = parseInt(mece.jQuery(mece.contentDivId).attr("meceWindowLeftOffset")) || MECE_DEFAULT_WINDOW_LEFT_OFFSET;
         mece.config.windowTopOffset = parseInt(mece.jQuery(mece.contentDivId).attr("meceWindowTopOffset")) || MECE_DEFAULT_WINDOW_TOP_OFFSET;
         mece.config.windowTopOffsetCollapsed = parseInt(mece.jQuery(mece.contentDivId).attr("meceWindowTopOffsetCollapsed")) || MECE_DEFAULT_WINDOW_TOP_OFFSET_COLLAPSED;
@@ -106,7 +106,7 @@ var meceNotifications = (function (mece) {
         }
         query.token = mece.token;
         var notificationsUrl = mece.domain + "/mece/api/notifications?" + $.param(query);
-
+        console.log("notificationURl: " + notificationsUrl);
         return $.ajax({
             url: notificationsUrl,
             type: 'GET',
@@ -131,7 +131,7 @@ var meceNotifications = (function (mece) {
 
         // take the startingTime before sorting
         if (temps && temps.length > 0) {
-            startingTime = temps[0].received;
+            getTheLatestStartingTime(temps);
         }
         // sort notifications based on submitted field
         temps.sort(function (a, b) {
@@ -175,19 +175,21 @@ var meceNotifications = (function (mece) {
             }));
         }
     }
+    function getTheLatestStartingTime(temps) {
+
+        $.each(temps, function(index, temp) {
+            if (startingTime < temp.received) {
+                startingTime = temp.received;
+            }
+        });
+    }
 
     function readAndInitializeAttributeValues() {
 
         function readPollingIntervalAttribute() {
             return $(mece.contentDivId).attr("pollingInterval") || MECE_DEFAULT_POLLING_INTERVAL;
         }
-
-        function readChannelsAttribute() {
-            return $(mece.contentDivId).attr("meceChannels") || MECE_DEFAULT_CHANNELS;
-        }
-
         pollingInterval = readPollingIntervalAttribute();
-        mece.channels = readChannelsAttribute();
     }
 
     function loadMomentJS() {
@@ -402,12 +404,8 @@ var meceNotifications = (function (mece) {
             outerDiv = $("<div>").addClass("mece-notification-detail-view").append(avatarDiv).append(detailsDiv).append(hiddenSubmittedDiv),
             li = $("<li>").attr("id", notification[NOTIF_ID_IND]).addClass("mece-msg-item");
 
+        li.addClass("mece-private-message");
 
-        if (notification[NOTIF_RECIPIENTS_IND]) {
-            li.addClass("mece-private-message");
-        } else {
-            li.addClass("mece-public-message");
-        }
         if (notification[NOTIF_RECIPIENTS_IND] && notification[NOTIF_RECIPIENTS_IND].read) {
             li.addClass("mece-read-message");
         }
