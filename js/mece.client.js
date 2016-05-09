@@ -4,8 +4,6 @@ var meceNotifications = (function (mece) {
     // some default values if not provided
     var MECE_DEFAULT_POLLING_INTERVAL = 4000,
         pollingInterval,
-        MECE_DEFAULT_CHANNELS = "",
-        MECE_CHANNEL_SEPARATOR = ",",
         startingTime = '0',
         notifications = [],
         $,
@@ -191,7 +189,7 @@ var meceNotifications = (function (mece) {
         function readPollingIntervalAttribute() {
             return $(mece.contentDivId).attr("pollingInterval") || MECE_DEFAULT_POLLING_INTERVAL;
         }
-          pollingInterval = readPollingIntervalAttribute();
+        pollingInterval = readPollingIntervalAttribute();
     }
 
     function loadMomentJS() {
