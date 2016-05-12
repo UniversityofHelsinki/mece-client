@@ -17,6 +17,13 @@ gulp.task('lint', function(){
     return gulp.src('js/*.js').pipe(jshint()).pipe(jshint.reporter('default'));
 });
 
+// copy mece-client.js file to dist folder and to mece-client-app project
+gulp.task('copy-mece-client', function() {
+    gulp.src('./js/mece.client.js')
+        .pipe(gulp.dest('../mece-client-app/public/js'))
+        .pipe(gulp.dest('./dist'));
+});
+
 // concatenate and minify javascript files
 gulp.task('packageScripts', function(){
     return gulp.src(['js/shibboLogin.js', 'js/controller.js', 'js/initializer.js', 'js/view.js'])

@@ -54,7 +54,7 @@ var meceNotifications = (function (mece) {
         if (startingTime !== '0') {
             query.startingTime = startingTime;
         }
-        var channelUrl = mece.domain + "/mece/notifications?" + $.param(query);
+        var channelUrl = mece.domain + "/mece/api/notifications?" + $.param(query);
 
         return $.ajax({
             url: channelUrl,

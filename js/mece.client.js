@@ -1,11 +1,8 @@
+(function (mece) {
+    'use strict';
 
-var meceNotifications = (function (mece) {
-
-    // some default values if not provided
     var MECE_DEFAULT_POLLING_INTERVAL = 4000,
         pollingInterval,
-        MECE_DEFAULT_CHANNELS = "",
-        MECE_CHANNEL_SEPARATOR = ",",
         startingTime = '0',
         notifications = [],
         $,
@@ -18,6 +15,7 @@ var meceNotifications = (function (mece) {
         MECE_DEFAULT_WINDOW_TOP_OFFSET = 35,
         MECE_DEFAULT_WINDOW_WIDTH = 300,
         MECE_DEFAULT_WINDOW_HEIGHT = 350,
+        MECE_DEFAULT_WINDOW_TOP_OFFSET_COLLAPSED = 70,
 
         language = 'fi', //Set in init(). This is just default.
     //notification property indexies
@@ -27,18 +25,17 @@ var meceNotifications = (function (mece) {
         NOTIF_LINK_TEXT_IND = 3,
         NOTIF_HEADING_IND = 4,
         NOTIF_AVATAR_IND = 5,
-        NOTIF_RECIPIENTS_IND = 7,
-        NOTIF_USE_TRANSLATION_IND = 8,
-        NOTIF_SUBMITTED_IND = 9,
+        NOTIF_USE_TRANSLATION_IND = 7,
+        NOTIF_SUBMITTED_IND = 8,
+        NOTIF_READ_IND = 9,
         IMAGES_URI = "https://rawgit.com/UniversityofHelsinki/mece-client/master/images",
-
 
         MECE_MSG_RECEIVED = "mece-msg-received",
 
         translations = {
             no_messages: {
                 en: "No messages",
-                fi: "Ei viestejä",
+                fi: "Ei viestej\u00e4",
                 sv: "Inga meddelanden"
             }
         };
@@ -50,15 +47,25 @@ var meceNotifications = (function (mece) {
     mece.config = {};
 
 
+    function determineTime(received, language) {
+        if (typeof moment !== "undefined") {
+            return moment(received).locale(language).calendar(); //TODO: Decide format
+        }
+    }
+
     function debug(txt) {
-        console.log('module: MECE-CLIENT -- ' + txt + ' : ' + Date().toString());
+        var DEBUG = true;
+
+        if (DEBUG) {
+            console.log('module: MECE-CLIENT -- ' + txt + ' : ' + Date().toString());
+        }
     }
 
     function init() {
         initializerStuff();
         $ = mece.jQuery;
         readAndInitializeAttributeValues();
-        __initWidgetList();
+        initWidgetList();
         getUnreadNotificationsCount(true);
         dialog();
         markNotificationAsRead();
@@ -66,19 +73,30 @@ var meceNotifications = (function (mece) {
     }
 
     function initializerStuff() {
+        debug('initializerStuff in');
+
         loadMomentJS();
-        mece.domain = mece.jQuery(mece.contentDivId).attr("meceDomain") || MECE_DEFAULT_DOMAIN;
-        mece.config.windowLeftOffset = parseInt(mece.jQuery(mece.contentDivId).attr("meceWindowLeftOffset")) || MECE_DEFAULT_WINDOW_LEFT_OFFSET;
-        mece.config.windowTopOffset = parseInt(mece.jQuery(mece.contentDivId).attr("meceWindowTopOffset")) || MECE_DEFAULT_WINDOW_TOP_OFFSET;
-        mece.config.windowTopOffsetCollapsed = parseInt(mece.jQuery(mece.contentDivId).attr("meceWindowTopOffsetCollapsed")) || MECE_DEFAULT_WINDOW_TOP_OFFSET_COLLAPSED;
-        mece.config.windowWidth = parseInt(mece.jQuery(mece.contentDivId).attr("meceWindowWidth")) || MECE_DEFAULT_WINDOW_WIDTH;
-        mece.config.windowHeight = parseInt(mece.jQuery(mece.contentDivId).attr("meceWindowHeight")) || MECE_DEFAULT_WINDOW_HEIGHT;
-        mece.config.collapseWidth = parseInt(mece.jQuery(mece.contentDivId).attr("meceCollapseWidth")) || MECE_DEFAULT_COLLAPSE_WIDTH;
-        mece.token = mece.jQuery(mece.contentDivId).attr("token");
+        mece.domain = mece.jQuery(mece.contentDivId).attr("mece-domain") || MECE_DEFAULT_DOMAIN;
+        mece.username = mece.jQuery(mece.contentDivId).attr("mece-username");
+        mece.config.windowLeftOffset = parseInt(mece.jQuery(mece.contentDivId).attr("mece-window-left-offset")) || MECE_DEFAULT_WINDOW_LEFT_OFFSET;
+        mece.config.windowTopOffset = parseInt(mece.jQuery(mece.contentDivId).attr("mece-window-top-offset")) || MECE_DEFAULT_WINDOW_TOP_OFFSET;
+        mece.config.windowTopOffsetCollapsed = parseInt(mece.jQuery(mece.contentDivId).attr("mece-window-top-offset-collapsed")) || MECE_DEFAULT_WINDOW_TOP_OFFSET_COLLAPSED;
+        mece.config.windowWidth = parseInt(mece.jQuery(mece.contentDivId).attr("mece-window-width")) || MECE_DEFAULT_WINDOW_WIDTH;
+        mece.config.windowHeight = parseInt(mece.jQuery(mece.contentDivId).attr("mece-window-height")) || MECE_DEFAULT_WINDOW_HEIGHT;
+        mece.config.collapseWidth = parseInt(mece.jQuery(mece.contentDivId).attr("mece-collapse-width")) || MECE_DEFAULT_COLLAPSE_WIDTH;
+        mece.token = mece.jQuery(mece.contentDivId).attr("mece-token");
+
+        mece.language = mece.jQuery(mece.contentDivId).attr("mece-language");
+        if (mece.language && (mece.language === 'fi' || mece.language === 'sv' || mece.language === 'en')) {
+            language = mece.language;
+        }
+
         initLocales();
+        debug('initializerStuff out');
     }
 
     function start() {
+        debug('start');
         updateNotificationTime();
         fetchNotifications();
         checkIfNoNotifications();
@@ -89,15 +107,14 @@ var meceNotifications = (function (mece) {
         }, pollingInterval);
     }
 
-
     function fetchNotifications() {
+        debug('fetchNotifications');
         getUserNotifications().done(function (response) {
             onGetNotificationsDone(response);
         }, function (error) {
             // TODO: interval cancellation in error cases
         });
     }
-
 
     function getUserNotifications() {
         var query = {};
@@ -116,6 +133,7 @@ var meceNotifications = (function (mece) {
                 withCredentials: true
             },
             success: function (data) {
+                console.log("data:" + JSON.stringify(data));
                 return data;
             },
             error: function (xhr, status, error) {
@@ -124,14 +142,13 @@ var meceNotifications = (function (mece) {
         });
     }
 
-
     function onGetNotificationsDone(response) {
         var temps = response,
             translations;
 
         // take the startingTime before sorting
         if (temps && temps.length > 0) {
-            startingTime = temps[0].received;
+            getTheLatestStartingTime(temps);
         }
         // sort notifications based on submitted field
         temps.sort(function (a, b) {
@@ -168,26 +185,31 @@ var meceNotifications = (function (mece) {
                     notification.heading,
                     notification.avatarImageUrl,
                     notification.received,
-                    notification._recipients ? notification._recipients[0] : null,
+                    // notification._recipients ? notification._recipients[0] : null,
                     USE_TRANSLATIONS ? translations : {en: {}, fi: {}, sv: {}},
-                    notification.submitted
+                    notification.submitted,
+                    notification.read
                 ]);
             }));
         }
     }
 
+    function getTheLatestStartingTime(temps) {
+
+        $.each(temps, function (index, temp) {
+            if (startingTime < temp.received) {
+                startingTime = temp.received;
+            }
+        });
+    }
+
     function readAndInitializeAttributeValues() {
 
         function readPollingIntervalAttribute() {
-            return $(mece.contentDivId).attr("pollingInterval") || MECE_DEFAULT_POLLING_INTERVAL;
-        }
-
-        function readChannelsAttribute() {
-            return $(mece.contentDivId).attr("meceChannels") || MECE_DEFAULT_CHANNELS;
+            return $(mece.contentDivId).attr("mece-polling-interval") || MECE_DEFAULT_POLLING_INTERVAL;
         }
 
         pollingInterval = readPollingIntervalAttribute();
-        mece.channels = readChannelsAttribute();
     }
 
     function loadMomentJS() {
@@ -293,7 +315,7 @@ var meceNotifications = (function (mece) {
         return translations[key][myLanguage || language];
     }
 
-    function __resizeWidget() {
+    function resizeWidget() {
 
         var widgetWidth = mece.config.windowWidth,
             widgetHeight = mece.config.windowHeight,
@@ -338,7 +360,7 @@ var meceNotifications = (function (mece) {
             .css("height", widgetHeight);
     }
 
-    function __initWidgetList() {
+    function initWidgetList() {
         $(mece.contentDivId)
             .append($("<ul/>")
                 .css("height", mece.config.windowHeight + "px")
@@ -346,7 +368,8 @@ var meceNotifications = (function (mece) {
                 .css("position", "absolute")
                 .addClass("mece-list"));
         $(mece.contentDivId).append($("<div/>").attr("ID", "meceNoNotificationsDiv"));
-        __resizeWidget();
+
+        resizeWidget();
     }
 
     function checkIfNoNotifications() {
@@ -358,10 +381,6 @@ var meceNotifications = (function (mece) {
         }
         getUnreadNotificationsCount(false);
     }
-
-    var determineTime = function (received, language) {
-        return moment(received).locale(language).calendar(); //TODO: Decide format
-    };
 
     function updateNotificationTime() {
         $(mece.contentDivId).find("ul").each(function () {
@@ -375,9 +394,9 @@ var meceNotifications = (function (mece) {
         });
     }
 
-    function __addWidgetIteminitWidget(offset, notification) {
+    function addWidgetIteminitWidget(offset, notification) {
         var avatar = function () {
-            var DEFAULT_AVATAR_URL = IMAGES_URI + (notification[NOTIF_RECIPIENTS_IND] ? "/avatar.png" : "/avatar-group.png"),
+            var DEFAULT_AVATAR_URL = IMAGES_URI + "/avatar.png",
                 urlFoundInTheMassage = notification[NOTIF_AVATAR_IND];
 
             return urlFoundInTheMassage || DEFAULT_AVATAR_URL;
@@ -402,15 +421,12 @@ var meceNotifications = (function (mece) {
             outerDiv = $("<div>").addClass("mece-notification-detail-view").append(avatarDiv).append(detailsDiv).append(hiddenSubmittedDiv),
             li = $("<li>").attr("id", notification[NOTIF_ID_IND]).addClass("mece-msg-item");
 
+        li.addClass("mece-private-message");
 
-        if (notification[NOTIF_RECIPIENTS_IND]) {
-            li.addClass("mece-private-message");
-        } else {
-            li.addClass("mece-public-message");
-        }
-        if (notification[NOTIF_RECIPIENTS_IND] && notification[NOTIF_RECIPIENTS_IND].read) {
+        if (notification[NOTIF_READ_IND]) {
             li.addClass("mece-read-message");
         }
+
         li.prepend(outerDiv);
         ulList.prepend(li);
     }
@@ -432,8 +448,17 @@ var meceNotifications = (function (mece) {
     function markNotificationAsRead() {
         $(document).ready(function () {
             $('ul').on('click', 'li.mece-private-message', function () {
+
+                if ($(this).hasClass("mece-read-message")) return;
+
+                var query = {};
+                query.token = mece.token;
+                query.id = this.id;
+
+                var markReadUrl = mece.domain + "/mece/api/notifications/markRead?" + $.param(query);
+
                 $.ajax({
-                    url: mece.domain + "/mece/notifications/markRead/" + this.id,
+                    url: markReadUrl,
                     type: 'GET',
                     crossDomain: true,
                     dataType: "json",
@@ -441,7 +466,8 @@ var meceNotifications = (function (mece) {
                         withCredentials: true
                     },
                     success: function (data) {
-                        $('#' + data._id).addClass("mece-read-message");
+
+                        $('#' + data[0].notificationId).addClass("mece-read-message");
                         getUnreadNotificationsCount(false);
                     },
                     error: function (xhr, status, error) {
@@ -482,13 +508,14 @@ var meceNotifications = (function (mece) {
 
     function addNotifications(notifications) {
         $.each(notifications, function (i, n) {
-            __addWidgetIteminitWidget(i, n);
+            addWidgetIteminitWidget(i, n);
         });
     }
 
     (function boot() {
         debug('*** STARTING ***');
         loadJQuery();
+        debug("*** DONE ***")
     }());
 
-})(meceNotifications || {});
+})({});
