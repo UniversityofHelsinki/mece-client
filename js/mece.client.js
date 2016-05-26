@@ -1,8 +1,8 @@
-(function (mece) {
+(function () {
     'use strict';
 
-    var MECE_DEFAULT_POLLING_INTERVAL = 4000,
-        pollingInterval,
+    var pollingInterval,
+        msgCount = 0,
         startingTime = '0',
         notifications = [],
         $,
@@ -10,12 +10,6 @@
 
         MECE_JQUERY_VERSION = '1.11.3',
         MECE_DEFAULT_DOMAIN = 'https://mece.it.helsinki.fi',
-        MECE_DEFAULT_WINDOW_LEFT_OFFSET = 250,
-        MECE_DEFAULT_COLLAPSE_WIDTH = 450,
-        MECE_DEFAULT_WINDOW_TOP_OFFSET = 35,
-        MECE_DEFAULT_WINDOW_WIDTH = 300,
-        MECE_DEFAULT_WINDOW_HEIGHT = 350,
-        MECE_DEFAULT_WINDOW_TOP_OFFSET_COLLAPSED = 70,
 
         language = 'fi', //Set in init(). This is just default.
     //notification property indexies
@@ -29,7 +23,7 @@
         NOTIF_SUBMITTED_IND = 8,
         NOTIF_READ_IND = 9,
         IMAGES_URI = "https://rawgit.com/UniversityofHelsinki/mece-client/master/images",
-
+        FONT_AWESOME_URL = "http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css",
         MECE_MSG_RECEIVED = "mece-msg-received",
 
         translations = {
@@ -38,13 +32,16 @@
                 fi: "Ei viestej\u00e4",
                 sv: "Inga meddelanden"
             }
-        };
+        },
 
-    mece.contentDivId = "#mece-content-div";
-    mece.iconDivId = "#mece-icon-div";
-    mece.unreadCountSpanId = "#unread-count";
-    mece.jQuery = null;
-    mece.config = {};
+        contentDivId = "#mece-content-div",
+        iconDivId = "#mece-icon-div",
+        unreadCountSpanId = "#unread-count",
+        mecejQuery = null,
+        meceConfig = {},
+        meceDomain,
+        meceUsername,
+        meceToken;
 
 
     function determineTime(received, language) {
@@ -63,10 +60,11 @@
 
     function init() {
         initializerStuff();
-        $ = mece.jQuery;
+        $ = mecejQuery;
+
+        checkStyleSheet();
         readAndInitializeAttributeValues();
         initWidgetList();
-        getUnreadNotificationsCount(true);
         dialog();
         markNotificationAsRead();
         start();
@@ -76,17 +74,17 @@
         debug('initializerStuff in');
 
         loadMomentJS();
-        mece.domain = mece.jQuery(mece.contentDivId).attr("mece-domain") || MECE_DEFAULT_DOMAIN;
-        mece.username = mece.jQuery(mece.contentDivId).attr("mece-username");
-        mece.config.windowLeftOffset = parseInt(mece.jQuery(mece.contentDivId).attr("mece-window-left-offset")) || MECE_DEFAULT_WINDOW_LEFT_OFFSET;
-        mece.config.windowTopOffset = parseInt(mece.jQuery(mece.contentDivId).attr("mece-window-top-offset")) || MECE_DEFAULT_WINDOW_TOP_OFFSET;
-        mece.config.windowTopOffsetCollapsed = parseInt(mece.jQuery(mece.contentDivId).attr("mece-window-top-offset-collapsed")) || MECE_DEFAULT_WINDOW_TOP_OFFSET_COLLAPSED;
-        mece.config.windowWidth = parseInt(mece.jQuery(mece.contentDivId).attr("mece-window-width")) || MECE_DEFAULT_WINDOW_WIDTH;
-        mece.config.windowHeight = parseInt(mece.jQuery(mece.contentDivId).attr("mece-window-height")) || MECE_DEFAULT_WINDOW_HEIGHT;
-        mece.config.collapseWidth = parseInt(mece.jQuery(mece.contentDivId).attr("mece-collapse-width")) || MECE_DEFAULT_COLLAPSE_WIDTH;
-        mece.token = mece.jQuery(mece.contentDivId).attr("mece-token");
+        meceDomain = mecejQuery(contentDivId).attr("mece-domain") || MECE_DEFAULT_DOMAIN;
+        meceUsername = mecejQuery(contentDivId).attr("mece-username");
+        meceConfig.windowLeftOffset = parseInt(mecejQuery(contentDivId).attr("mece-window-left-offset"));
+        meceConfig.windowTopOffset = parseInt(mecejQuery(contentDivId).attr("mece-window-top-offset"));
+        meceConfig.windowTopOffsetCollapsed = parseInt(mecejQuery(contentDivId).attr("mece-window-top-offset-collapsed"));
+        meceConfig.windowWidth = parseInt(mecejQuery(contentDivId).attr("mece-window-width"));
+        meceConfig.windowHeight = parseInt(mecejQuery(contentDivId).attr("mece-window-height"));
+        meceConfig.collapseWidth = parseInt(mecejQuery(contentDivId).attr("mece-collapse-width"));
+        meceToken = mecejQuery(contentDivId).attr("mece-token");
 
-        mece.language = mece.jQuery(mece.contentDivId).attr("mece-language");
+        mece.language = mecejQuery(contentDivId).attr("mece-language");
         if (mece.language && (mece.language === 'fi' || mece.language === 'sv' || mece.language === 'en')) {
             language = mece.language;
         }
@@ -99,7 +97,6 @@
         debug('start');
         updateNotificationTime();
         fetchNotifications();
-        checkIfNoNotifications();
         setInterval(function () {
             updateNotificationTime();
             fetchNotifications();
@@ -109,10 +106,15 @@
 
     function fetchNotifications() {
         debug('fetchNotifications');
+
+        // http://api.jquery.com/jQuery.ajax/#jqXHR
         getUserNotifications().done(function (response) {
+            resizeHeight(msgCount);
             onGetNotificationsDone(response);
-        }, function (error) {
+            checkIfNoNotifications();
+        }).fail(function (error) {
             // TODO: interval cancellation in error cases
+            debug("ERROR " + error);
         });
     }
 
@@ -121,8 +123,8 @@
         if (startingTime !== '0') {
             query.startingTime = startingTime;
         }
-        query.token = mece.token;
-        var notificationsUrl = mece.domain + "/mece/api/notifications?" + $.param(query);
+        query.token = meceToken;
+        var notificationsUrl = meceDomain + "/mece/api/notifications?" + $.param(query);
 
         return $.ajax({
             url: notificationsUrl,
@@ -133,7 +135,8 @@
                 withCredentials: true
             },
             success: function (data) {
-                console.log("data:" + JSON.stringify(data));
+                //console.log("data:" + JSON.stringify(data));
+                msgCount = msgCount + data.length;
                 return data;
             },
             error: function (xhr, status, error) {
@@ -206,7 +209,7 @@
     function readAndInitializeAttributeValues() {
 
         function readPollingIntervalAttribute() {
-            return $(mece.contentDivId).attr("mece-polling-interval") || MECE_DEFAULT_POLLING_INTERVAL;
+            return $(contentDivId).attr("mece-polling-interval");
         }
 
         pollingInterval = readPollingIntervalAttribute();
@@ -232,14 +235,14 @@
             if (script_tag.readyState) {
                 script_tag.onreadystatechange = function () { // For old versions of IE
                     if (this.readyState == 'complete' || this.readyState == 'loaded') {
-                        mece.jQuery = window.jQuery.noConflict(true);
+                        mecejQuery = window.jQuery.noConflict(true);
                         debug("jQuery loaded");
                         init();
                     }
                 };
             } else {
                 script_tag.onload = function () {
-                    mece.jQuery = window.jQuery.noConflict(true);
+                    mecejQuery = window.jQuery.noConflict(true);
                     debug("browsers");
                     init();
                 };
@@ -247,7 +250,7 @@
             (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
 
         } else {
-            mece.jQuery = window.jQuery;
+            mecejQuery = window.jQuery;
             debug("The jQuery version on the window is the one we want to use");
             init();
         }
@@ -303,6 +306,9 @@
                         LLLL: 'dddd, D MMMM YYYY HH:mm'
                     }
                 });
+
+                //launch the notification writer to update texts
+                updateNotificationTime();
             } else {
                 setTimeout(function () {
                     waitForElement();
@@ -315,23 +321,47 @@
         return translations[key][myLanguage || language];
     }
 
+    function checkStyleSheet() {
+
+        var found = false;
+        for(var i = 0; i < document.styleSheets.length; i++) {
+            var href = document.styleSheets[i].href;
+            if(href) {
+                if(href === FONT_AWESOME_URL) {
+                    found=true;
+                    break;
+                }
+                if (href.split('/').pop() === 'font-awesome.css' || href.split('/').pop() === 'font-awesome.min.css') {
+                    found=true;
+                    break;
+                }
+            }
+        }
+
+        if(!found){
+            $('head').append(
+                $('<link rel="stylesheet" type="text/css" href="' + FONT_AWESOME_URL + '" />')
+            );
+        }
+    }
+
     function resizeWidget() {
 
-        var widgetWidth = mece.config.windowWidth,
-            widgetHeight = mece.config.windowHeight,
+        var widgetWidth = meceConfig.windowWidth,
+            widgetHeight = meceConfig.windowHeight,
             meceRootDivLeft = $("#mece").position().left,
             windowWidth = $(window).width(),
             position = "relative",
             widgetLeft = 0,
             meceRootDivWidth = "50px",
-            widgetTop = $("#mece").position().top + mece.config.windowTopOffset;
+            widgetTop = $("#mece").position().top + meceConfig.windowTopOffset;
 
-        if (windowWidth < mece.config.collapseWidth) {
+        if (windowWidth < meceConfig.collapseWidth) {
             meceRootDivWidth = "100%";
             position = "absolute";
             widgetWidth = "100%";
             widgetLeft = 0;
-            widgetTop = $("#mece").position().top + mece.config.windowTopOffsetCollapsed;
+            widgetTop = $("#mece").position().top + meceConfig.windowTopOffsetCollapsed;
         }
         else if (windowWidth < widgetWidth) {
             position = "absolute";
@@ -346,34 +376,51 @@
             widgetLeft = -meceRootDivLeft;
         } else {
             position = "absolute";
-            widgetLeft = -widgetWidth / 2;
+            widgetLeft = -widgetWidth + 30;
         }
 
         $("#mece").css("position", "relative").css("width", meceRootDivWidth);
 
-        $(mece.contentDivId)
+        $(contentDivId)
             .css("position", position)
             .css("left", widgetLeft + "px")
-            .css("overflow-x", "visible")
+            //.css("overflow-x", "visible") //
             .css("top", widgetTop + "px")
             .css("width", widgetWidth)
             .css("height", widgetHeight);
     }
 
     function initWidgetList() {
-        $(mece.contentDivId)
+        $(contentDivId)
             .append($("<ul/>")
-                .css("height", mece.config.windowHeight + "px")
-                .css("overflow", "auto")
+                //.css("height", meceConfig.windowHeight + "px")//
+                //.css("overflow", "auto") //
                 .css("position", "absolute")
                 .addClass("mece-list"));
-        $(mece.contentDivId).append($("<div/>").attr("ID", "meceNoNotificationsDiv"));
+        resizeHeight(msgCount);
+        $(contentDivId).append($("<div/>").attr("ID", "meceNoNotificationsDiv"));
 
         resizeWidget();
     }
 
+    function resizeHeight(size){
+        if(size === 0 || size === 1){
+            $(contentDivId)
+                .css("height", 100 + "px");
+        }else if(size === 2){
+            $(contentDivId)
+                .css("height", 200 + "px");
+        }else if(size === 3){
+            $(contentDivId)
+                .css("height", 300 + "px");
+        }else{
+            $(contentDivId)
+                .css("height", 350 + "px");
+        }
+    }
+
     function checkIfNoNotifications() {
-        if ($(mece.contentDivId).find("li").length === 0) {
+        if ($(contentDivId).find("li").length === 0) {
             $("#meceNoNotificationsDiv").text(translate('no_messages'));
         }
         else {
@@ -383,7 +430,7 @@
     }
 
     function updateNotificationTime() {
-        $(mece.contentDivId).find("ul").each(function () {
+        $(contentDivId).find("ul").each(function () {
             $(this).find("li").each(function () {
                 var submitted = $(this).find(".hiddenSubmittedTime").first().text(),
                     div = $(this).find("." + MECE_MSG_RECEIVED).first();
@@ -394,6 +441,22 @@
         });
     }
 
+    function chooseValue(field, notification) {
+        console.log('Seeking field ' + field + ' for language ' + language);
+        var nextLang = { fi: 'sv', sv: 'en', en: 'fi'};
+        var curLang = language;
+        var value = notification[NOTIF_USE_TRANSLATION_IND][curLang][field];
+        if (!value) {
+            curLang = nextLang[curLang];
+            value = notification[NOTIF_USE_TRANSLATION_IND][curLang][field];
+        }
+        if (!value) {
+            curLang = nextLang[curLang];
+            value = notification[NOTIF_USE_TRANSLATION_IND][curLang][field];
+        }
+        return value;
+    }
+
     function addWidgetIteminitWidget(offset, notification) {
         var avatar = function () {
             var DEFAULT_AVATAR_URL = IMAGES_URI + "/avatar.png",
@@ -402,10 +465,10 @@
             return urlFoundInTheMassage || DEFAULT_AVATAR_URL;
         };
 
-        var ulList = $(mece.contentDivId).find("ul"),
-            myLink = notification[NOTIF_USE_TRANSLATION_IND][language].link || notification[NOTIF_LINK_IND],
-            myLinkText = notification[NOTIF_USE_TRANSLATION_IND][language].linkText || notification[NOTIF_LINK_TEXT_IND],
-            myMessage = notification[NOTIF_USE_TRANSLATION_IND][language].message || notification[NOTIF_MSG_IND],
+        var ulList = $(contentDivId).find("ul"),
+            myLink = chooseValue('link', notification) || notification[NOTIF_LINK_IND],
+            myLinkText = chooseValue('linkText', notification) || notification[NOTIF_LINK_TEXT_IND],
+            myMessage = chooseValue('message', notification) || notification[NOTIF_MSG_IND],
             linkDiv = $("<div>").html(myLinkText).contents(),
             link = $("<a>").attr("href", myLink).attr("target", "_blank").prepend(linkDiv),
 
@@ -423,6 +486,11 @@
 
         li.addClass("mece-private-message");
 
+        //var outerDivSize = 287;
+        var outerDivSize = meceConfig.windowWidth - 13; //13px - scrollbarin leveys?
+        outerDiv.css("width", outerDivSize + "px");
+        //console.log("Window: " + meceConfig.windowWidth + ", outer: "+ outerDivSize);
+
         if (notification[NOTIF_READ_IND]) {
             li.addClass("mece-read-message");
         }
@@ -432,16 +500,16 @@
     }
 
     function getUnreadNotificationsCount(append) {
-        var unreadMessagesLength = $(mece.contentDivId).find("ul li.mece-private-message").filter("li:not(.mece-read-message)").length;
+        var unreadMessagesLength = $(contentDivId).find("ul li.mece-private-message").filter("li:not(.mece-read-message)").length;
 
-        if ($(mece.unreadCountSpanId).length === 0) {
-            $(mece.iconDivId).append($("<span>").attr("id", "unread-count").text(unreadMessagesLength).addClass('mece-badge'));
+        if ($(unreadCountSpanId).length === 0) {
+            $(iconDivId).append($("<span>").attr("id", "unread-count").text(unreadMessagesLength).addClass('mece-badge'));
         }
         else {
-            $(mece.unreadCountSpanId).text(unreadMessagesLength);
+            $(unreadCountSpanId).text(unreadMessagesLength);
         }
         if (unreadMessagesLength === 0) {
-            $(mece.unreadCountSpanId).remove();
+            $(unreadCountSpanId).remove();
         }
     }
 
@@ -452,10 +520,10 @@
                 if ($(this).hasClass("mece-read-message")) return;
 
                 var query = {};
-                query.token = mece.token;
+                query.token = meceToken;
                 query.id = this.id;
 
-                var markReadUrl = mece.domain + "/mece/api/notifications/markRead?" + $.param(query);
+                var markReadUrl = meceDomain + "/mece/api/notifications/markRead?" + $.param(query);
 
                 $.ajax({
                     url: markReadUrl,
@@ -479,8 +547,8 @@
     }
 
     function dialog() {
-        $(mece.iconDivId).append($("<img>").attr("src", IMAGES_URI + "/bell.png").text("bell image"));
-        $(mece.iconDivId).click(function (e) {
+        //$(iconDivId).append($("<img>").attr("src", IMAGES_URI + "/bell.png").text("bell image"));
+        $(iconDivId).click(function (e) {
             e.stopPropagation();
             if ($(this).hasClass("active")) {
                 $(".dialog").fadeOut(200);
@@ -494,7 +562,7 @@
 
         function closeMenu() {
             $(".dialog").fadeOut(200);
-            $(mece.iconDivId).removeClass("active");
+            $(iconDivId).removeClass("active");
         }
 
         $(document.body).click(function (e) {
@@ -514,8 +582,11 @@
 
     (function boot() {
         debug('*** STARTING ***');
-        loadJQuery();
-        debug("*** DONE ***")
+        document.addEventListener("DOMContentLoaded", function(event) {
+            debug('*** DOM CONTENT LOADED ***');
+            loadJQuery();
+            debug("*** DONE ***");
+        });
     }());
 
-})({});
+})();
