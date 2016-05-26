@@ -37,7 +37,7 @@
         contentDivId = "#mece-content-div",
         iconDivId = "#mece-icon-div",
         unreadCountSpanId = "#unread-count",
-        mecejQuery = null,
+        $ = null,
         meceConfig = {},
         meceDomain,
         meceUsername,
@@ -60,8 +60,6 @@
 
     function init() {
         initializerStuff();
-        $ = mecejQuery;
-
         checkStyleSheet();
         readAndInitializeAttributeValues();
         initWidgetList();
@@ -74,17 +72,17 @@
         debug('initializerStuff in');
 
         loadMomentJS();
-        meceDomain = mecejQuery(contentDivId).attr("mece-domain") || MECE_DEFAULT_DOMAIN;
-        meceUsername = mecejQuery(contentDivId).attr("mece-username");
-        meceConfig.windowLeftOffset = parseInt(mecejQuery(contentDivId).attr("mece-window-left-offset"));
-        meceConfig.windowTopOffset = parseInt(mecejQuery(contentDivId).attr("mece-window-top-offset"));
-        meceConfig.windowTopOffsetCollapsed = parseInt(mecejQuery(contentDivId).attr("mece-window-top-offset-collapsed"));
-        meceConfig.windowWidth = parseInt(mecejQuery(contentDivId).attr("mece-window-width"));
-        meceConfig.windowHeight = parseInt(mecejQuery(contentDivId).attr("mece-window-height"));
-        meceConfig.collapseWidth = parseInt(mecejQuery(contentDivId).attr("mece-collapse-width"));
-        meceToken = mecejQuery(contentDivId).attr("mece-token");
+        meceDomain = $(contentDivId).attr("mece-domain") || MECE_DEFAULT_DOMAIN;
+        meceUsername = $(contentDivId).attr("mece-username");
+        meceConfig.windowLeftOffset = parseInt($(contentDivId).attr("mece-window-left-offset"));
+        meceConfig.windowTopOffset = parseInt($(contentDivId).attr("mece-window-top-offset"));
+        meceConfig.windowTopOffsetCollapsed = parseInt($(contentDivId).attr("mece-window-top-offset-collapsed"));
+        meceConfig.windowWidth = parseInt($(contentDivId).attr("mece-window-width"));
+        meceConfig.windowHeight = parseInt($(contentDivId).attr("mece-window-height"));
+        meceConfig.collapseWidth = parseInt($(contentDivId).attr("mece-collapse-width"));
+        meceToken = $(contentDivId).attr("mece-token");
 
-        language = mecejQuery(contentDivId).attr("mece-language");
+        language = $(contentDivId).attr("mece-language");
         if (language && (language === 'fi' || language === 'sv' || language === 'en')) {
             language = language;
         }
@@ -235,14 +233,14 @@
             if (script_tag.readyState) {
                 script_tag.onreadystatechange = function () { // For old versions of IE
                     if (this.readyState == 'complete' || this.readyState == 'loaded') {
-                        mecejQuery = window.jQuery.noConflict(true);
+                        $ = window.jQuery.noConflict(true);
                         debug("jQuery loaded");
                         init();
                     }
                 };
             } else {
                 script_tag.onload = function () {
-                    mecejQuery = window.jQuery.noConflict(true);
+                    $ = window.jQuery.noConflict(true);
                     debug("browsers");
                     init();
                 };
@@ -250,7 +248,7 @@
             (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
 
         } else {
-            mecejQuery = window.jQuery;
+            $ = window.jQuery;
             debug("The jQuery version on the window is the one we want to use");
             init();
         }
