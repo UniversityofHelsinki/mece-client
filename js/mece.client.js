@@ -84,9 +84,9 @@
         meceConfig.collapseWidth = parseInt(mecejQuery(contentDivId).attr("mece-collapse-width"));
         meceToken = mecejQuery(contentDivId).attr("mece-token");
 
-        mece.language = mecejQuery(contentDivId).attr("mece-language");
-        if (mece.language && (mece.language === 'fi' || mece.language === 'sv' || mece.language === 'en')) {
-            language = mece.language;
+        language = mecejQuery(contentDivId).attr("mece-language");
+        if (language && (language === 'fi' || language === 'sv' || language === 'en')) {
+            language = language;
         }
 
         initLocales();
