@@ -69,7 +69,6 @@
 
     function initializerStuff() {
         debug('initializerStuff in');
-
         loadMomentJS();
         meceDomain = $(contentDivId).attr("mece-domain") || MECE_DEFAULT_DOMAIN;
         meceUsername = $(contentDivId).attr("mece-username");
@@ -556,14 +555,9 @@
         });
     }
 
-    function ready(fn){
-        console.log(document.readyState);
-        (document.readyState === 'loading') ? document.addEventListener('DOMContentLoaded', fn) : fn();
-    }
-
-    ready(function(){
+    window.onload = function() {
         console.log(document.readyState);
         loadJQuery();
-    });
+    };
 
 })();
