@@ -59,12 +59,14 @@
     }
 
     function init() {
-        initializerStuff();
-        readAndInitializeAttributeValues();
-        initWidgetList();
-        dialog();
-        markNotificationAsRead();
-        start();
+        $(document).ready(function () {
+            initializerStuff();
+            readAndInitializeAttributeValues();
+            initWidgetList();
+            dialog();
+            markNotificationAsRead();
+            start();
+        });
     }
 
     function initializerStuff() {
