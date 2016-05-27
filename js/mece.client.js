@@ -59,7 +59,7 @@
     }
 
     function init() {
-        jQuery(document).ready(function () {
+        $(document).ready(function () {
             initializerStuff();
             readAndInitializeAttributeValues();
             initWidgetList();
@@ -558,7 +558,6 @@
     }
 
     window.onload = function() {
-        console.log(document.readyState);
         loadJQuery();
     };
 
