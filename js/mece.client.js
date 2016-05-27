@@ -556,13 +556,14 @@
         });
     }
 
-    (function boot() {
-        debug('*** STARTING ***');
-        document.addEventListener("DOMContentLoaded", function(event) {
-            debug('*** DOM CONTENT LOADED ***');
-            loadJQuery();
-            debug("*** DONE ***");
-        });
-    }());
+    function ready(fn){
+        console.log(document.readyState);
+        (document.readyState === 'loading') ? document.addEventListener('DOMContentLoaded', fn) : fn();
+    }
+
+    ready(function(){
+        console.log(document.readyState);
+        loadJQuery();
+    });
 
 })();
