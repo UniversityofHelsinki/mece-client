@@ -93,6 +93,10 @@ div#mece-content-div ul.mece-list li.mece-msg-item .mece-notification-detail-vie
   text-transform: uppercase;
   bottom: 8px;}
 
+div#mece-content-div {
+  z-index: 12;
+}
+
 /* initial color for the so called private message. */
 .mece-private-message {
   background-color: #E5F3F9 !important;
