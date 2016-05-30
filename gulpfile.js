@@ -26,7 +26,7 @@ gulp.task('copy-mece-client', function() {
 
 // concatenate and minify javascript files
 gulp.task('packageScripts', function(){
-    return gulp.src(['js/shibboLogin.js', 'js/controller.js', 'js/initializer.js', 'js/view.js'])
+    return gulp.src(['js/mece.client.js'])
         .pipe(concat('mece.client.js'))
         .pipe(gulp.dest('dist'))
         .pipe(rename('mece.client.min.js'))
