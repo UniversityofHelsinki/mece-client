@@ -24,7 +24,6 @@ div#mece-content-div {
   display: none;
   width: 350px;
   max-height: 350px;
-  overflow: hidden;
   background-color: #FFF;
   border: 0px;
   /* the ul-element containing all the notifications */ }
@@ -36,7 +35,7 @@ div#mece-content-div ul.mece-list {
   margin: 0px;
   list-style: none;
   word-wrap: break-word;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   /* the li-element containing one notification */ }
 div#mece-content-div ul.mece-list li.mece-msg-item {
@@ -78,7 +77,6 @@ div#mece-content-div ul.mece-list li.mece-msg-item .mece-notification-detail-vie
   color: #424242;
   /* truncate text */
   font-size: 13px;
-  overflow: hidden;
   text-overflow: ellipsis;
   margin-top: 5px;
   /*max-height: 50px;*/
@@ -97,6 +95,25 @@ div#mece-content-div {
   z-index: 12;
 }
 
+div#mece-content-div:before {
+  border-bottom-color: #ffffff;
+  border-width: 13px;
+  right: 33px;
+}
+
+div#mece-content-div:before {
+  bottom: 100%;
+  border-style: solid;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-top-color: transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
 /* initial color for the so called private message. */
 .mece-private-message {
   background-color: #E5F3F9 !important;
@@ -108,6 +125,7 @@ div#mece-content-div {
 }
 
 #mece-icon-div svg{cursor: pointer}
+
 
 
 
