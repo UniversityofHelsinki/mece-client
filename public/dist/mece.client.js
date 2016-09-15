@@ -37,6 +37,7 @@ var meceClientApp = (function () {
         $rowContentDiv,
         $iconDiv,
         $noMessagesDiv,
+        $meceMobileCover,
         $ = null,
         meceDomain,
         meceHost,
@@ -89,7 +90,8 @@ var meceClientApp = (function () {
                     </div>\
                 </div>\
             </div>\
-        </div>';
+        </div>\
+          <div id="mece-mobile-cover"></div>';
 
     function init() {
         $(document).ready(function () {
@@ -100,6 +102,7 @@ var meceClientApp = (function () {
             $iconDiv = $containerDiv.find('.mece-icon');
             $badgeDiv = $containerDiv.find('.mece-badge');
             $noMessagesDiv = $containerDiv.find('.mece-row-container--no-messages');
+            $meceMobileCover = $('#mece-mobile-cover');
             //TODO comment this
             initializeMomentAndLocales();
             readAndInitializeAttributeValues();
@@ -519,6 +522,7 @@ var meceClientApp = (function () {
         $iconDiv.click(function (e) {
             e.stopPropagation();
             $containerDiv.toggleClass("mece--open"); //, !isDialogVisible());
+            $meceMobileCover.toggleClass("mece-mobile-cover--visible");
         });
     }
 
