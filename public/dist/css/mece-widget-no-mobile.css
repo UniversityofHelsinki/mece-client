@@ -832,7 +832,7 @@
   font-size: 13px;
   width: 200px; }
   .mece-h3 a {
-    color: #0098d0;
+    color: #0098d0 !important;
     text-decoration: none; }
 
 .mece-hidden {

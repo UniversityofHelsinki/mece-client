@@ -44,8 +44,13 @@ var meceClientApp = (function () {
         meceToken,
         enableDebug = false,
         started = false,
+        contentDivId = ".mece-content",
+        contentWrapperDivId = ".mece-content-wrapper",
+        meceWidth,
         $badgeDiv;
-
+    //Styleguide/icons/src/avatar.svg
+        var DEFAULT_AVATAR_URL = "http://rawgit.com/UniversityofHelsinki/Styleguide/master/icons/src/avatar.svg";
+        //var DEFAULT_AVATAR_URL = IMAGES_URI + "/avatar.png",
 
     String.format = function () {
         var s = arguments[0];
@@ -73,16 +78,11 @@ var meceClientApp = (function () {
         /*jshint multistr:true */
         '<div class="mece">\
             <div class="mece-icon">\
-                <img src="https://mece.it.helsinki.fi/dist/prod/images/bell.svg">\
+                <img src="{0}/bell.svg">\
                 <div class="mece-badge"></div>\
             </div>\
             <div class="mece-icon mece-icon-close">\
-                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\
-                    viewBox="-16 -16 62 62" enable-background="new 0 0 62 62" xml:space="preserve">\
-                    <polygon fill="#fff" points="19.1,15.5 29.2,5.3 29.9,4.6 29.2,3.9 27.1,1.8 26.4,1.1 25.7,1.8 15.5,11.9 5.3,1.8 4.6,1.1\
-                    3.9,1.8 1.8,3.9 1.1,4.6 1.8,5.3 11.9,15.5 1.8,25.7 1.1,26.4 1.8,27.1 3.9,29.2 4.6,29.9 5.3,29.2 15.5,19.1 25.7,29.2 26.4,29.9\
-                    27.1,29.2 29.2,27.1 29.9,26.4 29.2,25.7 "/>\
-                </svg>\
+                <img src="{0}/close.svg">\
             </div>\
             <div class="mece-content-wrapper">\
                 <div class="mece-content">\
@@ -96,7 +96,7 @@ var meceClientApp = (function () {
     function init() {
         $(document).ready(function () {
             // TODO: maybe use data-id to find element
-            $mainDiv = $(mainDivId).append(containerTemplate);
+            $mainDiv = $(mainDivId).append(String.format(containerTemplate, IMAGES_URI));
             $containerDiv = $mainDiv.find('.mece');
             $rowContentDiv = $containerDiv.find('.mece-content');
             $iconDiv = $containerDiv.find('.mece-icon');
@@ -257,6 +257,14 @@ var meceClientApp = (function () {
         meceHost = $mainDiv.data("host") || MECE_DEFAULT_HOST;
         meceToken = $mainDiv.data("token");
         enableDebug = $mainDiv.data("enable-debug") || false;
+        meceWidth = $mainDiv.data("width") || 320;
+
+        if(meceWidth<320){
+            meceWidth = 320;
+        }
+
+        $(contentDivId).css("width", meceWidth + "px");
+        $(contentWrapperDivId).css("width", meceWidth + "px");
     }
 
     function loadMomentJS() {
@@ -430,7 +438,7 @@ var meceClientApp = (function () {
             <div class="mece-row mece-row--no-margins mece-top-xs"> <!--yksi rivi, jossa kaksi(kolme) kolumnia-->\
                 <div> <!--Column 1 (kuva) flouttaava divi joka asettuu sisaltonsa kokoiseksi-->\
                     <div class="mece-row-avatar mece-padding">\
-                        <img class="mece-row-avatar-picture" src="{1}">\
+                        <img class="mece-row-avatar-picture" alt="avatar" src="{1}">\
                     </div>\
                 </div>\
                 <div class="mece-col-xs"> <!--Column 2 (sisalto) venyy-->\
@@ -453,8 +461,8 @@ var meceClientApp = (function () {
 
     function addRow(notification) {
         var avatar = function () {
-            var DEFAULT_AVATAR_URL = IMAGES_URI + "/avatar.png",
-                urlFoundInTheMassage = notification[NOTIF_AVATAR_IND];
+          //  var DEFAULT_AVATAR_URL = IMAGES_URI + "/avatar.png",
+            var  urlFoundInTheMassage = notification[NOTIF_AVATAR_IND];
 
             return urlFoundInTheMassage || DEFAULT_AVATAR_URL;
         };

@@ -832,7 +832,7 @@
   font-size: 13px;
   width: 200px; }
   .mece-h3 a {
-    color: #0098d0;
+    color: #0098d0 !important;
     text-decoration: none; }
 
 .mece-hidden {
@@ -909,8 +909,8 @@
         -ms-transform: translate(-50%);
             transform: translate(-50%);
     position: fixed;
-    top: 11%;
     left: 50%;
+    top: 5em;
     transition-property: all;
     transition-duration: 0.5s;
     transition-timing-function: ease-in-out;
@@ -967,8 +967,8 @@
     bottom: 0;
     right: 0;
     z-index: 900;
-    background: rgba(8, 8, 8, 0.4);
+    background: rgba(0, 0, 0, 0.4);
     transition-property: all;
-    transition-duration: 0.75s;
+    transition-duration: 0.5s;
     transition-timing-function: ease-in-out;
     transition-delay: initial; } }
