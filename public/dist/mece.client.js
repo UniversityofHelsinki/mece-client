@@ -44,13 +44,14 @@ var meceClientApp = (function () {
         meceToken,
         enableDebug = false,
         started = false,
-        contentDivId = ".mece-content",
-        contentWrapperDivId = ".mece-content-wrapper",
-        meceWidth,
-        $badgeDiv;
+        $badgeDiv,
+        intervalID,
     //Styleguide/icons/src/avatar.svg
-        var DEFAULT_AVATAR_URL = "http://rawgit.com/UniversityofHelsinki/Styleguide/master/icons/src/avatar.svg";
-        //var DEFAULT_AVATAR_URL = IMAGES_URI + "/avatar.png",
+        DEFAULT_AVATAR_URL = "https://rawgit.com/UniversityofHelsinki/Styleguide/master/icons/src/avatar.svg",
+    //var DEFAULT_AVATAR_URL = IMAGES_URI + "/avatar.png",
+        MOMENT_LIB_URL = "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.min.js",
+        JQUERY_LIB_URL = "https://ajax.googleapis.com/ajax/libs/jquery/" + MECE_JQUERY_VERSION + "/jquery.min.js";
+
 
     String.format = function () {
         var s = arguments[0];
@@ -133,11 +134,17 @@ var meceClientApp = (function () {
         debug('start');
         fetchNotifications();
         updateNotificationTime(); // TODO:
-        setInterval(function () {
+        intervalID = setInterval(function () {
             fetchNotifications();
             updateNotificationTime();
-            // hasNotifications();
         }, pollingInterval);
+    }
+
+    function stopInterval(id, error) {
+        if (error && error.status === 401) {
+            debug('stopInterval, status 401');
+            clearInterval(id);  // https://developer.mozilla.org/en-US/docs/Web/API/WindowTimers/clearInterval
+        }
     }
 
     function fetchNotifications() {
@@ -148,7 +155,7 @@ var meceClientApp = (function () {
             onGetNotificationsDone(response);
             hasNotifications();
         }).fail(function (error) {
-            // TODO: interval cancellation in error cases
+            stopInterval(intervalID, error);
             debug("ERROR " + JSON.stringify(error));
             showNoNotificationsMsgOnError();
         });
@@ -172,7 +179,6 @@ var meceClientApp = (function () {
                 withCredentials: true
             },
             success: function (data) {
-                //console.log("data:" + JSON.stringify(data));
                 msgCount = msgCount + data.length;
                 return data;
             },
@@ -257,21 +263,13 @@ var meceClientApp = (function () {
         meceHost = $mainDiv.data("host") || MECE_DEFAULT_HOST;
         meceToken = $mainDiv.data("token");
         enableDebug = $mainDiv.data("enable-debug") || false;
-        meceWidth = $mainDiv.data("width") || 320;
-
-        if(meceWidth<320){
-            meceWidth = 320;
-        }
-
-        $(contentDivId).css("width", meceWidth + "px");
-        $(contentWrapperDivId).css("width", meceWidth + "px");
     }
 
     function loadMomentJS() {
         if (window.moment === undefined) {
             var script_tag = document.createElement('script');
             script_tag.setAttribute("type", "text/javascript");
-            script_tag.setAttribute("src", "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.min.js");
+            script_tag.setAttribute("src", MOMENT_LIB_URL);
             (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
         }
     }
@@ -282,7 +280,7 @@ var meceClientApp = (function () {
         if (window.jQuery === undefined || window.jQuery.fn.jquery !== MECE_JQUERY_VERSION) {
             script_tag = document.createElement('script');
             script_tag.setAttribute("type", "text/javascript");
-            script_tag.setAttribute("src", "https://ajax.googleapis.com/ajax/libs/jquery/" + MECE_JQUERY_VERSION + "/jquery.min.js");
+            script_tag.setAttribute("src", JQUERY_LIB_URL);
 
             if (script_tag.readyState) {
                 script_tag.onreadystatechange = function () { // For old versions of IE
@@ -382,9 +380,8 @@ var meceClientApp = (function () {
         getUnreadNotificationsCount(false);
     }
 
-    // TODO: if needed some error message could be shown. Now just "No messages"
     function showNoNotificationsMsgOnError() {
-        $containerDiv.toggleClass('mece--no-messages', true);
+        $containerDiv.toggleClass('mece--no-messages', getNotificationsCount() === 0);
         $noMessagesDiv.html(translate('no_messages'));
     }
 
@@ -430,7 +427,7 @@ var meceClientApp = (function () {
         return value;
     }
 
-    //TODO vaihda +:sat kenoviivoiksi
+
     // http://flexboxgrid.com/
     var rowTemplate =
         /*jshint multistr:true */
@@ -461,8 +458,8 @@ var meceClientApp = (function () {
 
     function addRow(notification) {
         var avatar = function () {
-          //  var DEFAULT_AVATAR_URL = IMAGES_URI + "/avatar.png",
-            var  urlFoundInTheMassage = notification[NOTIF_AVATAR_IND];
+            //  var DEFAULT_AVATAR_URL = IMAGES_URI + "/avatar.png",
+            var urlFoundInTheMassage = notification[NOTIF_AVATAR_IND];
 
             return urlFoundInTheMassage || DEFAULT_AVATAR_URL;
         };
