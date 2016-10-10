@@ -6,10 +6,11 @@ var meceClientApp = (function () {
         startingTime = '0',
         notifications = [],
         USE_TRANSLATIONS = true,
-
+        MECE_MOBILE_WIDTH = 768,
         MECE_JQUERY_VERSION = '1.11.3',
         MECE_DEFAULT_DOMAIN = 'https://mece.it.helsinki.fi',
         MECE_DEFAULT_HOST = "opintoni",
+        MECE_DESKTOP_HEIGHT = "330px",
         language = 'fi', //Set in init(). This is just default.
     //notification property indexies
         NOTIF_ID_IND = 0,
@@ -35,6 +36,7 @@ var meceClientApp = (function () {
         $mainDiv,
         $containerDiv,
         $rowContentDiv,
+        $containerWrapperDiv,
         $iconDiv,
         $noMessagesDiv,
         $meceMobileCover,
@@ -46,13 +48,26 @@ var meceClientApp = (function () {
         started = false,
         $badgeDiv,
         intervalID,
-    //Styleguide/icons/src/avatar.svg
+        isWidgetOpen=false,
+        isFirstOpen = false,
+        //Styleguide/icons/src/avatar.svg
         DEFAULT_AVATAR_URL = "https://rawgit.com/UniversityofHelsinki/Styleguide/master/icons/src/avatar.svg",
-    //var DEFAULT_AVATAR_URL = IMAGES_URI + "/avatar.png",
+        //var DEFAULT_AVATAR_URL = IMAGES_URI + "/avatar.png",
         MOMENT_LIB_URL = "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.min.js",
-        JQUERY_LIB_URL = "https://ajax.googleapis.com/ajax/libs/jquery/" + MECE_JQUERY_VERSION + "/jquery.min.js";
+        JQUERY_LIB_URL = "https://ajax.googleapis.com/ajax/libs/jquery/" + MECE_JQUERY_VERSION + "/jquery.min.js",
+        STATES = {
+            open: 'mece--open',
+            hasUnreads : 'mece--has-unreads',
+            noMessages: 'mece--no-messages',
+            html: 'mece--open-html'
+        },
 
+        MESSAGE_STATES = {
+            hasReads: 'mece-row-container--read',
+            noMessages: 'mece-row-container--no-messages'
+        };
 
+      /************* UTILITY FUNCTIONS: *************/
     String.format = function () {
         var s = arguments[0];
         for (var i = 0; i < arguments.length - 1; i++) {
@@ -74,31 +89,14 @@ var meceClientApp = (function () {
             console.log('module: MECE-CLIENT -- ' + txt + ' : ' + Date().toString());
         }
     }
-
-    var containerTemplate =
-        /*jshint multistr:true */
-        '<div class="mece">\
-            <div class="mece-icon">\
-                <img src="{0}/bell.svg">\
-                <div class="mece-badge"></div>\
-            </div>\
-            <div class="mece-icon mece-icon-close">\
-                <img src="{0}/close.svg">\
-            </div>\
-            <div class="mece-content-wrapper">\
-                <div class="mece-content">\
-                    <div class="mece-row-container mece-row-container--no-messages">\
-                    </div>\
-                </div>\
-            </div>\
-        </div>\
-          <div id="mece-mobile-cover"></div>';
+    /************* END OF UTILITY FUNCTIONS *************/
 
     function init() {
         $(document).ready(function () {
             // TODO: maybe use data-id to find element
-            $mainDiv = $(mainDivId).append(String.format(containerTemplate, IMAGES_URI));
+            $mainDiv = $(mainDivId).append(String.format(meceClientApp.Templates.containerTemplate, IMAGES_URI));
             $containerDiv = $mainDiv.find('.mece');
+            $containerWrapperDiv = $mainDiv.find('.mece-content-wrapper');
             $rowContentDiv = $containerDiv.find('.mece-content');
             $iconDiv = $containerDiv.find('.mece-icon');
             $badgeDiv = $containerDiv.find('.mece-badge');
@@ -375,20 +373,20 @@ var meceClientApp = (function () {
 
     //TODO: rename function
     function hasNotifications() {
-        $containerDiv.toggleClass('mece--no-messages', getNotificationsCount() === 0);
+        $containerDiv.toggleClass(STATES.noMessages, getNotificationsCount() === 0);
         $noMessagesDiv.html(translate('no_messages'));
         getUnreadNotificationsCount(false);
     }
 
     function showNoNotificationsMsgOnError() {
-        $containerDiv.toggleClass('mece--no-messages', getNotificationsCount() === 0);
+        $containerDiv.toggleClass(STATES.noMessages, getNotificationsCount() === 0);
         $noMessagesDiv.html(translate('no_messages'));
     }
 
     function getUnreadNotificationsCount(append) {
         var unreadMessagesLength = getNotifications().filter(':not(.mece-row-container--read)').length - 1;
         //TODO do with css flag
-        $containerDiv.toggleClass('mece--has-unreads', unreadMessagesLength !== 0);  //
+        $containerDiv.toggleClass(STATES.hasUnreads, unreadMessagesLength !== 0);  //
         changeBadgeText(unreadMessagesLength);
     }
 
@@ -427,35 +425,6 @@ var meceClientApp = (function () {
         return value;
     }
 
-
-    // http://flexboxgrid.com/
-    var rowTemplate =
-        /*jshint multistr:true */
-        '<div class="mece-row-container{7}" id="{0}">\
-            <div class="mece-row mece-row--no-margins mece-top-xs"> <!--yksi rivi, jossa kaksi(kolme) kolumnia-->\
-                <div> <!--Column 1 (kuva) flouttaava divi joka asettuu sisaltonsa kokoiseksi-->\
-                    <div class="mece-row-avatar mece-padding">\
-                        <img class="mece-row-avatar-picture" alt="avatar" src="{1}">\
-                    </div>\
-                </div>\
-                <div class="mece-col-xs"> <!--Column 2 (sisalto) venyy-->\
-                    <div class="mece-row-content mece-padding">\
-                        <div class="mece-row-content-title mece-h3 mece-text-ellipsis">\
-                            <a target="_blank" href="{2}">{3}</a>\
-                        </div>\
-                        <div class="mece-row-content-para {8}">{4}</div>\
-                        <div class="mece-row-content-received">{5}</div>\
-                    </div>\
-                </div>\
-                <div> <!--flouttaava divi joka asettuu sisaltonsa kokoiseksi-->\
-                    <div class="mece-row-actions">\
-                    </div>\
-                </div>\
-                    <div class="mece-hidden-submitted-time mece-hidden">{6}</div>\
-            </div>\
-        </div>';
-
-
     function addRow(notification) {
         var avatar = function () {
             //  var DEFAULT_AVATAR_URL = IMAGES_URI + "/avatar.png",
@@ -463,6 +432,7 @@ var meceClientApp = (function () {
 
             return urlFoundInTheMassage || DEFAULT_AVATAR_URL;
         };
+        var myLinkElement;
         var myLinkUrl = chooseValue('linkUrl', notification) || notification[NOTIF_LINK_URL_IND];
         var myMessage = chooseValue('message', notification) || notification[NOTIF_MSG_IND];
         var myHeading = chooseValue('heading', notification) || notification[NOTIF_HEADING_IND];
@@ -470,15 +440,22 @@ var meceClientApp = (function () {
         myMessage = myMessage === undefined || myMessage === "undefined" ? "&nbsp;" : myMessage;
         myHeading = myHeading === undefined || myHeading === "undefined" ? "&nbsp;" : myHeading;
 
-        var mece_row = String.format(rowTemplate,
+        if (myLinkUrl === "") {
+            //myLinkElement = '<a>' + myHeading + '</a>';
+            myLinkElement = myHeading;
+        } else {
+            myLinkElement = '<a target="_blank" href="' + myLinkUrl + '">' + myHeading +'</a>';
+        }
+
+
+        var mece_row = String.format(meceClientApp.Templates.rowTemplate,
             notification[NOTIF_ID_IND],
             avatar(),
-            myLinkUrl,
-            myHeading,
+            myLinkElement,
             myMessage,
             determineTime(notification[NOTIF_SUBMITTED_IND], language),
             notification[NOTIF_SUBMITTED_IND],
-            notification[NOTIF_READ_IND] ? ' mece-row-container--read' : '',
+            notification[NOTIF_READ_IND] ? ' ' + MESSAGE_STATES.hasReads : '',
             notification[NOTIF_READ_IND] ? 'mece-para-ellipsis--read' : 'mece-para-ellipsis');
 
         $rowContentDiv.prepend(mece_row);
@@ -490,7 +467,7 @@ var meceClientApp = (function () {
 
             var $msgElem = $(this);
 
-            if ($msgElem.hasClass("mece-row-container--read") || $msgElem.hasClass("mece-row-container--no-messages")) {
+            if ($msgElem.hasClass(MESSAGE_STATES.hasReads) || $msgElem.hasClass(MESSAGE_STATES.noMessages)) {
                 return;
             }
 
@@ -525,12 +502,29 @@ var meceClientApp = (function () {
     // TODO: replace with CSS. click changes class.
     function dialog() {
         $iconDiv.click(function (e) {
+            isWidgetOpen = !isWidgetOpen;
             e.stopPropagation();
-            $containerDiv.toggleClass("mece--open"); //, !isDialogVisible());
-            $meceMobileCover.toggleClass("mece-mobile-cover--visible");
+            $containerDiv.toggleClass(STATES.open, isWidgetOpen); //, !isDialogVisible());
+            $('html').toggleClass(STATES.html, isWidgetOpen);
+
+
+            if (isMobileOpen()) {
+                var topPosition = $containerWrapperDiv.offset().top;
+                $containerWrapperDiv.css('max-height', 'calc(100vh - ' + topPosition + 'px)');
+                $rowContentDiv.css('max-height', 'calc(100vh - ' + topPosition + 'px)');
+
+            }
+
+            if (!isMobileOpen()) {
+                $containerWrapperDiv.css('max-height', MECE_DESKTOP_HEIGHT);
+                $rowContentDiv.css('max-height', MECE_DESKTOP_HEIGHT);
+             }
         });
     }
 
+    function isMobileOpen() {
+        return (isWidgetOpen && window.innerWidth < MECE_MOBILE_WIDTH) ? true : false;
+    }
     function addNotifications(notifications) {
         $.each(notifications, function (i, n) {
             addRow(n);
@@ -550,3 +544,62 @@ var meceClientApp = (function () {
     };
 
 })();
+
+meceClientApp.Templates = {};
+
+/**
+ * Koko mece container
+ * @type {string}
+ */
+meceClientApp.Templates.containerTemplate =
+    /*jshint multistr:true */
+    '<div class="mece">\
+        <div class="mece-icon-container">\
+            <div class="mece-icon mece-icon-bell">\
+                <img src="{0}/bell.svg">\
+                <div class="mece-badge"></div>\
+            </div>\
+            <div class="mece-icon mece-icon-close">\
+                <img src="{0}/close.svg">\
+            </div>\
+        </div>\
+        <div class="mece-content-wrapper">\
+            <div class="mece-content">\
+                <div class="mece-row-container mece-row-container--no-messages">\
+                </div>\
+            </div>\
+        </div>\
+        <div id="mece-mobile-cover" class="mece-mobile-cover"></div>\
+    </div>';
+
+/**
+ * Yksi rivi
+ * @type {string}
+ */
+
+meceClientApp.Templates.rowTemplate =
+    /*jshint multistr:true */
+    '<div class="mece-row-container{6}" id="{0}">\
+        <div class="mece-row mece-row--no-margins mece-top-xs"> <!--yksi rivi, jossa kaksi(kolme) kolumnia-->\
+            <div> <!--Column 1 (kuva) flouttaava divi joka asettuu sisaltonsa kokoiseksi-->\
+                <div class="mece-row-avatar mece-padding">\
+                    <img class="mece-row-avatar-picture" alt="avatar" src="{1}">\
+                </div>\
+            </div>\
+            <div class="mece-col-xs"> <!--Column 2 (sisalto) venyy-->\
+                <div class="mece-row-content mece-padding">\
+                    <div class="mece-row-content-title mece-h3 mece-text-ellipsis">\
+                       {2}\
+                    </div>\
+                    <div class="mece-row-content-para {7}">{3}</div>\
+                    <div class="mece-row-content-received">{4}</div>\
+                </div>\
+            </div>\
+            <div> <!--flouttaava divi joka asettuu sisaltonsa kokoiseksi-->\
+                <div class="mece-row-actions">\
+                </div>\
+            </div>\
+                <div class="mece-hidden-submitted-time mece-hidden">{5}</div>\
+        </div>\
+    </div>';
+
