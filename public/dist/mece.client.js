@@ -39,7 +39,6 @@ var meceClientApp = (function () {
         $containerWrapperDiv,
         $iconDiv,
         $noMessagesDiv,
-        $meceMobileCover,
         $ = null,
         meceDomain,
         meceHost,
@@ -101,7 +100,6 @@ var meceClientApp = (function () {
             $iconDiv = $containerDiv.find('.mece-icon');
             $badgeDiv = $containerDiv.find('.mece-badge');
             $noMessagesDiv = $containerDiv.find('.mece-row-container--no-messages');
-            $meceMobileCover = $('#mece-mobile-cover');
             //TODO comment this
             initializeMomentAndLocales();
             readAndInitializeAttributeValues();
@@ -509,10 +507,16 @@ var meceClientApp = (function () {
 
 
             if (isMobileOpen()) {
+                var isiOSSafari = (navigator.userAgent.match(/like Mac OS X/i)) ? true: false;
                 var topPosition = $containerWrapperDiv.offset().top;
                 $containerWrapperDiv.css('max-height', 'calc(100vh - ' + topPosition + 'px)');
-                $rowContentDiv.css('max-height', 'calc(100vh - ' + topPosition + 'px)');
-
+                if(isiOSSafari) {
+                    adjustMaxHeight(topPosition);
+                    changeOrientation(topPosition);
+                } else {
+                    $rowContentDiv.css('max-height', 'calc(100vh - ' + topPosition  + 'px)');
+                }
+                removeIOSRubberEffect(document.querySelector( ".mece-content" ))
             }
 
             if (!isMobileOpen()) {
@@ -520,6 +524,36 @@ var meceClientApp = (function () {
                 $rowContentDiv.css('max-height', MECE_DESKTOP_HEIGHT);
              }
         });
+    }
+
+
+    function adjustMaxHeight(topPosition) {
+        if (window.matchMedia("(orientation: portrait)").matches) {
+            $rowContentDiv.css('max-height', 'calc(100vh - ' + (topPosition + 60) + 'px)');
+        }
+        if (window.matchMedia("(orientation: landscape)").matches) {
+            $rowContentDiv.css('max-height', 'calc(100vh - ' + (topPosition + 30) + 'px)');
+        }
+    }
+
+    function changeOrientation(topPosition) {
+        window.addEventListener("orientationchange", function () {
+            adjustMaxHeight(topPosition);
+        }, false);
+    }
+
+    function removeIOSRubberEffect( element ) {
+        if(element) {
+            element.addEventListener( "touchstart", function () {
+                var top = element.scrollTop;
+                if ( top === 0 ) {
+                    element.scrollTop = 1;
+                }
+                if(element.scrollTop + element.clientHeight === element.scrollHeight) {
+                    element.scrollTop = top - 1;
+                }
+            } );
+        }
     }
 
     function isMobileOpen() {
@@ -570,6 +604,7 @@ meceClientApp.Templates.containerTemplate =
             </div>\
         </div>\
         <div id="mece-mobile-cover" class="mece-mobile-cover"></div>\
+        <div id="mece-mobile-cover-top" class="mece-mobile-cover-top"></div>\
     </div>';
 
 /**
