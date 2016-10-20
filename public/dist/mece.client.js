@@ -510,12 +510,16 @@ var meceClientApp = (function () {
                 var isiOSSafari = (navigator.userAgent.match(/like Mac OS X/i)) ? true: false;
                 var topPosition = $containerWrapperDiv.offset().top;
                 $containerWrapperDiv.css('max-height', 'calc(100vh - ' + topPosition + 'px)');
+                $rowContentDiv.css('max-height', 'calc(100vh - ' + topPosition  + 'px)');
+                /* TÄMÄ ON VÄLIAIKAISESTI POIS KÄYTÖSTÄ KOSKA IOSSISSA EI OLE AINA ALAPALKKIA
+                MECE-871
                 if(isiOSSafari) {
                     adjustMaxHeight(topPosition);
                     changeOrientation(topPosition);
                 } else {
                     $rowContentDiv.css('max-height', 'calc(100vh - ' + topPosition  + 'px)');
                 }
+                */
                 removeIOSRubberEffect(document.querySelector( ".mece-content" ))
             }
 
